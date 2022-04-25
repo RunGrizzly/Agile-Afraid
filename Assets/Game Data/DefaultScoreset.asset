@@ -1,0 +1,101 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f57f269ebda8cf4595f097d88580b43, type: 3}
+  m_Name: DefaultScoreset
+  m_EditorClassIdentifier: 
+  scoreset:
+    m_keys:
+    - character: 97
+      score: 1
+    - character: 98
+      score: 3
+    - character: 99
+      score: 3
+    - character: 100
+      score: 2
+    - character: 101
+      score: 1
+    - character: 102
+      score: 4
+    - character: 103
+      score: 2
+    - character: 104
+      score: 4
+    - character: 105
+      score: 1
+    - character: 106
+      score: 1
+    - character: 107
+      score: 5
+    - character: 108
+      score: 1
+    - character: 109
+      score: 3
+    - character: 110
+      score: 1
+    - character: 111
+      score: 1
+    - character: 112
+      score: 3
+    - character: 113
+      score: 10
+    - character: 114
+      score: 1
+    - character: 115
+      score: 1
+    - character: 116
+      score: 1
+    - character: 117
+      score: 1
+    - character: 118
+      score: 4
+    - character: 119
+      score: 4
+    - character: 120
+      score: 8
+    - character: 121
+      score: 4
+    - character: 122
+      score: 10
+    m_values:
+    - 90
+    - 12.5
+    - 30
+    - 50
+    - 100
+    - 12.5
+    - 20
+    - 20
+    - 70
+    - 12.5
+    - 7.5
+    - 40
+    - 30
+    - 70
+    - 80
+    - 12.5
+    - 7.5
+    - 70
+    - 60
+    - 80
+    - 40
+    - 12.5
+    - 12.5
+    - 7.5
+    - 12.5
+    - 7.5
+  specificTileCost: 10
+  vowelCost: 5
+  consonantCost: 5
+  fillCost: 15
+  newRackCost: 25
+  levelRestartCost: 30

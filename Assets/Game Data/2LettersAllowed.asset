@@ -1,0 +1,268 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f6196b0a4824a44a9d4be64136585ed, type: 3}
+  m_Name: 2LettersAllowed
+  m_EditorClassIdentifier: 
+  levels:
+  - gridDims: {x: 6, y: 7}
+    music:
+      Name: 
+      AudioClip: {fileID: 8300000, guid: f370113d35be2a741af91cee879960a9, type: 3}
+    deadZoneColor: {r: 0.19272874, g: 0.5754717, b: 0.22591382, a: 1}
+    seeds:
+    - word: agile
+      placementType: 0
+      assignedBlocks: []
+      possibleLines: []
+    - word: afraid
+      placementType: 2
+      assignedBlocks: []
+      possibleLines: []
+    rackSize: 10
+    repeatLimit: 2
+  - gridDims: {x: 7, y: 6}
+    music:
+      Name: 
+      AudioClip: {fileID: 8300000, guid: f370113d35be2a741af91cee879960a9, type: 3}
+    deadZoneColor: {r: 0.19272874, g: 0.5754717, b: 0.22591382, a: 1}
+    seeds:
+    - word: agile
+      placementType: 0
+      assignedBlocks: []
+      possibleLines: []
+    - word: afraid
+      placementType: 2
+      assignedBlocks: []
+      possibleLines: []
+    rackSize: 10
+    repeatLimit: 2
+  - gridDims: {x: 7, y: 7}
+    music:
+      Name: 
+      AudioClip: {fileID: 8300000, guid: f370113d35be2a741af91cee879960a9, type: 3}
+    deadZoneColor: {r: 0.19272874, g: 0.5754717, b: 0.22591382, a: 1}
+    seeds:
+    - word: agile
+      placementType: 0
+      assignedBlocks: []
+      possibleLines: []
+    - word: afraid
+      placementType: 2
+      assignedBlocks: []
+      possibleLines: []
+    rackSize: 10
+    repeatLimit: 3
+  - gridDims: {x: 7, y: 8}
+    music:
+      Name: 
+      AudioClip: {fileID: 8300000, guid: f370113d35be2a741af91cee879960a9, type: 3}
+    deadZoneColor: {r: 0.19272874, g: 0.5754717, b: 0.22591382, a: 1}
+    seeds:
+    - word: agile
+      placementType: 0
+      assignedBlocks: []
+      possibleLines: []
+    - word: afraid
+      placementType: 3
+      assignedBlocks: []
+      possibleLines: []
+    rackSize: 10
+    repeatLimit: 2
+  - gridDims: {x: 8, y: 7}
+    music:
+      Name: 
+      AudioClip: {fileID: 8300000, guid: f370113d35be2a741af91cee879960a9, type: 3}
+    deadZoneColor: {r: 0.19272874, g: 0.5754717, b: 0.22591382, a: 1}
+    seeds:
+    - word: whale
+      placementType: 0
+      assignedBlocks: []
+      possibleLines: []
+    - word: meat
+      placementType: 2
+      assignedBlocks: []
+      possibleLines: []
+    rackSize: 10
+    repeatLimit: 2
+  - gridDims: {x: 8, y: 8}
+    music:
+      Name: 
+      AudioClip: {fileID: 8300000, guid: f370113d35be2a741af91cee879960a9, type: 3}
+    deadZoneColor: {r: 0.19272874, g: 0.5754717, b: 0.22591382, a: 1}
+    seeds:
+    - word: no
+      placementType: 1
+      assignedBlocks: []
+      possibleLines: []
+    - word: bugs
+      placementType: 5
+      assignedBlocks: []
+      possibleLines: []
+    - word: here
+      placementType: 3
+      assignedBlocks: []
+      possibleLines: []
+    rackSize: 10
+    repeatLimit: 2
+  - gridDims: {x: 8, y: 9}
+    music:
+      Name: 
+      AudioClip: {fileID: 8300000, guid: ec636abfe9e3e2d4e89864a8e2fc0240, type: 3}
+    deadZoneColor: {r: 0.39810663, g: 0.19446424, b: 0.4339623, a: 1}
+    seeds:
+    - word: please
+      placementType: 3
+      assignedBlocks: []
+      possibleLines: []
+    - word: help
+      placementType: 1
+      assignedBlocks: []
+      possibleLines: []
+    rackSize: 10
+    repeatLimit: 2
+  - gridDims: {x: 9, y: 8}
+    music:
+      Name: 
+      AudioClip: {fileID: 8300000, guid: ec636abfe9e3e2d4e89864a8e2fc0240, type: 3}
+    deadZoneColor: {r: 0.39810663, g: 0.19446424, b: 0.4339623, a: 1}
+    seeds:
+    - word: they
+      placementType: 3
+      assignedBlocks: []
+      possibleLines: []
+    - word: are
+      placementType: 5
+      assignedBlocks: []
+      possibleLines: []
+    - word: here
+      placementType: 1
+      assignedBlocks: []
+      possibleLines: []
+    rackSize: 10
+    repeatLimit: 2
+  - gridDims: {x: 9, y: 9}
+    music:
+      Name: 
+      AudioClip: {fileID: 8300000, guid: ec636abfe9e3e2d4e89864a8e2fc0240, type: 3}
+    deadZoneColor: {r: 0.39810663, g: 0.19446424, b: 0.4339623, a: 1}
+    seeds:
+    - word: all
+      placementType: 2
+      assignedBlocks: []
+      possibleLines: []
+    - word: is
+      placementType: 5
+      assignedBlocks: []
+      possibleLines: []
+    - word: well
+      placementType: 0
+      assignedBlocks: []
+      possibleLines: []
+    rackSize: 10
+    repeatLimit: 2
+  - gridDims: {x: 10, y: 9}
+    music:
+      Name: 
+      AudioClip: {fileID: 8300000, guid: ec636abfe9e3e2d4e89864a8e2fc0240, type: 3}
+    deadZoneColor: {r: 0.39810663, g: 0.19446424, b: 0.4339623, a: 1}
+    seeds:
+    - word: columbo
+      placementType: 3
+      assignedBlocks: []
+      possibleLines: []
+    - word: rules
+      placementType: 0
+      assignedBlocks: []
+      possibleLines: []
+    rackSize: 10
+    repeatLimit: 2
+  - gridDims: {x: 9, y: 10}
+    music:
+      Name: 
+      AudioClip: {fileID: 8300000, guid: ec636abfe9e3e2d4e89864a8e2fc0240, type: 3}
+    deadZoneColor: {r: 0.39810663, g: 0.19446424, b: 0.4339623, a: 1}
+    seeds:
+    - word: subscribe
+      placementType: 3
+      assignedBlocks: []
+      possibleLines: []
+    - word: to
+      placementType: 5
+      assignedBlocks: []
+      possibleLines: []
+    - word: pedro
+      placementType: 0
+      assignedBlocks: []
+      possibleLines: []
+    rackSize: 10
+    repeatLimit: 2
+  - gridDims: {x: 10, y: 11}
+    music:
+      Name: 
+      AudioClip: {fileID: 8300000, guid: 585e2ff5224ae754fbad7c30f3c8961b, type: 3}
+    deadZoneColor: {r: 0.36196154, g: 0.7031305, b: 0.9245283, a: 1}
+    seeds:
+    - word: agile
+      placementType: 0
+      assignedBlocks: []
+      possibleLines: []
+    - word: agile
+      placementType: 5
+      assignedBlocks: []
+      possibleLines: []
+    - word: agile
+      placementType: 2
+      assignedBlocks: []
+      possibleLines: []
+    rackSize: 10
+    repeatLimit: 2
+  - gridDims: {x: 11, y: 10}
+    music:
+      Name: 
+      AudioClip: {fileID: 8300000, guid: 585e2ff5224ae754fbad7c30f3c8961b, type: 3}
+    deadZoneColor: {r: 0.36196154, g: 0.7031305, b: 0.9245283, a: 1}
+    seeds:
+    - word: afraid
+      placementType: 0
+      assignedBlocks: []
+      possibleLines: []
+    - word: afraid
+      placementType: 5
+      assignedBlocks: []
+      possibleLines: []
+    - word: afraid
+      placementType: 2
+      assignedBlocks: []
+      possibleLines: []
+    rackSize: 10
+    repeatLimit: 2
+  - gridDims: {x: 11, y: 11}
+    music:
+      Name: 
+      AudioClip: {fileID: 8300000, guid: 585e2ff5224ae754fbad7c30f3c8961b, type: 3}
+    deadZoneColor: {r: 0.36196154, g: 0.7031305, b: 0.9245283, a: 1}
+    seeds:
+    - word: indie
+      placementType: 3
+      assignedBlocks: []
+      possibleLines: []
+    - word: game
+      placementType: 5
+      assignedBlocks: []
+      possibleLines: []
+    - word: squad
+      placementType: 0
+      assignedBlocks: []
+      possibleLines: []
+    rackSize: 10
+    repeatLimit: 2
+  permittedWords: {fileID: 11400000, guid: 44317b310db86cb4cb9979e73c1911eb, type: 2}
