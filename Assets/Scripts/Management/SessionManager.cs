@@ -83,6 +83,8 @@ public class SessionManager : MonoBehaviour
 
         });
 
+        //A test change
+
         //Modify score
         BrainControl.Get().eventManager.e_juiceChange.AddListener((c) =>
         {
