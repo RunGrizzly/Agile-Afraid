@@ -146,7 +146,10 @@ public class TileRack : MonoBehaviour
 
     bool AtCapacity()
     {
-        return letterTiles.Count >= BrainControl.Get().sessionManager.currentSession.currentLevel.data.rackSize;
+
+        bool atCapacity = letterTiles.Count >= BrainControl.Get().sessionManager.currentSession.currentLevel.data.rackSize;
+        if (atCapacity) BrainControl.Get().uiManager.PrintMessage("Your rack is at capacity");
+        return atCapacity;
     }
 
     int RepeatLimit()

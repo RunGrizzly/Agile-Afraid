@@ -42,7 +42,7 @@ public class ScoreManager : MonoBehaviour
 
         foreach (LetterBlock block in blocks)
         {
-            score += block.letter.score;
+            score += block.baseLetter.score;
         }
 
         return score;

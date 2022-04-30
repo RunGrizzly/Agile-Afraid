@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.3731193, g: 0.38073996, b: 0.35872698, a: 1}
+  m_IndirectSpecularColor: {r: 0.37311912, g: 0.3807398, b: 0.3587272, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -150,6 +150,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1652736063}
   m_RootOrder: 0
@@ -284,6 +285,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1652736063}
   m_Father: {fileID: 0}
@@ -363,6 +365,7 @@ MonoBehaviour:
   gameCanvas: {fileID: 0}
   scoreText: {fileID: 0}
   levelText: {fileID: 0}
+  messageBox: {fileID: 0}
   inputControlTemplate: {fileID: 2820702500035625035, guid: fbb95001e239b3b4ab129f830e2ea7ed, type: 3}
   interruptPanelTemplate: {fileID: 5592790444646282466, guid: 35caf8b585127404287e897236004bc4, type: 3}
   interruptPanel: {fileID: 0}
@@ -439,7 +442,7 @@ LightingSettings:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: 
-  serializedVersion: 3
+  serializedVersion: 4
   m_GIWorkflowMode: 1
   m_EnableBakedLightmaps: 1
   m_EnableRealtimeLightmaps: 0
@@ -452,7 +455,7 @@ LightingSettings:
   m_LightmapMaxSize: 1024
   m_BakeResolution: 40
   m_Padding: 2
-  m_TextureCompression: 1
+  m_LightmapCompression: 2
   m_AO: 0
   m_AOMaxDistance: 1
   m_CompAOExponent: 1
@@ -493,6 +496,7 @@ LightingSettings:
   m_PVRFilteringAtrousPositionSigmaDirect: 0.5
   m_PVRFilteringAtrousPositionSigmaIndirect: 2
   m_PVRFilteringAtrousPositionSigmaAO: 1
+  m_PVRTiledBaking: 0
 --- !u!1 &1604044744
 GameObject:
   m_ObjectHideFlags: 0
@@ -525,6 +529,33 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _version: 2
   _crossSceneReferences:
+  - _sourceObject: {fileID: 938982173}
+    _sourceField: messageBox
+    DEPRECATED_fromObject:
+      scene:
+        editorAssetGUID: 
+        name: 
+        _path: 
+      fullPath: 
+      componentName: 
+      componentIndex: 0
+      editorLocalId: 0
+      editorPrefabRelativePath: 
+      version: 0
+    _toObject:
+      scene:
+        editorAssetGUID: 1410d76adbb43f746b49c8df674a9654
+        name: UI
+        _path: Assets/Scenes/UI.unity
+      fullPath: /UICanvas/MessagePanel/Text (TMP)
+      componentName: TMPro.TextMeshProUGUI, Unity.TextMeshPro, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      componentIndex: 0
+      editorLocalId: 726737535
+      editorPrefabRelativePath: 
+      version: 1
+    _data:
+      data: []
   - _sourceObject: {fileID: 938982173}
     _sourceField: levelText
     DEPRECATED_fromObject:
@@ -680,19 +711,19 @@ MonoBehaviour:
       editorAssetGUID: 14a58eddb21d09b4eb3e7acc94a35b22
       name: Cameras
       _path: Assets/Scenes/Cameras.unity
-    loadInEditor: 0
+    loadInEditor: 1
     loadMethod: 3
   - scene:
       editorAssetGUID: 1410d76adbb43f746b49c8df674a9654
       name: UI
       _path: Assets/Scenes/UI.unity
-    loadInEditor: 0
+    loadInEditor: 1
     loadMethod: 3
   - scene:
       editorAssetGUID: 6ef2b6432a170f344880dae6ed4c2166
       name: WordGame
       _path: Assets/Scenes/WordGame.unity
-    loadInEditor: 0
+    loadInEditor: 1
     loadMethod: 3
   - scene:
       editorAssetGUID: c282660f956924543a0e62c8d797e9d3
@@ -713,6 +744,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -773,6 +805,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 420565796}
   - {fileID: 1899554694}
@@ -910,6 +943,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1652736063}
   m_RootOrder: 1

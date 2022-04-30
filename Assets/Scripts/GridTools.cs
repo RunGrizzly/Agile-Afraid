@@ -274,7 +274,7 @@ public static class GridTools
         bool up = true;
         bool down = true;
 
-        for (int i = 1; i < Mathf.Max(BrainControl.Get().grid.gridDims.x, BrainControl.Get().grid.gridDims.y); i++)
+        for (int i = 1; i < Mathf.Max( BrainControl.Get().grid.letterBlocks.GetLength(0), BrainControl.Get().grid.letterBlocks.GetLength(1)); i++)
         {
 
 

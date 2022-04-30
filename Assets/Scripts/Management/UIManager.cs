@@ -9,6 +9,7 @@ public class UIManager : MonoBehaviour
 
     public TextMeshProUGUI scoreText;
     public TextMeshProUGUI levelText;
+    public TextMeshProUGUI messageBox;
 
     public GameObject inputControlTemplate;
 
@@ -80,6 +81,7 @@ public class UIManager : MonoBehaviour
             Destroy(inputControlCanvas);
         });
 
+
         BrainControl.Get().eventManager.e_restartSession.AddListener(() =>
         {
             Destroy(inputControlCanvas);
@@ -131,30 +133,23 @@ public class UIManager : MonoBehaviour
 
         });
 
-
-
-
-
-        // case InterruptType.Win:
-        //     newPanel = Instantiate(interruptPanelTemplate, Vector3.zero, Quaternion.identity).GetComponent<InterruptPanel>();
-        //     newPanel.transform.SetParent(gameCanvas.transform, false);
-        //     newPanel.transform.localPosition = Vector3.zero;
-        //     newPanel.BuildWin();
-        //     break;
-
-        // case InterruptType.Fail:
-        //     newPanel = Instantiate(interruptPanelTemplate, Vector3.zero, Quaternion.identity).GetComponent<InterruptPanel>();
-        //     newPanel.transform.SetParent(gameCanvas.transform, false);
-        //     newPanel.transform.localPosition = Vector3.zero;
-        //     newPanel.BuildLose();
-        //     break;
-
         BrainControl.Get().eventManager.e_unpauseSession.AddListener(() =>
         {
 
             if (interruptPanel != null) interruptPanel.KillPanel();
 
         });
+    }
+
+    public void PrintMessage(string message)
+    {
+        messageBox.text = message;
+
+        LeanTween.delayedCall(3f, () => LeanTween.value(messageBox.gameObject, 0, -50f, 0.35f).setEase(LeanTweenType.easeOutExpo).setOnUpdate((v) => messageBox.GetComponent<RectTransform>().anchoredPosition = new Vector3(0, v, 0)));
+
+        LeanTween.value(messageBox.gameObject, -50f, 0, 0.35f).setEase(LeanTweenType.easeOutExpo).setOnUpdate((v) => messageBox.GetComponent<RectTransform>().anchoredPosition = new Vector3(0, v, 0));
+
+
 
     }
 

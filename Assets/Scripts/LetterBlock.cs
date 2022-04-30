@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
@@ -22,16 +23,43 @@ public class LetterBlock : MonoBehaviour
     public TextMeshProUGUI letterBox;
     public TextMeshProUGUI scoreBox;
 
-    public Letter letter;
+    public Letter baseLetter;
 
+    public Letter moddedLetter
+    {
+        get
+        {
+            Letter m = null;
+
+            foreach (ILetterEffect e in letterEffects)
+            {
+                m = e.ApplyEffect(m);
+            }
+
+            return m;
+        }
+    }
+
+
+    public List<ILetterEffect> letterEffects = new List<ILetterEffect>();
 
 
     public Vector2Int gridRef;
-
     LTDescr pop;
-
     public float buildPopStrength;
     public float emptyPopStrength;
+
+
+    void Start()
+    {
+
+        //Adding a new letter multiplier effect to this block
+        letterEffects.Add(new MultiplyLetterScore(3));
+        letterEffects.Add(new RandomLetterScore(2, 10));
+        letterEffects.Add(new DivideLetterScore(2));
+
+
+    }
 
     public void SetLockState(LockState state)
     {
@@ -59,7 +87,7 @@ public class LetterBlock : MonoBehaviour
 
         meshObject.GetComponent<MeshRenderer>().material = emptyMaterial;
 
-        letter = new Letter(char.MinValue, 0);
+        baseLetter = new Letter(char.MinValue, 0);
 
         gameObject.layer = LayerMask.NameToLayer("Default");
 
@@ -88,14 +116,14 @@ public class LetterBlock : MonoBehaviour
 
 
         //Create a new copy of the letter entry found using the passed letters
-        letter = new Letter(GameObject.FindGameObjectWithTag("Brain").GetComponent<Brain>().scoreManager.scoreSet.scoreset.Keys.FirstOrDefault(x => x.character == _letter));
+        baseLetter = new Letter(GameObject.FindGameObjectWithTag("Brain").GetComponent<Brain>().scoreManager.scoreSet.scoreset.Keys.FirstOrDefault(x => x.character == _letter));
 
         gameObject.layer = LayerMask.NameToLayer("Navigable");
 
         //if (Application.isPlaying) Brain.ins.eventManager.e_navUpdate.Invoke();
 
-        letterBox.text = letter.character.ToString();
-        scoreBox.text = letter.score.ToString();
+        letterBox.text = baseLetter.character.ToString();
+        scoreBox.text = baseLetter.score.ToString();
 
 
     }
@@ -109,14 +137,14 @@ public class LetterBlock : MonoBehaviour
         meshObject.GetComponent<MeshRenderer>().material = filledMaterial;
 
         //Create a new copy of the letter entry found using the random letter
-        letter = GameObject.FindGameObjectWithTag("Brain").GetComponent<Brain>().scoreManager.scoreSet.LetterFromDistribution(minDist, maxDist);
+        baseLetter = GameObject.FindGameObjectWithTag("Brain").GetComponent<Brain>().scoreManager.scoreSet.LetterFromDistribution(minDist, maxDist);
 
         gameObject.layer = LayerMask.NameToLayer("Navigable");
 
         // Brain.ins.eventManager.e_navUpdate.Invoke();
 
-        letterBox.text = letter.character.ToString();
-        scoreBox.text = letter.score.ToString();
+        letterBox.text = baseLetter.character.ToString();
+        scoreBox.text = baseLetter.score.ToString();
 
 
     }
@@ -130,14 +158,14 @@ public class LetterBlock : MonoBehaviour
         meshObject.GetComponent<MeshRenderer>().material = filledMaterial;
 
         //Create a new copy of the letter entry found using the random letter
-        letter = GameObject.FindGameObjectWithTag("Brain").GetComponent<Brain>().scoreManager.scoreSet.WeightedLetter();
+        baseLetter = GameObject.FindGameObjectWithTag("Brain").GetComponent<Brain>().scoreManager.scoreSet.WeightedLetter();
 
         gameObject.layer = LayerMask.NameToLayer("Navigable");
 
         // Brain.ins.eventManager.e_navUpdate.Invoke();
 
-        letterBox.text = letter.character.ToString();
-        scoreBox.text = letter.score.ToString();
+        letterBox.text = baseLetter.character.ToString();
+        scoreBox.text = baseLetter.score.ToString();
     }
 
     public void SetAsStart()

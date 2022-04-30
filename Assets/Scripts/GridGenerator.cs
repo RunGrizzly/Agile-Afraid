@@ -8,7 +8,8 @@ using UnityEngine.AI;
 public class GridGenerator : MonoBehaviour
 {
     [SerializeField] public Vector2Int gridDims;
-    public LetterBlock[,] letterBlocks;
+
+    public LetterBlock[,] letterBlocks = new LetterBlock[,]{};
 
     public List<WordRequest> requests = new List<WordRequest>();
 
@@ -28,6 +29,8 @@ public class GridGenerator : MonoBehaviour
     public GameObject deadZone;
 
     public NavMeshPath path;
+
+    public GUISkin editorSkin;
 
 
     void Start()

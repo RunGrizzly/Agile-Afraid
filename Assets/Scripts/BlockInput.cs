@@ -81,7 +81,7 @@ public class BlockInput
     {
         Debug.Log("A new block was added to the current input");
         blocks.Add(a);
-        characters.Add(a.letter.character);
+        characters.Add(a.baseLetter.character);
         possibleLines = SetPossibleLines();
     }
 
@@ -92,7 +92,7 @@ public class BlockInput
 
 
         blocks.Remove(r);//Not called on second levels
-        characters.Remove(r.letter.character);
+        characters.Remove(r.baseLetter.character);
         r.SetLockState(LockState.unlocked);
         r.Empty();
 
@@ -108,10 +108,6 @@ public class BlockInput
     public void Compile()
     {
 
-        // List<LetterBlock> compileBlocks = new List<LetterBlock>(blocks);
-
-        compiledLines = new List<BlockLine>();
-
 
         bool horizIsGood = false;
         bool vertIsGood = false;
@@ -120,11 +116,11 @@ public class BlockInput
         foreach (LetterBlock block in blocks)
         {
 
-            compiledLines.Clear();
+            compiledLines = new List<BlockLine>();
 
             BlockLine horiz = new BlockLine("horizLine", GridTools.GetFilledCross(block)[0].blocks);
 
-            BlockLine vert = new BlockLine("horizLine", GridTools.GetFilledCross(block)[1].blocks);
+            BlockLine vert = new BlockLine("vert line", GridTools.GetFilledCross(block)[1].blocks);
 
             //Put each block list in order
             horiz.blocks = horiz.blocks.OrderBy(x => x.gridRef.x).ToList();
@@ -147,7 +143,7 @@ public class BlockInput
                 //Forwards
                 for (int i = 0; i < horiz.blocks.Count; i++)
                 {
-                    word += horiz.blocks[i].letter.character;
+                    word += horiz.blocks[i].baseLetter.character;
                 }
 
                 if (BrainControl.Get().sessionManager.sessionSettings.permittedWords.Validate(word))
@@ -167,7 +163,7 @@ public class BlockInput
                     //Backwards
                     for (int i = horiz.blocks.Count - 1; i > -1; i--)
                     {
-                        reverseword += horiz.blocks[i].letter.character;
+                        reverseword += horiz.blocks[i].baseLetter.character;
                     }
 
                     if (BrainControl.Get().sessionManager.sessionSettings.permittedWords.Validate(reverseword))
@@ -199,7 +195,7 @@ public class BlockInput
                 //Forwards
                 for (int i = 0; i < vert.blocks.Count; i++)
                 {
-                    word += vert.blocks[i].letter.character;
+                    word += vert.blocks[i].baseLetter.character;
                 }
                 if (BrainControl.Get().sessionManager.sessionSettings.permittedWords.Validate(word))
                 {
@@ -218,7 +214,7 @@ public class BlockInput
                     //Backwards
                     for (int i = vert.blocks.Count - 1; i > -1; i--)
                     {
-                        reverseword += vert.blocks[i].letter.character;
+                        reverseword += vert.blocks[i].baseLetter.character;
                     }
                     if (BrainControl.Get().sessionManager.sessionSettings.permittedWords.Validate(reverseword))
                     {

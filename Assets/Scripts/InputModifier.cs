@@ -29,7 +29,7 @@ public class InputModifier : MonoBehaviour
 
             case InputModification.Cancel:
                 Debug.Log("Input cancelled");
-                BrainControl.Get().eventManager.e_getTile.Invoke(BrainControl.Get().grid.selectedBlock.letter, false);
+                BrainControl.Get().eventManager.e_getTile.Invoke(BrainControl.Get().grid.selectedBlock.baseLetter, false);
                 BrainControl.Get().eventManager.e_clearBlock.Invoke(BrainControl.Get().grid.selectedBlock);
                 break;
         }
