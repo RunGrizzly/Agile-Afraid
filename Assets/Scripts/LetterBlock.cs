@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using CodingJar;
 using TMPro;
 using UnityEngine;
 
@@ -23,22 +24,24 @@ public class LetterBlock : MonoBehaviour
     public TextMeshProUGUI letterBox;
     public TextMeshProUGUI scoreBox;
 
-    public Letter baseLetter;
+    private Letter _baseLetter;
 
-    public Letter moddedLetter
+    public Letter baseLetter
     {
+        set
+        {
+            _baseLetter = value;
+            letter = ModifyLetter();
+        }
         get
         {
-            Letter m = null;
-
-            foreach (ILetterEffect e in letterEffects)
-            {
-                m = e.ApplyEffect(m);
-            }
-
-            return m;
+            return _baseLetter;
         }
     }
+
+    [Readonly]
+    public Letter letter;
+
 
 
     public List<ILetterEffect> letterEffects = new List<ILetterEffect>();
@@ -50,13 +53,26 @@ public class LetterBlock : MonoBehaviour
     public float emptyPopStrength;
 
 
+    public Letter ModifyLetter()
+    {
+        Letter m = _baseLetter;
+
+        foreach (ILetterEffect e in letterEffects)
+        {
+            m = e.ApplyEffect(m);
+        }
+
+        return m;
+    }
+
+
     void Start()
     {
 
-        //Adding a new letter multiplier effect to this block
-        letterEffects.Add(new MultiplyLetterScore(3));
-        letterEffects.Add(new RandomLetterScore(2, 10));
-        letterEffects.Add(new DivideLetterScore(2));
+        // //Adding a new letter multiplier effect to this block
+        // letterEffects.Add(new MultiplyLetterScore(3));
+        // letterEffects.Add(new RandomLetterScore(2, 10));
+        // letterEffects.Add(new DivideLetterScore(2));
 
 
     }

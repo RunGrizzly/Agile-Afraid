@@ -51,7 +51,7 @@ public class AudioManager : MonoBehaviour
 
         BrainControl.Get().eventManager.e_pathComplete.AddListener(() => PlaySFX(sfxClips.FirstOrDefault(x => x.Name == "pathComplete").AudioClip));
 
-        BrainControl.Get().eventManager.e_validateFail.AddListener((i) => PlaySFX(sfxClips.FirstOrDefault(x => x.Name == "validateFail").AudioClip));
+        BrainControl.Get().eventManager.e_validateFail.AddListener(() => PlaySFX(sfxClips.FirstOrDefault(x => x.Name == "validateFail").AudioClip));
         BrainControl.Get().eventManager.e_validateSuccess.AddListener((i) => PlaySFX(sfxClips.FirstOrDefault(x => x.Name == "validateSuccess").AudioClip));
 
         SetMusic(menuClip.AudioClip);

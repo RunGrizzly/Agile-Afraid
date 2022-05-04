@@ -25,6 +25,16 @@ public class LetterBlockEditor : Editor
             t.Empty();
         }
 
+        if (GUILayout.Button("Make 3x Multiplier"))
+        {
+            t.letterEffects.Add(new MultiplyLetterScore(3));
+        }
+
+        if (GUILayout.Button("Make 4x Multiplier"))
+        {
+            t.letterEffects.Add(new MultiplyLetterScore(4));
+        }
+
 
     }
 

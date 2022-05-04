@@ -18,7 +18,7 @@ public class SessionManager : MonoBehaviour
     //////////////////////
     //                  //
     //  //Session/////////
-    //////////////////
+    //////////////////////
     //  //              //
     //  //  //Level///////
     //  //  //////////////
@@ -46,8 +46,6 @@ public class SessionManager : MonoBehaviour
             currentSession = null;
         });
 
-        //Session level event responses
-        ////////////////////////
 
         BrainControl.Get().eventManager.e_restartSession.AddListener(() =>
         {
@@ -63,12 +61,11 @@ public class SessionManager : MonoBehaviour
            currentSession.levelTracker = new Task(currentSession.currentLevel.TrackLevel());
        });
 
-
+        //Level incrementation
+        //////////////////////
         BrainControl.Get().eventManager.e_pathComplete.AddListener(() =>
         {
             Debug.Log("A path was completed");
-            //Level incrementation
-
             if (currentSession.level >= sessionSettings.levels.Count - 1)
             {
                 BrainControl.Get().eventManager.e_winSession.Invoke();
@@ -79,24 +76,20 @@ public class SessionManager : MonoBehaviour
             currentSession.levelTracker.Stop();
             currentSession.levelTracker = new Task(currentSession.currentLevel.TrackLevel());
 
-
-
         });
-
-        //A test change
+        //////////////////////
 
         //Modify score
+        //////////////////////
         BrainControl.Get().eventManager.e_juiceChange.AddListener((c) =>
         {
-            Debug.Log("Score change: " + c);
             currentSession.score = (int)Mathf.Clamp((float)currentSession.score + (float)c, 0, Mathf.Infinity);
             BrainControl.Get().eventManager.e_updateUI.Invoke();
             if (currentSession.score <= 0) BrainControl.Get().eventManager.e_failSession.Invoke();
         });
+        //////////////////////
 
 
-        //Level level event responses
-        /////////////////////////////
         Brain.ins.eventManager.e_clearBlock.AddListener((c) =>
         {
             currentSession.currentLevel.LatestInput().RemoveFromInput(c);
@@ -104,22 +97,30 @@ public class SessionManager : MonoBehaviour
             if (currentSession.currentLevel.LatestInput().blocks.Count == 0) currentSession.currentLevel.RemoveInput(currentSession.currentLevel.LatestInput());
         });
 
-        //Track input mode
+        //A new input is called
+        //////////////////////
         Brain.ins.eventManager.e_beginInput.AddListener((a) =>
         {
             // //Check for any initial adjacency
             currentSession.currentLevel.inputs.Add(new BlockInput(new List<LetterBlock>() { /*BrainControl.Get().grid.CheckAdjacency(a),*/ a }, false, false));
         });
+        //////////////////////
 
+        //The current input is updated
+        //////////////////////
         Brain.ins.eventManager.e_updateInput.AddListener((u) =>
         {
             currentSession.currentLevel.LatestInput().AddToInput(u);
         });
+        //////////////////////
 
+        //The current input is ended
+        //////////////////////
         Brain.ins.eventManager.e_endInput.AddListener(() =>
         {
             currentSession.currentLevel.LatestInput().Compile();
         });
+        //////////////////////
 
         BrainControl.Get().eventManager.e_pauseSession.AddListener(() =>
         {

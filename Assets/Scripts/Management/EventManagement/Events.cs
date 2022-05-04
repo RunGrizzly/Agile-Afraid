@@ -24,8 +24,8 @@ public class EndInputEvent : UnityEvent { }
 
 //Scoring events
 /////////////////////
-public class ValidateFailEvent : UnityEvent<int> { }
-public class ValidateSuccessEvent : UnityEvent<int> { }
+public class ValidateFailEvent : UnityEvent { }
+public class ValidateSuccessEvent : UnityEvent<BlockInput> { }
 /////////////////////
 
 

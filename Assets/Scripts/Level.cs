@@ -82,29 +82,21 @@ public class Level
         //Place word seeds
         foreach (WordRequest request in data.seeds)
         {
-            if (!GridTools.WordIntoLine(BrainControl.Get().grid, request, true)) GridTools.WordIntoLine(BrainControl.Get().grid, new WordRequest(request.word, PlacementType.Random), true);
+            if (!GridTools.WordIntoLine(request, true)) GridTools.WordIntoLine(new WordRequest(request.word, PlacementType.Random), true);
         }
-
 
         SetStartInput(inputs[0]);
         SetTargetInput(inputs[inputs.Count - 1]);
-
 
         BrainControl.Get().eventManager.e_levelLoaded.Invoke(this);
 
         while (Brain.ins.sessionManager.currentSession != null && BrainControl.Get().sessionManager.currentSession.currentLevel == this)
         {
             Debug.Log("A level is running");
-
-            //Level level inputs and conditions
-
             yield return null;
         }
-
         Debug.Log("Session ended");
         //Level cleanup
-
-
     }
 }
 

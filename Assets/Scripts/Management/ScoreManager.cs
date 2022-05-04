@@ -30,9 +30,32 @@ public class ScoreManager : MonoBehaviour
             if (c) BrainControl.Get().eventManager.e_juiceChange.Invoke(-scoreSet.vowelCost);
         });
 
-        BrainControl.Get().eventManager.e_validateFail.AddListener((f) => BrainControl.Get().eventManager.e_juiceChange.Invoke(-f));
-        BrainControl.Get().eventManager.e_validateSuccess.AddListener((f) => BrainControl.Get().eventManager.e_juiceChange.Invoke(f));
+        BrainControl.Get().eventManager.e_validateFail.AddListener(() => BrainControl.Get().eventManager.e_juiceChange.Invoke(-scoreSet.validateFailPenalty));
+
+        BrainControl.Get().eventManager.e_validateSuccess.AddListener((f) =>
+        {
+
+            int score = 0;
+
+            foreach (BlockLine b in f.compiledWords)
+            {
+
+                Debug.Log("Compiled word set: " + GridTools.WordFromLine(b));
+                int scoreAdd = ScoreFromBlocks(b.blocks);
+                Debug.Log("Compiled word set is worth: " + scoreAdd);
+                score += scoreAdd;
+            }
+            Debug.Log("Full input was worth: " + score);
+            BrainControl.Get().eventManager.e_juiceChange.Invoke(score);
+
+
+        });
+
+
+
         BrainControl.Get().eventManager.e_restartLevel.AddListener(() => BrainControl.Get().eventManager.e_juiceChange.Invoke(-scoreSet.levelRestartCost));
+
+
     }
 
     public int ScoreFromBlocks(List<LetterBlock> blocks)
@@ -42,10 +65,10 @@ public class ScoreManager : MonoBehaviour
 
         foreach (LetterBlock block in blocks)
         {
-            score += block.baseLetter.score;
+            score += block.letter.score;
         }
 
-        return score;
+        return score * blocks.Count;
 
     }
 

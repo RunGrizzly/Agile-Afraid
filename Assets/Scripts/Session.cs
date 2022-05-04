@@ -53,6 +53,9 @@ public class Session
 
         BrainControl.Get().eventManager.e_juiceChange.Invoke(100 - score);
 
+        //Debug control
+        score = 99999;
+
         //Initial level load
         currentLevel = new Level(sessionSettings.levels[level]);
         //Do initial session track

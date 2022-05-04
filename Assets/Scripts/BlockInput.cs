@@ -10,16 +10,17 @@ public enum InputDirection { Forwards, Backwards, Unknown }
 [Serializable]
 public class BlockInput
 {
-
-
     public InputOrientation inputOrientation;
-
     List<BlockLine> possibleLines = new List<BlockLine>();
     public List<LetterBlock> blocks = new List<LetterBlock>();
 
     public List<BlockLine> compiledLines = new List<BlockLine>();
 
+    public List<BlockLine> compiledWords = new List<BlockLine>();
+
     public List<char> characters = new List<char>();
+
+    public bool isValidated;
 
     public BlockInput(List<LetterBlock> _blocks, bool validate, bool score)
     {
@@ -33,11 +34,7 @@ public class BlockInput
             Validate(score);
             return;
         }
-
     }
-
-    public bool isValidated;
-
     public BlockLine GetRow(LetterBlock block)
     {
         BlockLine row = new BlockLine("row");
@@ -62,7 +59,7 @@ public class BlockInput
         if (blocks.Count >= 2)
         {
             Debug.Log("Calculating input direction");
-            return new List<BlockLine>() { CalculateDirection() };
+            return new List<BlockLine>() { DirectionFilter() };
         }
 
         return new List<BlockLine>() { GetRow(blocks[blocks.Count - 1]), GetColumn(blocks[blocks.Count - 1]) };
@@ -79,6 +76,11 @@ public class BlockInput
     //Add a letter block to the input
     public void AddToInput(LetterBlock a)
     {
+
+        // //Ongoing input orientation check
+        // inputOrientation = GridTools.GetLineOrientation(new BlockLine("input", blocks));
+
+
         Debug.Log("A new block was added to the current input");
         blocks.Add(a);
         characters.Add(a.baseLetter.character);
@@ -87,9 +89,7 @@ public class BlockInput
 
     public void RemoveFromInput(LetterBlock r)
     {
-
         Debug.Log("Removing active block: " + r);
-
 
         blocks.Remove(r);//Not called on second levels
         characters.Remove(r.baseLetter.character);
@@ -100,141 +100,76 @@ public class BlockInput
         else possibleLines = new List<BlockLine>() { };
 
         Debug.Log("Removal complete");
-
     }
 
 
 
     public void Compile()
     {
+        //Got an orientation ( horizontal or vertical)
+        inputOrientation = GridTools.GetLineOrientation(new BlockLine("input", blocks));
 
-
-        bool horizIsGood = false;
-        bool vertIsGood = false;
-
-        //Go through each input block and figure out if we have made a horizontal or a vertical word
-        foreach (LetterBlock block in blocks)
+        //Go through blocks
+        for (int i = 0; i < blocks.Count; i++)
         {
-
-            compiledLines = new List<BlockLine>();
-
-            BlockLine horiz = new BlockLine("horizLine", GridTools.GetFilledCross(block)[0].blocks);
-
-            BlockLine vert = new BlockLine("vert line", GridTools.GetFilledCross(block)[1].blocks);
-
-            //Put each block list in order
-            horiz.blocks = horiz.blocks.OrderBy(x => x.gridRef.x).ToList();
-            vert.blocks = vert.blocks.OrderBy(x => x.gridRef.y).ToList();
-
-
-            compiledLines.Add(horiz);
-            compiledLines.Add(vert);
-            // }
-
-
-            string word = "";
-            string reverseword = "";
-
-
-            //Figure out horiz word and check
-            if (horiz.blocks.Count > 1)
+            //Compile blocklines of blocks that intersect the the block horizontally and vertically
+            compiledLines = new List<BlockLine>()
             {
-                Debug.Log("Assembling horizontal forwards");
-                //Forwards
-                for (int i = 0; i < horiz.blocks.Count; i++)
-                {
-                    word += horiz.blocks[i].baseLetter.character;
-                }
+                //Horizontally
+                new BlockLine("horizLine", GridTools.GetFilledCross(blocks[i])[0].blocks.OrderBy(x => x.gridRef.x).ToList()),
+                //Vertically
+                new BlockLine("vertLine", GridTools.GetFilledCross(blocks[i])[1].blocks.OrderBy(x => x.gridRef.y).ToList()),
+            };
 
-                if (BrainControl.Get().sessionManager.sessionSettings.permittedWords.Validate(word))
+            //Horiz direction //If the input direction is horizontal only do this once
+            ////////////////////////////
+            if (compiledLines[0].blocks.Count > 1)
+            {
+                if (!(inputOrientation == InputOrientation.Horiz && i > 0))
                 {
-                    Debug.Log("A word was validated: " + word);
-                    horizIsGood = true;
-                }
-                else
-                {
-                    Debug.Log("A word was not validated: " + word);
-                    horizIsGood = false;
-                }
+                    (string forwards, string backwards) horizset = GridTools.WordFromLine(compiledLines[0]);
 
-                if (!horizIsGood)
-                {
-                    Debug.Log("Assembling horizontal backwards");
-                    //Backwards
-                    for (int i = horiz.blocks.Count - 1; i > -1; i--)
-                    {
-                        reverseword += horiz.blocks[i].baseLetter.character;
-                    }
+                    //If this horizontal blocks are valid forwards
+                    if (BrainControl.Get().sessionManager.sessionSettings.permittedWords.Validate(horizset.forwards)) compiledWords.Add(new BlockLine("forwards", compiledLines[0].blocks));
 
-                    if (BrainControl.Get().sessionManager.sessionSettings.permittedWords.Validate(reverseword))
-                    {
-                        Debug.Log("A word was validated: " + reverseword);
-                        horizIsGood = true;
-                    }
+                    //If this horizontal blocks are valid backward
+                    else if (BrainControl.Get().sessionManager.sessionSettings.permittedWords.Validate(horizset.backwards)) compiledWords.Add(new BlockLine("backwards", compiledLines[0].blocks.OrderByDescending(x => x.gridRef.x).ToList()));
+
                     else
                     {
-                        Debug.Log("A word was not validated: " + reverseword);
-                        horizIsGood = false;
+                        BrainControl.Get().eventManager.e_validateFail.Invoke();
+                        return;
                     }
                 }
             }
-            else horizIsGood = true;
+            ////////////////////////////
 
-
-
-
-
-            //Figure out vert word and check
-            if (vert.blocks.Count > 1)
+            //Vert direction //If the input direction is vertucal only do this once
+            ////////////////////////////
+            if (compiledLines[1].blocks.Count > 1)
             {
+                if (!(inputOrientation == InputOrientation.Vert && i > 0))
+                {
+                    (string forwards, string backwards) vertset = GridTools.WordFromLine(compiledLines[1]);
 
-                word = "";
-                reverseword = "";
+                    //If this horizontal blocks are valid forwards
+                    if (BrainControl.Get().sessionManager.sessionSettings.permittedWords.Validate(vertset.forwards)) compiledWords.Add(new BlockLine("forwards", compiledLines[1].blocks));
 
-                Debug.Log("Assembling vertical forwards");
-                //Forwards
-                for (int i = 0; i < vert.blocks.Count; i++)
-                {
-                    word += vert.blocks[i].baseLetter.character;
-                }
-                if (BrainControl.Get().sessionManager.sessionSettings.permittedWords.Validate(word))
-                {
-                    Debug.Log("A word was validated: " + word);
-                    vertIsGood = true;
-                }
-                else
-                {
-                    Debug.Log("A word was not validated: " + word);
-                    vertIsGood = false;
-                }
+                    //If this horizontal blocks are valid backward
+                    else if (BrainControl.Get().sessionManager.sessionSettings.permittedWords.Validate(vertset.backwards)) compiledWords.Add(new BlockLine("backwards", compiledLines[1].blocks.OrderByDescending(x => x.gridRef.y).ToList()));
 
-                if (!vertIsGood)
-                {
-                    Debug.Log("Assembling vertical backwards");
-                    //Backwards
-                    for (int i = vert.blocks.Count - 1; i > -1; i--)
-                    {
-                        reverseword += vert.blocks[i].baseLetter.character;
-                    }
-                    if (BrainControl.Get().sessionManager.sessionSettings.permittedWords.Validate(reverseword))
-                    {
-                        Debug.Log("A word was validated: " + reverseword);
-                        vertIsGood = true;
-                    }
                     else
                     {
-                        Debug.Log("A word was not validate: " + reverseword);
-                        vertIsGood = false;
+                        BrainControl.Get().eventManager.e_validateFail.Invoke();
+                        return;
                     }
                 }
             }
-            else vertIsGood = true;
-
+            ////////////////////////////
         }
-
-        if (horizIsGood && vertIsGood) Validate(true);
-        else BrainControl.Get().eventManager.e_validateFail.Invoke(10);
-
+        //Single letter inputs get here but are not registered properly
+        Debug.Log("The input was validated");
+        Validate(true);
     }
 
     public void Validate(bool score)
@@ -245,12 +180,15 @@ public class BlockInput
         {
             block.SetLockState(LockState.locked);
         }
-        if (score) BrainControl.Get().eventManager.e_validateSuccess.Invoke(20);
+
+        //Validate the input by locking it and triggering a validate success event
+        //Send the input
+        if (score) BrainControl.Get().eventManager.e_validateSuccess.Invoke(this);
         BrainControl.Get().eventManager.e_navUpdate.Invoke();
     }
 
 
-    BlockLine CalculateDirection()
+    BlockLine DirectionFilter()
     {
         //Else find out what direction we are going
         //Find out which coords are the same

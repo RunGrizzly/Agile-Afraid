@@ -7,11 +7,16 @@ public class UIManager : MonoBehaviour
 {
     public Transform gameCanvas;
 
+    public Transform recentHolder;
+
     public TextMeshProUGUI scoreText;
     public TextMeshProUGUI levelText;
     public TextMeshProUGUI messageBox;
 
+
+
     public GameObject inputControlTemplate;
+    public GameObject recentWordTemplate;
 
     GameObject inputControlCanvas;
 
@@ -28,8 +33,6 @@ public class UIManager : MonoBehaviour
     void Start()
     {
 
-        // BrainControl.Get().eventManager.e_juiceChange.AddListener((s) => BrainControl.Get().eventManager.e_updateUI.Invoke());
-        // BrainControl.Get().eventManager.e_pathComplete.AddListener(() => SetLevelText(Brain.ins.sessionManager.currentSession.level + 1));
 
         BrainControl.Get().eventManager.e_updateUI.AddListener(() =>
         {
@@ -48,8 +51,6 @@ public class UIManager : MonoBehaviour
              inputControlCanvas.transform.localEulerAngles = new Vector3(90, 0, 0);
              //Set Position
              LeanTween.move(inputControlCanvas, new Vector3(b.transform.position.x, 0.75f, b.transform.position.z), 0.35f).setEase(LeanTweenType.easeOutExpo);
-
-
          });
 
         BrainControl.Get().eventManager.e_beginInput.AddListener((b) =>
@@ -71,6 +72,14 @@ public class UIManager : MonoBehaviour
             LeanTween.move(inputControlCanvas, new Vector3(u.transform.position.x, 0.75f, u.transform.position.z), 0.35f).setEase(LeanTweenType.easeOutExpo);
         });
 
+        BrainControl.Get().eventManager.e_validateSuccess.AddListener((s) =>
+        {
+            foreach (var t in s.compiledWords)
+            {
+                AddToRecent((GridTools.WordFromLine(t).forwards) + " " + BrainControl.Get().scoreManager.ScoreFromBlocks(t.blocks));
+            }
+        });
+
         BrainControl.Get().eventManager.e_endInput.AddListener(() =>
         {
             Destroy(inputControlCanvas);
@@ -80,7 +89,6 @@ public class UIManager : MonoBehaviour
         {
             Destroy(inputControlCanvas);
         });
-
 
         BrainControl.Get().eventManager.e_restartSession.AddListener(() =>
         {
@@ -118,26 +126,21 @@ public class UIManager : MonoBehaviour
             interruptPanel.transform.SetParent(gameCanvas.transform, false);
             interruptPanel.transform.localPosition = Vector3.zero;
             interruptPanel.BuildFail();
-
         });
 
         BrainControl.Get().eventManager.e_winSession.AddListener(() =>
         {
-
             if (interruptPanel != null) interruptPanel.KillPanel();
 
             interruptPanel = Instantiate(interruptPanelTemplate, Vector3.zero, Quaternion.identity).GetComponent<InterruptPanel>();
             interruptPanel.transform.SetParent(gameCanvas.transform, false);
             interruptPanel.transform.localPosition = Vector3.zero;
             interruptPanel.BuildWin();
-
         });
 
         BrainControl.Get().eventManager.e_unpauseSession.AddListener(() =>
         {
-
             if (interruptPanel != null) interruptPanel.KillPanel();
-
         });
     }
 
@@ -148,7 +151,21 @@ public class UIManager : MonoBehaviour
         LeanTween.delayedCall(3f, () => LeanTween.value(messageBox.gameObject, 0, -50f, 0.35f).setEase(LeanTweenType.easeOutExpo).setOnUpdate((v) => messageBox.GetComponent<RectTransform>().anchoredPosition = new Vector3(0, v, 0)));
 
         LeanTween.value(messageBox.gameObject, -50f, 0, 0.35f).setEase(LeanTweenType.easeOutExpo).setOnUpdate((v) => messageBox.GetComponent<RectTransform>().anchoredPosition = new Vector3(0, v, 0));
+    }
 
+    void AddToRecent(string recent)
+    {
+
+        TextMeshProUGUI newRecent = Instantiate(recentWordTemplate, Vector3.zero, Quaternion.identity).GetComponentInChildren<TextMeshProUGUI>();
+        newRecent.transform.SetParent(recentHolder);
+        newRecent.transform.SetAsFirstSibling();
+
+        newRecent.text = recent;
+
+
+        newRecent.transform.localPosition = Vector3.zero;
+        newRecent.transform.localEulerAngles = Vector3.zero;
+        newRecent.transform.localScale = Vector3.one;
 
 
     }

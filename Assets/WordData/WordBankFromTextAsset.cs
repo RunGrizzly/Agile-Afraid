@@ -12,13 +12,16 @@ public class WordBankFromTextAsset : ScriptableObject
     public int minLength;
     public int maxLength;
 
-
     public TextAsset textAsset;
     List<string> data;
 
-    // public List<string> filteredData;
-
     public WordBank filteredData;
+
+
+    void OnEnable()
+    {
+        RebuildBank();
+    }
 
 
     public void RebuildBank()

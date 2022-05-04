@@ -274,7 +274,7 @@ public static class GridTools
         bool up = true;
         bool down = true;
 
-        for (int i = 1; i < Mathf.Max( BrainControl.Get().grid.letterBlocks.GetLength(0), BrainControl.Get().grid.letterBlocks.GetLength(1)); i++)
+        for (int i = 1; i < Mathf.Max(BrainControl.Get().grid.letterBlocks.GetLength(0), BrainControl.Get().grid.letterBlocks.GetLength(1)); i++)
         {
 
 
@@ -332,8 +332,10 @@ public static class GridTools
 
     }
 
-    public static bool WordIntoLine(GridGenerator grid, WordRequest request, bool lockBlock)
+    public static bool WordIntoLine(WordRequest request, bool lockBlock)
     {
+
+        GridGenerator grid = BrainControl.Get().grid;
 
         Debug.Log("Placing word: Grid = " + grid + ", request = " + request.word + " into " + request.placementType.ToString());
 
@@ -367,10 +369,6 @@ public static class GridTools
                 {
                     //Build the block from desired letter
                     line.blocks[i].BuildFromLetter(request.word[i]);
-                    // //Add the block to assigned blocks
-                    // assignedBlocks.Add(line.blocks[i]);
-                    //Lock it if required
-                    //  if (lockBlock) line.blocks[i].SetLockState(LockState.locked);
                 }
             }
             else
@@ -379,10 +377,6 @@ public static class GridTools
                 {
                     //Build the block from desired letter
                     line.blocks[i].BuildFromLetter(request.word[i]);
-                    // //Add the block to assigned blocks
-                    // assignedBlocks.Add(line.blocks[i]);
-                    //Lock it if required
-                    //  if (lockBlock) line.blocks[i].SetLockState(LockState.locked);
                 }
             }
 
@@ -427,4 +421,28 @@ public static class GridTools
             default: return new Vector2Int(0, 0);
         }
     }
+
+    public static (string forwards, string backwards) WordFromLine(BlockLine line)
+    {
+
+        string forwards = "";
+        string backwards = "";
+
+        for (int i = 0; i < line.blocks.Count; i++)
+        {
+            forwards += line.blocks[i].letter.character;
+        }
+
+        for (int i = line.blocks.Count - 1; i > -1; i--)
+        {
+            backwards += line.blocks[i].letter.character;
+        }
+
+        return (forwards, backwards);
+
+    }
+
+
+
+
 }

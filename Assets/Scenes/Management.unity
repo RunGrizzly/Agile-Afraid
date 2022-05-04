@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37311912, g: 0.3807398, b: 0.3587272, a: 1}
+  m_IndirectSpecularColor: {r: 0.3731193, g: 0.38073996, b: 0.35872698, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -363,10 +363,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameCanvas: {fileID: 0}
+  recentHolder: {fileID: 0}
   scoreText: {fileID: 0}
   levelText: {fileID: 0}
   messageBox: {fileID: 0}
   inputControlTemplate: {fileID: 2820702500035625035, guid: fbb95001e239b3b4ab129f830e2ea7ed, type: 3}
+  recentWordTemplate: {fileID: 7910235621893071442, guid: 4ee2454551d21504993949f5306f62c9, type: 3}
   interruptPanelTemplate: {fileID: 5592790444646282466, guid: 35caf8b585127404287e897236004bc4, type: 3}
   interruptPanel: {fileID: 0}
 --- !u!114 &938982174
@@ -395,6 +397,8 @@ MonoBehaviour:
           AudioClip: {fileID: 0}
         deadZoneColor: {r: 0, g: 0, b: 0, a: 0}
         seeds: []
+        par: 0
+        trophyScore: 0
         rackSize: 0
         repeatLimit: 0
       inputs: []
@@ -402,12 +406,14 @@ MonoBehaviour:
         inputOrientation: 0
         blocks: []
         compiledLines: []
+        compiledWords: []
         characters: 
         isValidated: 0
       targetInput:
         inputOrientation: 0
         blocks: []
         compiledLines: []
+        compiledWords: []
         characters: 
         isValidated: 0
     isPaused: 0
@@ -529,6 +535,33 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _version: 2
   _crossSceneReferences:
+  - _sourceObject: {fileID: 938982171}
+    _sourceField: grid
+    DEPRECATED_fromObject:
+      scene:
+        editorAssetGUID: 
+        name: 
+        _path: 
+      fullPath: 
+      componentName: 
+      componentIndex: 0
+      editorLocalId: 0
+      editorPrefabRelativePath: 
+      version: 0
+    _toObject:
+      scene:
+        editorAssetGUID: 6ef2b6432a170f344880dae6ed4c2166
+        name: WordGame
+        _path: Assets/Scenes/WordGame.unity
+      fullPath: /SpacesGrid
+      componentName: GridGenerator, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      componentIndex: 0
+      editorLocalId: 1504374147
+      editorPrefabRelativePath: 
+      version: 1
+    _data:
+      data: []
   - _sourceObject: {fileID: 938982173}
     _sourceField: messageBox
     DEPRECATED_fromObject:
@@ -611,6 +644,33 @@ MonoBehaviour:
     _data:
       data: []
   - _sourceObject: {fileID: 938982173}
+    _sourceField: recentHolder
+    DEPRECATED_fromObject:
+      scene:
+        editorAssetGUID: 
+        name: 
+        _path: 
+      fullPath: 
+      componentName: 
+      componentIndex: 0
+      editorLocalId: 0
+      editorPrefabRelativePath: 
+      version: 0
+    _toObject:
+      scene:
+        editorAssetGUID: 1410d76adbb43f746b49c8df674a9654
+        name: UI
+        _path: Assets/Scenes/UI.unity
+      fullPath: /UICanvas/WordTrackPanel/Layout
+      componentName: UnityEngine.RectTransform, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+      componentIndex: 0
+      editorLocalId: 1672245626
+      editorPrefabRelativePath: 
+      version: 1
+    _data:
+      data: []
+  - _sourceObject: {fileID: 938982173}
     _sourceField: gameCanvas
     DEPRECATED_fromObject:
       scene:
@@ -664,33 +724,6 @@ MonoBehaviour:
       version: 1
     _data:
       data: []
-  - _sourceObject: {fileID: 938982171}
-    _sourceField: grid
-    DEPRECATED_fromObject:
-      scene:
-        editorAssetGUID: 
-        name: 
-        _path: 
-      fullPath: 
-      componentName: 
-      componentIndex: 0
-      editorLocalId: 0
-      editorPrefabRelativePath: 
-      version: 0
-    _toObject:
-      scene:
-        editorAssetGUID: 6ef2b6432a170f344880dae6ed4c2166
-        name: WordGame
-        _path: Assets/Scenes/WordGame.unity
-      fullPath: /SpacesGrid
-      componentName: GridGenerator, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
-      componentIndex: 0
-      editorLocalId: 1504374147
-      editorPrefabRelativePath: 
-      version: 1
-    _data:
-      data: []
   _realSceneRootsForPostBuild: []
   _mergedScenes: []
 --- !u!114 &1604044746
@@ -711,7 +744,7 @@ MonoBehaviour:
       editorAssetGUID: 14a58eddb21d09b4eb3e7acc94a35b22
       name: Cameras
       _path: Assets/Scenes/Cameras.unity
-    loadInEditor: 1
+    loadInEditor: 0
     loadMethod: 3
   - scene:
       editorAssetGUID: 1410d76adbb43f746b49c8df674a9654
@@ -723,7 +756,7 @@ MonoBehaviour:
       editorAssetGUID: 6ef2b6432a170f344880dae6ed4c2166
       name: WordGame
       _path: Assets/Scenes/WordGame.unity
-    loadInEditor: 1
+    loadInEditor: 0
     loadMethod: 3
   - scene:
       editorAssetGUID: c282660f956924543a0e62c8d797e9d3

@@ -30,10 +30,7 @@ public class WordRequestDrawer : PropertyDrawer
         if (GUI.Button(buttonRect, "Place"))
         {
             //  Debug.Log("Enum value = " + property.FindPropertyRelative("placementType").enumValueIndex);
-
-
-
-            GridTools.WordIntoLine(BrainControl.Get().grid, new WordRequest(property.FindPropertyRelative("word").stringValue, (PlacementType)property.FindPropertyRelative("placementType").enumValueIndex), true);
+            GridTools.WordIntoLine(new WordRequest(property.FindPropertyRelative("word").stringValue, (PlacementType)property.FindPropertyRelative("placementType").enumValueIndex), true);
         }
 
         EditorGUI.EndProperty();

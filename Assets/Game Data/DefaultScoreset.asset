@@ -16,56 +16,82 @@ MonoBehaviour:
     m_keys:
     - character: 97
       score: 1
+      type: 0
     - character: 98
       score: 3
+      type: 0
     - character: 99
       score: 3
+      type: 0
     - character: 100
       score: 2
+      type: 0
     - character: 101
       score: 1
+      type: 0
     - character: 102
       score: 4
+      type: 0
     - character: 103
       score: 2
+      type: 0
     - character: 104
       score: 4
+      type: 0
     - character: 105
       score: 1
+      type: 0
     - character: 106
       score: 1
+      type: 0
     - character: 107
       score: 5
+      type: 0
     - character: 108
       score: 1
+      type: 0
     - character: 109
       score: 3
+      type: 0
     - character: 110
       score: 1
+      type: 0
     - character: 111
       score: 1
+      type: 0
     - character: 112
       score: 3
+      type: 0
     - character: 113
       score: 10
+      type: 0
     - character: 114
       score: 1
+      type: 0
     - character: 115
       score: 1
+      type: 0
     - character: 116
       score: 1
+      type: 0
     - character: 117
       score: 1
+      type: 0
     - character: 118
       score: 4
+      type: 0
     - character: 119
       score: 4
+      type: 0
     - character: 120
       score: 8
+      type: 0
     - character: 121
       score: 4
+      type: 0
     - character: 122
       score: 10
+      type: 0
     m_values:
     - 90
     - 12.5
@@ -99,3 +125,4 @@ MonoBehaviour:
   fillCost: 15
   newRackCost: 25
   levelRestartCost: 30
+  validateFailPenalty: 20

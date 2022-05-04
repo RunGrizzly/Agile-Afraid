@@ -11,9 +11,9 @@ public class ScoreSet : ScriptableObject
     public int consonantCost;
     public int fillCost;
     public int newRackCost;
-
     public int levelRestartCost;
 
+    public int validateFailPenalty;
 
     public Letter LetterFromCharacter(char c)
     {
