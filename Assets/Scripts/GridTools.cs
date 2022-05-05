@@ -10,8 +10,8 @@ public class BlockLine
     [HideInInspector]
     public string Name;
 
-    public InputOrientation lineOrientation;
-    public InputDirection lineDirection;
+    public LineOrientation lineOrientation;
+    public LineDirection lineDirection;
     public List<LetterBlock> blocks = new List<LetterBlock>();
 
     public BlockLine(string _name)
@@ -147,43 +147,43 @@ public static class GridTools
         }
     }
 
-    public static InputDirection GetLineDirection(BlockLine line)
+    public static LineDirection GetLineDirection(BlockLine line)
     {
 
-        if (line.lineOrientation == null) line.lineOrientation = GetLineOrientation(line);
+        if (line.lineOrientation == LineOrientation.Unknown) line.lineOrientation = GetLineOrientation(line);
 
-        if (line.lineOrientation == InputOrientation.Unknown) return InputDirection.Unknown;
+        if (line.lineOrientation == LineOrientation.Unknown) return LineDirection.Unknown;
 
 
         //Find out if its a column or a row
         //Same x // column
-        if (line.lineOrientation == InputOrientation.Vert)
+        if (line.lineOrientation == LineOrientation.Vert)
         {
-            if (line.blocks[0].gridRef.y > line.blocks[line.blocks.Count - 1].gridRef.y) return InputDirection.Forwards;
-            else return InputDirection.Backwards;
+            if (line.blocks[0].gridRef.y > line.blocks[line.blocks.Count - 1].gridRef.y) return LineDirection.Forwards;
+            else return LineDirection.Backwards;
         }
 
-        else if (line.lineOrientation == InputOrientation.Horiz)
+        else if (line.lineOrientation == LineOrientation.Horiz)
         {
-            if (line.blocks[0].gridRef.x < line.blocks[line.blocks.Count - 1].gridRef.x) return InputDirection.Forwards;
-            else return InputDirection.Backwards;
+            if (line.blocks[0].gridRef.x < line.blocks[line.blocks.Count - 1].gridRef.x) return LineDirection.Forwards;
+            else return LineDirection.Backwards;
         }
 
-        else return InputDirection.Unknown;
+        else return LineDirection.Unknown;
 
     }
 
-    public static InputOrientation GetLineOrientation(BlockLine line)
+    public static LineOrientation GetLineOrientation(BlockLine line)
     {
 
-        if (line.blocks.Count < 2) return InputOrientation.Unknown;
+        if (line.blocks.Count < 2) return LineOrientation.Unknown;
         //Find out if its a column or a row
         //Same x // column
-        else if (line.blocks[0].gridRef.x == line.blocks[line.blocks.Count - 1].gridRef.x) return InputOrientation.Vert;
+        else if (line.blocks[0].gridRef.x == line.blocks[line.blocks.Count - 1].gridRef.x) return LineOrientation.Vert;
         //Same y // row1
-        else if (line.blocks[0].gridRef.y == line.blocks[line.blocks.Count - 1].gridRef.y) return InputOrientation.Horiz;
+        else if (line.blocks[0].gridRef.y == line.blocks[line.blocks.Count - 1].gridRef.y) return LineOrientation.Horiz;
 
-        else return InputOrientation.Unknown;
+        else return LineOrientation.Unknown;
     }
 
     public static bool IsInBounds(Vector2Int checkRef)
@@ -262,8 +262,8 @@ public static class GridTools
         BlockLine horiz = new BlockLine("horiz");
         BlockLine vert = new BlockLine("vert");
 
-        horiz.lineOrientation = InputOrientation.Horiz;
-        vert.lineOrientation = InputOrientation.Vert;
+        horiz.lineOrientation = LineOrientation.Horiz;
+        vert.lineOrientation = LineOrientation.Vert;
 
 
         horiz.blocks.Add(block);
@@ -363,7 +363,7 @@ public static class GridTools
 
         if (line != null)
         {
-            if (GetLineDirection(line) == InputDirection.Forwards)
+            if (GetLineDirection(line) == LineDirection.Forwards)
             {
                 for (int i = 0; i < request.word.Length; i++)
                 {

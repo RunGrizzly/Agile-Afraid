@@ -64,19 +64,6 @@ public class LetterBlock : MonoBehaviour
 
         return m;
     }
-
-
-    void Start()
-    {
-
-        // //Adding a new letter multiplier effect to this block
-        // letterEffects.Add(new MultiplyLetterScore(3));
-        // letterEffects.Add(new RandomLetterScore(2, 10));
-        // letterEffects.Add(new DivideLetterScore(2));
-
-
-    }
-
     public void SetLockState(LockState state)
     {
         lockState = state;
@@ -113,7 +100,7 @@ public class LetterBlock : MonoBehaviour
 
     public void BuildFromLetter(char _letter)
     {
-        Debug.Log("Assigning letter " + _letter + " to the block");
+        //Debug.Log("Assigning letter " + _letter + " to the block");
 
         if (Application.isPlaying)
         {
@@ -130,7 +117,6 @@ public class LetterBlock : MonoBehaviour
 
         meshObject.GetComponent<MeshRenderer>().material = filledMaterial;
 
-
         //Create a new copy of the letter entry found using the passed letters
         baseLetter = new Letter(GameObject.FindGameObjectWithTag("Brain").GetComponent<Brain>().scoreManager.scoreSet.scoreset.Keys.FirstOrDefault(x => x.character == _letter));
 
@@ -140,8 +126,6 @@ public class LetterBlock : MonoBehaviour
 
         letterBox.text = baseLetter.character.ToString();
         scoreBox.text = baseLetter.score.ToString();
-
-
     }
     public void BuildFromDistribution(float minDist, float maxDist)
     {
@@ -161,8 +145,6 @@ public class LetterBlock : MonoBehaviour
 
         letterBox.text = baseLetter.character.ToString();
         scoreBox.text = baseLetter.score.ToString();
-
-
     }
 
     public void BuildWeighted()

@@ -364,13 +364,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameCanvas: {fileID: 0}
   recentHolder: {fileID: 0}
+  levelTrack: {fileID: 0}
   scoreText: {fileID: 0}
   levelText: {fileID: 0}
   messageBox: {fileID: 0}
   inputControlTemplate: {fileID: 2820702500035625035, guid: fbb95001e239b3b4ab129f830e2ea7ed, type: 3}
-  recentWordTemplate: {fileID: 7910235621893071442, guid: 4ee2454551d21504993949f5306f62c9, type: 3}
+  inputControlInstance: {fileID: 0}
   interruptPanelTemplate: {fileID: 5592790444646282466, guid: 35caf8b585127404287e897236004bc4, type: 3}
-  interruptPanel: {fileID: 0}
+  interruptPanelInstance: {fileID: 0}
+  recentWordTemplate: {fileID: 7910235621893071442, guid: 4ee2454551d21504993949f5306f62c9, type: 3}
+  levelPipTemplate: {fileID: 2504070363903430941, guid: f7f77a36514740c4d8a16662b9ae8e2f, type: 3}
 --- !u!114 &938982174
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -388,6 +391,7 @@ MonoBehaviour:
     sessionSettings: {fileID: 0}
     score: 0
     level: 0
+    recentWords: []
     elapsed: 0
     currentLevel:
       data:
@@ -644,6 +648,33 @@ MonoBehaviour:
     _data:
       data: []
   - _sourceObject: {fileID: 938982173}
+    _sourceField: levelTrack
+    DEPRECATED_fromObject:
+      scene:
+        editorAssetGUID: 
+        name: 
+        _path: 
+      fullPath: 
+      componentName: 
+      componentIndex: 0
+      editorLocalId: 0
+      editorPrefabRelativePath: 
+      version: 0
+    _toObject:
+      scene:
+        editorAssetGUID: 1410d76adbb43f746b49c8df674a9654
+        name: UI
+        _path: Assets/Scenes/UI.unity
+      fullPath: /UICanvas/LevelPanel/Track
+      componentName: UnityEngine.RectTransform, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+      componentIndex: 0
+      editorLocalId: 1635221203
+      editorPrefabRelativePath: 
+      version: 1
+    _data:
+      data: []
+  - _sourceObject: {fileID: 938982173}
     _sourceField: recentHolder
     DEPRECATED_fromObject:
       scene:
@@ -661,7 +692,7 @@ MonoBehaviour:
         editorAssetGUID: 1410d76adbb43f746b49c8df674a9654
         name: UI
         _path: Assets/Scenes/UI.unity
-      fullPath: /UICanvas/WordTrackPanel/Layout
+      fullPath: /UICanvas/RecentWordPanel/Layout
       componentName: UnityEngine.RectTransform, UnityEngine.CoreModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
       componentIndex: 0

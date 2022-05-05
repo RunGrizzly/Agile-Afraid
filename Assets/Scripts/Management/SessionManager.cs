@@ -34,9 +34,9 @@ public class SessionManager : MonoBehaviour
     //Track session here
     void Start()
     {
-        Brain.ins.eventManager.e_newSession.AddListener(() =>
+        Brain.ins.eventManager.e_newSession.AddListener((s) =>
         {
-            currentSession = new Session(sessionSettings);
+            currentSession = new Session(s);
             sessionTracker = new Task(currentSession.TrackSession());
         });
 
@@ -121,6 +121,22 @@ public class SessionManager : MonoBehaviour
             currentSession.currentLevel.LatestInput().Compile();
         });
         //////////////////////
+
+        //An input is validated and broadcasts itself
+        //////////////////////
+        Brain.ins.eventManager.e_validateSuccess.AddListener((s) =>
+        {
+            //Add word to our recent list
+            foreach (BlockLine line in s.compiledWords)
+            {
+                currentSession.recentWords.Add(GridTools.WordFromLine(line).forwards);
+                //Truncate our list
+                if (currentSession.recentWords.Count >= currentSession.sessionSettings.recentWordBias) currentSession.recentWords.RemoveAt(currentSession.recentWords.Count - 1);
+            }
+
+
+        });
+        ///////////////////////
 
         BrainControl.Get().eventManager.e_pauseSession.AddListener(() =>
         {

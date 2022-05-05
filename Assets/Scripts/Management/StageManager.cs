@@ -40,7 +40,7 @@ public class StageManager : MonoBehaviour
         }
         Debug.Log("All scenes initialised");
         //Fire off a new session
-        Brain.ins.eventManager.e_newSession.Invoke();
+        Brain.ins.eventManager.e_newSession.Invoke(BrainControl.Get().sessionManager.sessionSettings);
     }
 
 

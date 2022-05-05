@@ -40,8 +40,14 @@ public class ScoreManager : MonoBehaviour
             foreach (BlockLine b in f.compiledWords)
             {
 
+                string validated = GridTools.WordFromLine(b).forwards;
+
                 Debug.Log("Compiled word set: " + GridTools.WordFromLine(b));
-                int scoreAdd = ScoreFromBlocks(b.blocks);
+
+                //Figure out how much the compiled block line is worth
+                int scoreAdd = ScoreFromBlocks(b);
+
+
                 Debug.Log("Compiled word set is worth: " + scoreAdd);
                 score += scoreAdd;
             }
@@ -58,17 +64,18 @@ public class ScoreManager : MonoBehaviour
 
     }
 
-    public int ScoreFromBlocks(List<LetterBlock> blocks)
+    public int ScoreFromBlocks(BlockLine line)
     {
 
         int score = 0;
 
-        foreach (LetterBlock block in blocks)
+        foreach (LetterBlock block in line.blocks)
         {
             score += block.letter.score;
+
         }
 
-        return score * blocks.Count;
+        return (score * line.blocks.Count) / (1 + BrainControl.Get().sessionManager.currentSession.RecencyScore(GridTools.WordFromLine(line).forwards));
 
     }
 

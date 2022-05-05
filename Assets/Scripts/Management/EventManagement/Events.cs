@@ -9,7 +9,7 @@ public class BlockSelectEvent : UnityEvent<LetterBlock> { }
 public class ClearBlockEvent : UnityEvent<LetterBlock> { }
 public class QuitToMenuEvent : UnityEvent { }
 public class GameInitialisedEvent : UnityEvent { }
-public class NewSessionEvent : UnityEvent { }
+public class NewSessionEvent : UnityEvent<SessionSettings> { }
 public class RestartSessionEvent : UnityEvent { }
 public class RestartLevelEvent : UnityEvent { }
 public class PauseSessionEvent : UnityEvent { }

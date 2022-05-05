@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public enum InputOrientation { Horiz, Vert, Unknown }
-public enum InputDirection { Forwards, Backwards, Unknown }
+public enum LineOrientation { Horiz, Vert, Unknown }
+public enum LineDirection { Forwards, Backwards, Unknown }
 
 
 [Serializable]
 public class BlockInput
 {
-    public InputOrientation inputOrientation;
+    public LineOrientation inputOrientation;
     List<BlockLine> possibleLines = new List<BlockLine>();
     public List<LetterBlock> blocks = new List<LetterBlock>();
 
@@ -125,7 +125,7 @@ public class BlockInput
             ////////////////////////////
             if (compiledLines[0].blocks.Count > 1)
             {
-                if (!(inputOrientation == InputOrientation.Horiz && i > 0))
+                if (!(inputOrientation == LineOrientation.Horiz && i > 0))
                 {
                     (string forwards, string backwards) horizset = GridTools.WordFromLine(compiledLines[0]);
 
@@ -148,7 +148,7 @@ public class BlockInput
             ////////////////////////////
             if (compiledLines[1].blocks.Count > 1)
             {
-                if (!(inputOrientation == InputOrientation.Vert && i > 0))
+                if (!(inputOrientation == LineOrientation.Vert && i > 0))
                 {
                     (string forwards, string backwards) vertset = GridTools.WordFromLine(compiledLines[1]);
 
@@ -194,12 +194,12 @@ public class BlockInput
         //Find out which coords are the same
         if (blocks[0].gridRef.x == blocks[1].gridRef.x)
         {
-            inputOrientation = InputOrientation.Vert;
+            inputOrientation = LineOrientation.Vert;
             return GetColumn(blocks[blocks.Count - 1]);
         }
         else
         {
-            inputOrientation = InputOrientation.Horiz;
+            inputOrientation = LineOrientation.Horiz;
             return GetRow(blocks[blocks.Count - 1]);
         }
     }

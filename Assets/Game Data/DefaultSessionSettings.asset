@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f6196b0a4824a44a9d4be64136585ed, type: 3}
   m_Name: DefaultSessionSettings
   m_EditorClassIdentifier: 
+  recentWordBias: 3
   levels:
   - gridDims: {x: 6, y: 7}
     music:
@@ -27,6 +28,8 @@ MonoBehaviour:
       placementType: 2
       assignedBlocks: []
       possibleLines: []
+    par: 0
+    trophyScore: 0
     rackSize: 10
     repeatLimit: 2
   - gridDims: {x: 7, y: 6}
@@ -43,6 +46,8 @@ MonoBehaviour:
       placementType: 2
       assignedBlocks: []
       possibleLines: []
+    par: 0
+    trophyScore: 0
     rackSize: 10
     repeatLimit: 2
   - gridDims: {x: 7, y: 7}
@@ -59,6 +64,8 @@ MonoBehaviour:
       placementType: 2
       assignedBlocks: []
       possibleLines: []
+    par: 0
+    trophyScore: 0
     rackSize: 10
     repeatLimit: 3
   - gridDims: {x: 7, y: 8}
@@ -75,6 +82,8 @@ MonoBehaviour:
       placementType: 3
       assignedBlocks: []
       possibleLines: []
+    par: 0
+    trophyScore: 0
     rackSize: 10
     repeatLimit: 2
   - gridDims: {x: 8, y: 7}
@@ -91,6 +100,8 @@ MonoBehaviour:
       placementType: 2
       assignedBlocks: []
       possibleLines: []
+    par: 0
+    trophyScore: 0
     rackSize: 10
     repeatLimit: 2
   - gridDims: {x: 8, y: 8}
@@ -111,6 +122,8 @@ MonoBehaviour:
       placementType: 3
       assignedBlocks: []
       possibleLines: []
+    par: 0
+    trophyScore: 0
     rackSize: 10
     repeatLimit: 2
   - gridDims: {x: 8, y: 9}
@@ -127,6 +140,8 @@ MonoBehaviour:
       placementType: 1
       assignedBlocks: []
       possibleLines: []
+    par: 0
+    trophyScore: 0
     rackSize: 10
     repeatLimit: 2
   - gridDims: {x: 9, y: 8}
@@ -147,6 +162,8 @@ MonoBehaviour:
       placementType: 1
       assignedBlocks: []
       possibleLines: []
+    par: 0
+    trophyScore: 0
     rackSize: 10
     repeatLimit: 2
   - gridDims: {x: 9, y: 9}
@@ -167,6 +184,8 @@ MonoBehaviour:
       placementType: 0
       assignedBlocks: []
       possibleLines: []
+    par: 0
+    trophyScore: 0
     rackSize: 10
     repeatLimit: 2
   - gridDims: {x: 10, y: 9}
@@ -183,6 +202,8 @@ MonoBehaviour:
       placementType: 0
       assignedBlocks: []
       possibleLines: []
+    par: 0
+    trophyScore: 0
     rackSize: 10
     repeatLimit: 2
   - gridDims: {x: 9, y: 10}
@@ -203,6 +224,8 @@ MonoBehaviour:
       placementType: 0
       assignedBlocks: []
       possibleLines: []
+    par: 0
+    trophyScore: 0
     rackSize: 10
     repeatLimit: 2
   - gridDims: {x: 10, y: 11}
@@ -223,6 +246,8 @@ MonoBehaviour:
       placementType: 2
       assignedBlocks: []
       possibleLines: []
+    par: 0
+    trophyScore: 0
     rackSize: 10
     repeatLimit: 2
   - gridDims: {x: 11, y: 10}
@@ -243,6 +268,8 @@ MonoBehaviour:
       placementType: 2
       assignedBlocks: []
       possibleLines: []
+    par: 0
+    trophyScore: 0
     rackSize: 10
     repeatLimit: 2
   - gridDims: {x: 11, y: 11}
@@ -263,6 +290,8 @@ MonoBehaviour:
       placementType: 0
       assignedBlocks: []
       possibleLines: []
+    par: 0
+    trophyScore: 0
     rackSize: 10
     repeatLimit: 2
   permittedWords: {fileID: 11400000, guid: 44317b310db86cb4cb9979e73c1911eb, type: 2}

@@ -16,6 +16,7 @@ public class Session
 
     public int score;
     public int level;
+    public List<string> recentWords = new List<string>();
     public float elapsed;
     public Level currentLevel;
     public Task levelTracker = null;
@@ -42,6 +43,12 @@ public class Session
 
             BrainControl.Get().eventManager.e_unpauseSession.Invoke();
         }
+    }
+
+    //Return a number that represents the amount of times the given string appears in the recent words buffer
+    public int RecencyScore(string check)
+    {
+        return recentWords.Where(x => x == check).ToList().Count;
     }
 
     public void InitialiseSession()
@@ -71,13 +78,13 @@ public class Session
     public IEnumerator TrackSession()
     {
 
-        /////////////////////////////
-        /////////////////////////////
         InitialiseSession();
 
         //While the session has not been ended
         while (BrainControl.Get().sessionManager.currentSession != null && BrainControl.Get().sessionManager.currentSession == this)
         {
+            //Dev shortcuts
+            ///////////////////////////////////
             //Level skip
             if (Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.LeftAlt) && Input.GetKeyUp(KeyCode.Alpha0))
             {
@@ -97,6 +104,7 @@ public class Session
                 Debug.Log("DEVELOPER CONTROL: Empty Rack");
                 BrainControl.Get().rack.EmptyRack();
             }
+            ///////////////////////////////////
 
             elapsed += Time.deltaTime;
 

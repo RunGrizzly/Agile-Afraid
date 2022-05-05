@@ -28,7 +28,14 @@ public class TileRack : MonoBehaviour
 
     public bool AddRandomTile()
     {
+
+        if (AtCapacity()) return false;
+
         LetterTile newTile = Instantiate(tileTemplate, Vector3.zero, Quaternion.identity).GetComponent<LetterTile>();
+        newTile.transform.localScale = Vector3.one;
+        newTile.transform.localEulerAngles = Vector3.zero;
+        newTile.transform.localPosition = Vector3.zero;
+
         int tries = 0;
 
         do
@@ -36,7 +43,7 @@ public class TileRack : MonoBehaviour
             newTile.BuildWeighted();
             tries += 1;
         }
-        while (GetCount(newTile.letter.character) >= RepeatLimit() && tries < 10);
+        while (GetCountOfChar(newTile.letter.character) >= RepeatLimit() && tries < 10);
 
         newTile.name = newTile.letter.character.ToString();
 
@@ -54,13 +61,17 @@ public class TileRack : MonoBehaviour
         if (AtCapacity()) return false;
 
         LetterTile newTile = Instantiate(tileTemplate, Vector3.zero, Quaternion.identity).GetComponent<LetterTile>();
+        newTile.transform.localScale = Vector3.one;
+        newTile.transform.localEulerAngles = Vector3.zero;
+        newTile.transform.localPosition = Vector3.zero;
+
         int tries = 0;
 
         do
         {
             newTile.BuildVowel();
         }
-        while (GetCount(newTile.letter.character) >= RepeatLimit() && tries < 10);
+        while (GetCountOfChar(newTile.letter.character) >= RepeatLimit() && tries < 10);
 
         newTile.name = newTile.letter.character.ToString();
 
@@ -83,7 +94,7 @@ public class TileRack : MonoBehaviour
         {
             newTile.BuildConsonant();
         }
-        while (GetCount(newTile.letter.character) >= RepeatLimit() && tries < 10);
+        while (GetCountOfChar(newTile.letter.character) >= RepeatLimit() && tries < 10);
 
 
         newTile.name = newTile.letter.character.ToString();
@@ -102,14 +113,21 @@ public class TileRack : MonoBehaviour
 
         if (AtCapacity()) return false;
 
-        LetterTile newTile = Instantiate(tileTemplate, Vector3.zero, Quaternion.identity).GetComponent<LetterTile>();
+        LetterTile newTile = Instantiate(tileTemplate, Vector3.zero, Quaternion.identity).
+        GetComponent<LetterTile>();
+        newTile.transform.localScale = Vector3.one;
+        newTile.transform.localEulerAngles = Vector3.zero;
+        newTile.transform.localPosition = Vector3.zero;
+
+
+
         int tries = 0;
 
         do
         {
             newTile.BuildFromLetter(_character);
         }
-        while (GetCount(newTile.letter.character) >= RepeatLimit() && tries < 10);
+        while (GetCountOfChar(newTile.letter.character) >= RepeatLimit() && tries < 10);
 
         Debug.Log("Rack added a tile with characte: " + newTile.letter.character);
 
@@ -158,7 +176,7 @@ public class TileRack : MonoBehaviour
     }
 
     //Get the number of tiles of a specific character
-    int GetCount(char _char)
+    int GetCountOfChar(char _char)
     {
         int count = letterTiles.Where(x => x.letter.character == _char).ToList().Count;
         Debug.Log("Requested character " + _char + " existing count of: " + count);
