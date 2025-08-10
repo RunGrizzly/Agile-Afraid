@@ -12,12 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f6196b0a4824a44a9d4be64136585ed, type: 3}
   m_Name: 2LettersAllowed
   m_EditorClassIdentifier: 
+  recentWordBias: 0
   levels:
-  - gridDims: {x: 6, y: 7}
+  - gridData:
+      GridDims: {x: 6, y: 6}
     music:
       Name: 
       AudioClip: {fileID: 8300000, guid: f370113d35be2a741af91cee879960a9, type: 3}
-    deadZoneColor: {r: 0.19272874, g: 0.5754717, b: 0.22591382, a: 1}
+    DeadZoneColorA: {r: 0.9258138, g: 1, b: 0, a: 1}
+    DeadZoneColorB: {r: 1, g: 0.51359504, b: 0, a: 1}
     seeds:
     - word: agile
       placementType: 0
@@ -27,13 +30,17 @@ MonoBehaviour:
       placementType: 2
       assignedBlocks: []
       possibleLines: []
+    par: 0
+    trophyScore: 0
     rackSize: 10
     repeatLimit: 2
-  - gridDims: {x: 7, y: 6}
+  - gridData:
+      GridDims: {x: 6, y: 6}
     music:
       Name: 
       AudioClip: {fileID: 8300000, guid: f370113d35be2a741af91cee879960a9, type: 3}
-    deadZoneColor: {r: 0.19272874, g: 0.5754717, b: 0.22591382, a: 1}
+    DeadZoneColorA: {r: 0.9258138, g: 1, b: 0, a: 1}
+    DeadZoneColorB: {r: 1, g: 0.51359504, b: 0, a: 1}
     seeds:
     - word: agile
       placementType: 0
@@ -43,13 +50,17 @@ MonoBehaviour:
       placementType: 2
       assignedBlocks: []
       possibleLines: []
+    par: 0
+    trophyScore: 0
     rackSize: 10
     repeatLimit: 2
-  - gridDims: {x: 7, y: 7}
+  - gridData:
+      GridDims: {x: 6, y: 6}
     music:
       Name: 
       AudioClip: {fileID: 8300000, guid: f370113d35be2a741af91cee879960a9, type: 3}
-    deadZoneColor: {r: 0.19272874, g: 0.5754717, b: 0.22591382, a: 1}
+    DeadZoneColorA: {r: 0.9258138, g: 1, b: 0, a: 1}
+    DeadZoneColorB: {r: 1, g: 0.51359504, b: 0, a: 1}
     seeds:
     - word: agile
       placementType: 0
@@ -59,13 +70,17 @@ MonoBehaviour:
       placementType: 2
       assignedBlocks: []
       possibleLines: []
+    par: 0
+    trophyScore: 0
     rackSize: 10
     repeatLimit: 3
-  - gridDims: {x: 7, y: 8}
+  - gridData:
+      GridDims: {x: 6, y: 6}
     music:
       Name: 
       AudioClip: {fileID: 8300000, guid: f370113d35be2a741af91cee879960a9, type: 3}
-    deadZoneColor: {r: 0.19272874, g: 0.5754717, b: 0.22591382, a: 1}
+    DeadZoneColorA: {r: 0.9258138, g: 1, b: 0, a: 1}
+    DeadZoneColorB: {r: 1, g: 0.51359504, b: 0, a: 1}
     seeds:
     - word: agile
       placementType: 0
@@ -75,13 +90,17 @@ MonoBehaviour:
       placementType: 3
       assignedBlocks: []
       possibleLines: []
+    par: 0
+    trophyScore: 0
     rackSize: 10
     repeatLimit: 2
-  - gridDims: {x: 8, y: 7}
+  - gridData:
+      GridDims: {x: 6, y: 6}
     music:
       Name: 
       AudioClip: {fileID: 8300000, guid: f370113d35be2a741af91cee879960a9, type: 3}
-    deadZoneColor: {r: 0.19272874, g: 0.5754717, b: 0.22591382, a: 1}
+    DeadZoneColorA: {r: 0.9258138, g: 1, b: 0, a: 1}
+    DeadZoneColorB: {r: 1, g: 0.51359504, b: 0, a: 1}
     seeds:
     - word: whale
       placementType: 0
@@ -91,13 +110,17 @@ MonoBehaviour:
       placementType: 2
       assignedBlocks: []
       possibleLines: []
+    par: 0
+    trophyScore: 0
     rackSize: 10
     repeatLimit: 2
-  - gridDims: {x: 8, y: 8}
+  - gridData:
+      GridDims: {x: 6, y: 6}
     music:
       Name: 
       AudioClip: {fileID: 8300000, guid: f370113d35be2a741af91cee879960a9, type: 3}
-    deadZoneColor: {r: 0.19272874, g: 0.5754717, b: 0.22591382, a: 1}
+    DeadZoneColorA: {r: 1, g: 0.74511266, b: 0.36320752, a: 1}
+    DeadZoneColorB: {r: 0.7830189, g: 0.3089506, b: 0.2991723, a: 1}
     seeds:
     - word: no
       placementType: 1
@@ -111,13 +134,17 @@ MonoBehaviour:
       placementType: 3
       assignedBlocks: []
       possibleLines: []
+    par: 0
+    trophyScore: 0
     rackSize: 10
     repeatLimit: 2
-  - gridDims: {x: 8, y: 9}
+  - gridData:
+      GridDims: {x: 6, y: 6}
     music:
       Name: 
       AudioClip: {fileID: 8300000, guid: ec636abfe9e3e2d4e89864a8e2fc0240, type: 3}
-    deadZoneColor: {r: 0.39810663, g: 0.19446424, b: 0.4339623, a: 1}
+    DeadZoneColorA: {r: 1, g: 0.74511266, b: 0.36320752, a: 1}
+    DeadZoneColorB: {r: 0.7830189, g: 0.3089506, b: 0.2991723, a: 1}
     seeds:
     - word: please
       placementType: 3
@@ -127,13 +154,17 @@ MonoBehaviour:
       placementType: 1
       assignedBlocks: []
       possibleLines: []
+    par: 0
+    trophyScore: 0
     rackSize: 10
     repeatLimit: 2
-  - gridDims: {x: 9, y: 8}
+  - gridData:
+      GridDims: {x: 6, y: 6}
     music:
       Name: 
       AudioClip: {fileID: 8300000, guid: ec636abfe9e3e2d4e89864a8e2fc0240, type: 3}
-    deadZoneColor: {r: 0.39810663, g: 0.19446424, b: 0.4339623, a: 1}
+    DeadZoneColorA: {r: 1, g: 0.74511266, b: 0.36320752, a: 1}
+    DeadZoneColorB: {r: 0.7830189, g: 0.3089506, b: 0.2991723, a: 1}
     seeds:
     - word: they
       placementType: 3
@@ -147,13 +178,17 @@ MonoBehaviour:
       placementType: 1
       assignedBlocks: []
       possibleLines: []
+    par: 0
+    trophyScore: 0
     rackSize: 10
     repeatLimit: 2
-  - gridDims: {x: 9, y: 9}
+  - gridData:
+      GridDims: {x: 6, y: 6}
     music:
       Name: 
       AudioClip: {fileID: 8300000, guid: ec636abfe9e3e2d4e89864a8e2fc0240, type: 3}
-    deadZoneColor: {r: 0.39810663, g: 0.19446424, b: 0.4339623, a: 1}
+    DeadZoneColorA: {r: 1, g: 0.74511266, b: 0.36320752, a: 1}
+    DeadZoneColorB: {r: 0.7830189, g: 0.3089506, b: 0.2991723, a: 1}
     seeds:
     - word: all
       placementType: 2
@@ -167,13 +202,17 @@ MonoBehaviour:
       placementType: 0
       assignedBlocks: []
       possibleLines: []
+    par: 0
+    trophyScore: 0
     rackSize: 10
     repeatLimit: 2
-  - gridDims: {x: 10, y: 9}
+  - gridData:
+      GridDims: {x: 6, y: 6}
     music:
       Name: 
       AudioClip: {fileID: 8300000, guid: ec636abfe9e3e2d4e89864a8e2fc0240, type: 3}
-    deadZoneColor: {r: 0.39810663, g: 0.19446424, b: 0.4339623, a: 1}
+    DeadZoneColorA: {r: 1, g: 0.74511266, b: 0.36320752, a: 1}
+    DeadZoneColorB: {r: 0.7830189, g: 0.3089506, b: 0.2991723, a: 1}
     seeds:
     - word: columbo
       placementType: 3
@@ -183,13 +222,17 @@ MonoBehaviour:
       placementType: 0
       assignedBlocks: []
       possibleLines: []
+    par: 0
+    trophyScore: 0
     rackSize: 10
     repeatLimit: 2
-  - gridDims: {x: 9, y: 10}
+  - gridData:
+      GridDims: {x: 6, y: 6}
     music:
       Name: 
       AudioClip: {fileID: 8300000, guid: ec636abfe9e3e2d4e89864a8e2fc0240, type: 3}
-    deadZoneColor: {r: 0.39810663, g: 0.19446424, b: 0.4339623, a: 1}
+    DeadZoneColorA: {r: 0.36470592, g: 1, b: 0.7031347, a: 1}
+    DeadZoneColorB: {r: 0.20069422, g: 0.20229161, b: 0.7735849, a: 1}
     seeds:
     - word: subscribe
       placementType: 3
@@ -203,13 +246,17 @@ MonoBehaviour:
       placementType: 0
       assignedBlocks: []
       possibleLines: []
+    par: 0
+    trophyScore: 0
     rackSize: 10
     repeatLimit: 2
-  - gridDims: {x: 10, y: 11}
+  - gridData:
+      GridDims: {x: 6, y: 6}
     music:
       Name: 
       AudioClip: {fileID: 8300000, guid: 585e2ff5224ae754fbad7c30f3c8961b, type: 3}
-    deadZoneColor: {r: 0.36196154, g: 0.7031305, b: 0.9245283, a: 1}
+    DeadZoneColorA: {r: 0.36470592, g: 1, b: 0.7031347, a: 1}
+    DeadZoneColorB: {r: 0.20069422, g: 0.20229161, b: 0.7735849, a: 1}
     seeds:
     - word: agile
       placementType: 0
@@ -223,13 +270,17 @@ MonoBehaviour:
       placementType: 2
       assignedBlocks: []
       possibleLines: []
+    par: 0
+    trophyScore: 0
     rackSize: 10
     repeatLimit: 2
-  - gridDims: {x: 11, y: 10}
+  - gridData:
+      GridDims: {x: 6, y: 6}
     music:
       Name: 
       AudioClip: {fileID: 8300000, guid: 585e2ff5224ae754fbad7c30f3c8961b, type: 3}
-    deadZoneColor: {r: 0.36196154, g: 0.7031305, b: 0.9245283, a: 1}
+    DeadZoneColorA: {r: 0.36470592, g: 1, b: 0.7031347, a: 1}
+    DeadZoneColorB: {r: 0.20069422, g: 0.20229161, b: 0.7735849, a: 1}
     seeds:
     - word: afraid
       placementType: 0
@@ -243,13 +294,17 @@ MonoBehaviour:
       placementType: 2
       assignedBlocks: []
       possibleLines: []
+    par: 0
+    trophyScore: 0
     rackSize: 10
     repeatLimit: 2
-  - gridDims: {x: 11, y: 11}
+  - gridData:
+      GridDims: {x: 6, y: 6}
     music:
       Name: 
       AudioClip: {fileID: 8300000, guid: 585e2ff5224ae754fbad7c30f3c8961b, type: 3}
-    deadZoneColor: {r: 0.36196154, g: 0.7031305, b: 0.9245283, a: 1}
+    DeadZoneColorA: {r: 0.36470592, g: 1, b: 0.7031347, a: 1}
+    DeadZoneColorB: {r: 0.20069422, g: 0.20229161, b: 0.7735849, a: 1}
     seeds:
     - word: indie
       placementType: 3
@@ -263,6 +318,8 @@ MonoBehaviour:
       placementType: 0
       assignedBlocks: []
       possibleLines: []
+    par: 0
+    trophyScore: 0
     rackSize: 10
     repeatLimit: 2
   permittedWords: {fileID: 11400000, guid: 44317b310db86cb4cb9979e73c1911eb, type: 2}

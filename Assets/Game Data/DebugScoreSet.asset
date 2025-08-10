@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1f57f269ebda8cf4595f097d88580b43, type: 3}
-  m_Name: DefaultScoreset
+  m_Name: DebugScoreSet
   m_EditorClassIdentifier: 
   serializationData:
     SerializedFormat: 2
@@ -665,15 +665,15 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-  specificTileScoreCost: 10
-  specificTilePipCost: 3
-  vowelScoreCost: 10
-  vowelPipCost: 2
-  consonantScoreCost: 10
-  consonantPipCost: 1
-  fillRackScoreCost: 10
-  fillRackPipCost: 3
-  newRackScoreCost: 10
-  newRackPipCost: 4
-  levelRestartCost: 10
-  validateFailPenalty: 10
+  specificTileScoreCost: 0
+  specificTilePipCost: 0
+  vowelScoreCost: 0
+  vowelPipCost: 0
+  consonantScoreCost: 0
+  consonantPipCost: 0
+  fillRackScoreCost: 0
+  fillRackPipCost: 0
+  newRackScoreCost: 0
+  newRackPipCost: 0
+  levelRestartCost: 0
+  validateFailPenalty: 0

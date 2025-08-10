@@ -1,0 +1,196 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1f5e7d8dd164094a39abe2c1d0be34e, type: 3}
+  m_Name: DailyChallenge00001
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects:
+    - {fileID: 8300000, guid: 3f3cee6e2a1f14d48939d21e0f1e87c3, type: 3}
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: Levels
+      Entry: 7
+      Data: 0|System.Collections.Generic.List`1[[LevelData, Assembly-CSharp]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: 1|LevelData, Assembly-CSharp
+    - Name: gridData
+      Entry: 7
+      Data: 2|GridData, Assembly-CSharp
+    - Name: gridSeed
+      Entry: 7
+      Data: 3|System.String[,], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 15
+    - Name: ranks
+      Entry: 1
+      Data: 5|3
+    - Name: 
+      Entry: 1
+      Data: H2
+    - Name: 
+      Entry: 1
+      Data: '-'
+    - Name: 
+      Entry: 1
+      Data: T1
+    - Name: 
+      Entry: 1
+      Data: O2
+    - Name: 
+      Entry: 1
+      Data: '-'
+    - Name: 
+      Entry: 1
+      Data: A1
+    - Name: 
+      Entry: 1
+      Data: N2
+    - Name: 
+      Entry: 1
+      Data: '-'
+    - Name: 
+      Entry: 1
+      Data: M1
+    - Name: 
+      Entry: 1
+      Data: K2
+    - Name: 
+      Entry: 1
+      Data: '-'
+    - Name: 
+      Entry: 1
+      Data: E1
+    - Name: 
+      Entry: 1
+      Data: '#'
+    - Name: 
+      Entry: 1
+      Data: '#'
+    - Name: 
+      Entry: 1
+      Data: '#'
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: music
+      Entry: 7
+      Data: 4|PlayableClip, Assembly-CSharp
+    - Name: Name
+      Entry: 6
+      Data: 
+    - Name: AudioClip
+      Entry: 10
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: DeadZoneColorA
+      Entry: 7
+      Data: UnityEngine.Color, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0.48383522
+    - Name: 
+      Entry: 4
+      Data: 0.9245283
+    - Name: 
+      Entry: 4
+      Data: 0.440459251
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: DeadZoneColorB
+      Entry: 7
+      Data: UnityEngine.Color, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0.68728
+    - Name: 
+      Entry: 4
+      Data: 0.29703632
+    - Name: 
+      Entry: 4
+      Data: 0.8396226
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: LevelRequirements
+      Entry: 3
+      Data: 1
+    - Name: par
+      Entry: 3
+      Data: 0
+    - Name: trophyScore
+      Entry: 3
+      Data: 0
+    - Name: RackSeeds
+      Entry: 7
+      Data: 5|System.Collections.Generic.List`1[[System.Char, mscorlib]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 4
+    - Name: 
+      Entry: 1
+      Data: V
+    - Name: 
+      Entry: 1
+      Data: A
+    - Name: 
+      Entry: 1
+      Data: O
+    - Name: 
+      Entry: 1
+      Data: L
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: rackSize
+      Entry: 3
+      Data: 6
+    - Name: repeatLimit
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+  LevelSetID: DailyChallenge1
