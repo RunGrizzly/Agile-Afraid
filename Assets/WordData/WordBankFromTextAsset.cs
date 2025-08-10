@@ -51,7 +51,7 @@ public class WordBankFromTextAsset : ScriptableObject
         }
     }
 
-    public bool Validate(string checkString)
+    public bool CheckValidWord(string checkString)
     {
         bool isPermitted = false;
 
