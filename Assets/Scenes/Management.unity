@@ -38,7 +38,6 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.3731193, g: 0.38073996, b: 0.35872698, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -104,7 +103,7 @@ NavMeshSettings:
   serializedVersion: 2
   m_ObjectHideFlags: 0
   m_BuildSettings:
-    serializedVersion: 2
+    serializedVersion: 3
     agentTypeID: 0
     agentRadius: 0.5
     agentHeight: 2
@@ -117,7 +116,7 @@ NavMeshSettings:
     cellSize: 0.16666667
     manualTileSize: 0
     tileSize: 256
-    accuratePlacement: 0
+    buildHeightMesh: 0
     maxJobWorkers: 0
     preserveTilesOutsideBounds: 0
     debug:
@@ -147,13 +146,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 420565795}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1652736063}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!82 &420565797
 AudioSource:
@@ -261,7 +260,6 @@ GameObject:
   m_Component:
   - component: {fileID: 938982168}
   - component: {fileID: 938982171}
-  - component: {fileID: 938982172}
   - component: {fileID: 938982170}
   - component: {fileID: 938982173}
   - component: {fileID: 938982174}
@@ -282,6 +280,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 938982167}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -289,7 +288,6 @@ Transform:
   m_Children:
   - {fileID: 1652736063}
   m_Father: {fileID: 0}
-  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &938982169
 MonoBehaviour:
@@ -328,8 +326,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   eventManager: {fileID: 938982170}
-  scoreManager: {fileID: 938982172}
-  sessionManager: {fileID: 938982174}
+  runManager: {fileID: 938982174}
   uiManager: {fileID: 938982173}
   stageManager: {fileID: 938982169}
   taskManager: {fileID: 938982175}
@@ -337,19 +334,7 @@ MonoBehaviour:
   buttonControls: {fileID: 938982176}
   grid: {fileID: 0}
   rack: {fileID: 0}
---- !u!114 &938982172
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 938982167}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 530f18d29e214f74499e1364669a8798, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  scoreSet: {fileID: 11400000, guid: aebfadb60de633940abe86b8b7ef09f6, type: 2}
+  RunSettings: {fileID: 11400000, guid: 8cdc3118955cc3a4ea98dce126b9bc6b, type: 2}
 --- !u!114 &938982173
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -362,18 +347,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06ba404df4b1d3f4a9373eaffe553dfd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MainMenuCanvas: {fileID: 0}
+  GameCanvas: {fileID: 0}
+  TimerGroup: {fileID: 0}
+  TileRackGroup: {fileID: 0}
+  TileRequestGroup: {fileID: 0}
+  LevelRequirementsGroup: {fileID: 0}
   gameCanvas: {fileID: 0}
   recentHolder: {fileID: 0}
   levelTrack: {fileID: 0}
+  TimeBar: {fileID: 0}
+  TimePipHolder: {fileID: 0}
   scoreText: {fileID: 0}
   levelText: {fileID: 0}
   messageBox: {fileID: 0}
   inputControlTemplate: {fileID: 2820702500035625035, guid: fbb95001e239b3b4ab129f830e2ea7ed, type: 3}
-  inputControlInstance: {fileID: 0}
-  interruptPanelTemplate: {fileID: 5592790444646282466, guid: 35caf8b585127404287e897236004bc4, type: 3}
-  interruptPanelInstance: {fileID: 0}
+  m_interruptPanelTemplate: {fileID: 1638279720682749569, guid: 35caf8b585127404287e897236004bc4, type: 3}
   recentWordTemplate: {fileID: 7910235621893071442, guid: 4ee2454551d21504993949f5306f62c9, type: 3}
   levelPipTemplate: {fileID: 2504070363903430941, guid: f7f77a36514740c4d8a16662b9ae8e2f, type: 3}
+  TimePipWidgetTemplate: {fileID: 5932449589687278403, guid: 2206d3bd1cbcaf34c89977f0dccaa8ab, type: 3}
+  LevelRequirementGrubTemplate: {fileID: 1449135074601833485, guid: c4bb8f6110c783846b0be3e01302b0bb, type: 3}
 --- !u!114 &938982174
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -386,41 +379,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 309d17db47be3a047ba632b411c01957, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sessionSettings: {fileID: 11400000, guid: 8cdc3118955cc3a4ea98dce126b9bc6b, type: 2}
-  currentSession:
-    sessionSettings: {fileID: 0}
-    score: 0
-    level: 0
-    recentWords: []
-    elapsed: 0
-    currentLevel:
-      data:
-        gridDims: {x: 0, y: 0}
-        music:
-          Name: 
-          AudioClip: {fileID: 0}
-        deadZoneColor: {r: 0, g: 0, b: 0, a: 0}
-        seeds: []
-        par: 0
-        trophyScore: 0
-        rackSize: 0
-        repeatLimit: 0
-      inputs: []
-      startInput:
-        inputOrientation: 0
-        blocks: []
-        compiledLines: []
-        compiledWords: []
-        characters: 
-        isValidated: 0
-      targetInput:
-        inputOrientation: 0
-        blocks: []
-        compiledLines: []
-        compiledWords: []
-        characters: 
-        isValidated: 0
-    isPaused: 0
+  Runs: []
 --- !u!114 &938982175
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -452,7 +411,7 @@ LightingSettings:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: 
-  serializedVersion: 4
+  serializedVersion: 6
   m_GIWorkflowMode: 1
   m_EnableBakedLightmaps: 1
   m_EnableRealtimeLightmaps: 0
@@ -491,8 +450,8 @@ LightingSettings:
   m_PVREnvironmentReferencePointCount: 2048
   m_LightProbeSampleCountMultiplier: 4
   m_PVRBounces: 2
-  m_PVRMinBounces: 1
-  m_PVREnvironmentMIS: 1
+  m_PVRMinBounces: 2
+  m_PVREnvironmentImportanceSampling: 1
   m_PVRFilteringMode: 1
   m_PVRDenoiserTypeDirect: 1
   m_PVRDenoiserTypeIndirect: 1
@@ -507,6 +466,8 @@ LightingSettings:
   m_PVRFilteringAtrousPositionSigmaIndirect: 2
   m_PVRFilteringAtrousPositionSigmaAO: 1
   m_PVRTiledBaking: 0
+  m_NumRaysToShootPerTexel: -1
+  m_RespectSceneVisibilityWhenBakingGI: 0
 --- !u!1 &1604044744
 GameObject:
   m_ObjectHideFlags: 0
@@ -648,6 +609,60 @@ MonoBehaviour:
     _data:
       data: []
   - _sourceObject: {fileID: 938982173}
+    _sourceField: TimePipHolder
+    DEPRECATED_fromObject:
+      scene:
+        editorAssetGUID: 
+        name: 
+        _path: 
+      fullPath: 
+      componentName: 
+      componentIndex: 0
+      editorLocalId: 0
+      editorPrefabRelativePath: 
+      version: 0
+    _toObject:
+      scene:
+        editorAssetGUID: 1410d76adbb43f746b49c8df674a9654
+        name: UI
+        _path: Assets/Scenes/UI.unity
+      fullPath: /UICanvas/TimePanel/TimeBarPips
+      componentName: UnityEngine.RectTransform, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+      componentIndex: 0
+      editorLocalId: 1180938478
+      editorPrefabRelativePath: 
+      version: 1
+    _data:
+      data: []
+  - _sourceObject: {fileID: 938982173}
+    _sourceField: TimeBar
+    DEPRECATED_fromObject:
+      scene:
+        editorAssetGUID: 
+        name: 
+        _path: 
+      fullPath: 
+      componentName: 
+      componentIndex: 0
+      editorLocalId: 0
+      editorPrefabRelativePath: 
+      version: 0
+    _toObject:
+      scene:
+        editorAssetGUID: 1410d76adbb43f746b49c8df674a9654
+        name: UI
+        _path: Assets/Scenes/UI.unity
+      fullPath: /UICanvas/TimePanel/TimeBar/TimeBarFace
+      componentName: UnityEngine.UI.Image, UnityEngine.UI, Version=1.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      componentIndex: 0
+      editorLocalId: 429803785
+      editorPrefabRelativePath: 
+      version: 1
+    _data:
+      data: []
+  - _sourceObject: {fileID: 938982173}
     _sourceField: levelTrack
     DEPRECATED_fromObject:
       scene:
@@ -728,6 +743,168 @@ MonoBehaviour:
       version: 1
     _data:
       data: []
+  - _sourceObject: {fileID: 938982173}
+    _sourceField: LevelRequirementsGroup
+    DEPRECATED_fromObject:
+      scene:
+        editorAssetGUID: 
+        name: 
+        _path: 
+      fullPath: 
+      componentName: 
+      componentIndex: 0
+      editorLocalId: 0
+      editorPrefabRelativePath: 
+      version: 0
+    _toObject:
+      scene:
+        editorAssetGUID: 1410d76adbb43f746b49c8df674a9654
+        name: UI
+        _path: Assets/Scenes/UI.unity
+      fullPath: /UICanvas/LevelRequirementsPanel
+      componentName: UnityEngine.CanvasGroup, UnityEngine.UIModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+      componentIndex: 0
+      editorLocalId: 1225521287
+      editorPrefabRelativePath: 
+      version: 1
+    _data:
+      data: []
+  - _sourceObject: {fileID: 938982173}
+    _sourceField: TileRequestGroup
+    DEPRECATED_fromObject:
+      scene:
+        editorAssetGUID: 
+        name: 
+        _path: 
+      fullPath: 
+      componentName: 
+      componentIndex: 0
+      editorLocalId: 0
+      editorPrefabRelativePath: 
+      version: 0
+    _toObject:
+      scene:
+        editorAssetGUID: 1410d76adbb43f746b49c8df674a9654
+        name: UI
+        _path: Assets/Scenes/UI.unity
+      fullPath: /UICanvas/RackButtons
+      componentName: UnityEngine.CanvasGroup, UnityEngine.UIModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+      componentIndex: 0
+      editorLocalId: 1014110932
+      editorPrefabRelativePath: 
+      version: 1
+    _data:
+      data: []
+  - _sourceObject: {fileID: 938982173}
+    _sourceField: TileRackGroup
+    DEPRECATED_fromObject:
+      scene:
+        editorAssetGUID: 
+        name: 
+        _path: 
+      fullPath: 
+      componentName: 
+      componentIndex: 0
+      editorLocalId: 0
+      editorPrefabRelativePath: 
+      version: 0
+    _toObject:
+      scene:
+        editorAssetGUID: 1410d76adbb43f746b49c8df674a9654
+        name: UI
+        _path: Assets/Scenes/UI.unity
+      fullPath: /UICanvas/TIleRack
+      componentName: UnityEngine.CanvasGroup, UnityEngine.UIModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+      componentIndex: 0
+      editorLocalId: 1566520539
+      editorPrefabRelativePath: 
+      version: 1
+    _data:
+      data: []
+  - _sourceObject: {fileID: 938982173}
+    _sourceField: TimerGroup
+    DEPRECATED_fromObject:
+      scene:
+        editorAssetGUID: 
+        name: 
+        _path: 
+      fullPath: 
+      componentName: 
+      componentIndex: 0
+      editorLocalId: 0
+      editorPrefabRelativePath: 
+      version: 0
+    _toObject:
+      scene:
+        editorAssetGUID: 1410d76adbb43f746b49c8df674a9654
+        name: UI
+        _path: Assets/Scenes/UI.unity
+      fullPath: /UICanvas/TimePanel
+      componentName: UnityEngine.CanvasGroup, UnityEngine.UIModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+      componentIndex: 0
+      editorLocalId: 1233919995
+      editorPrefabRelativePath: 
+      version: 1
+    _data:
+      data: []
+  - _sourceObject: {fileID: 938982173}
+    _sourceField: GameCanvas
+    DEPRECATED_fromObject:
+      scene:
+        editorAssetGUID: 
+        name: 
+        _path: 
+      fullPath: 
+      componentName: 
+      componentIndex: 0
+      editorLocalId: 0
+      editorPrefabRelativePath: 
+      version: 0
+    _toObject:
+      scene:
+        editorAssetGUID: 1410d76adbb43f746b49c8df674a9654
+        name: UI
+        _path: Assets/Scenes/UI.unity
+      fullPath: /UICanvas
+      componentName: UnityEngine.Canvas, UnityEngine.UIModule, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      componentIndex: 0
+      editorLocalId: 1125546524
+      editorPrefabRelativePath: 
+      version: 1
+    _data:
+      data: []
+  - _sourceObject: {fileID: 938982173}
+    _sourceField: MainMenuCanvas
+    DEPRECATED_fromObject:
+      scene:
+        editorAssetGUID: 
+        name: 
+        _path: 
+      fullPath: 
+      componentName: 
+      componentIndex: 0
+      editorLocalId: 0
+      editorPrefabRelativePath: 
+      version: 0
+    _toObject:
+      scene:
+        editorAssetGUID: c282660f956924543a0e62c8d797e9d3
+        name: MainMenu
+        _path: Assets/Scenes/MainMenu.unity
+      fullPath: /MainMenuCanvas
+      componentName: UnityEngine.Canvas, UnityEngine.UIModule, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      componentIndex: 0
+      editorLocalId: 1920690336
+      editorPrefabRelativePath: 
+      version: 1
+    _data:
+      data: []
   - _sourceObject: {fileID: 938982171}
     _sourceField: rack
     DEPRECATED_fromObject:
@@ -781,7 +958,7 @@ MonoBehaviour:
       editorAssetGUID: 1410d76adbb43f746b49c8df674a9654
       name: UI
       _path: Assets/Scenes/UI.unity
-    loadInEditor: 1
+    loadInEditor: 0
     loadMethod: 3
   - scene:
       editorAssetGUID: 6ef2b6432a170f344880dae6ed4c2166
@@ -805,13 +982,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1604044744}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1652736061
 GameObject:
@@ -847,18 +1024,28 @@ MonoBehaviour:
   layer1: {fileID: 1899554693}
   menuClip:
     Name: 
-    AudioClip: {fileID: 8300000, guid: f370113d35be2a741af91cee879960a9, type: 3}
+    AudioClip: {fileID: 8300000, guid: 160b2b019b20e364eb3e7a04d3c7279b, type: 3}
+  m_winMusic:
+    Name: 
+    AudioClip: {fileID: 8300000, guid: 3baf11ffaec711b44be89a85ae97dbfd, type: 3}
+  m_failMusic:
+    Name: 
+    AudioClip: {fileID: 8300000, guid: 3baf11ffaec711b44be89a85ae97dbfd, type: 3}
   sfxClips:
   - Name: tileAction
     AudioClip: {fileID: 8300000, guid: 91ee29d436cc1ac4fbdb4e1fef183b5a, type: 3}
   - Name: blockPlaced
     AudioClip: {fileID: 8300000, guid: dd47f0199a3a68e43a7fb551df0333c8, type: 3}
-  - Name: pathComplete
+  - Name: levelSuccess
     AudioClip: {fileID: 8300000, guid: 713ed7902a5ec444d95974f8bd533752, type: 3}
+  - Name: levelFail
+    AudioClip: {fileID: 8300000, guid: e294c816b7c4ba84f95d7bdd092d65aa, type: 3}
   - Name: validateFail
     AudioClip: {fileID: 8300000, guid: e294c816b7c4ba84f95d7bdd092d65aa, type: 3}
   - Name: validateSuccess
     AudioClip: {fileID: 8300000, guid: 127aecbef131cd6409aabd69a6dab6bf, type: 3}
+  m_musicFadeOutDuration: 1.2
+  m_musicFadeInDuration: 0
 --- !u!4 &1652736063
 Transform:
   m_ObjectHideFlags: 0
@@ -866,6 +1053,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1652736061}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -874,7 +1062,6 @@ Transform:
   - {fileID: 420565796}
   - {fileID: 1899554694}
   m_Father: {fileID: 938982168}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!81 &1652736065
 AudioListener:
@@ -1004,11 +1191,17 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1899554692}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1652736063}
-  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1660057539 &9223372036854775807
+SceneRoots:
+  m_ObjectHideFlags: 0
+  m_Roots:
+  - {fileID: 1604044747}
+  - {fileID: 938982168}
