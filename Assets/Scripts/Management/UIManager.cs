@@ -336,6 +336,7 @@ public class UIManager : MonoBehaviour
     {
         foreach (var entry in LevelRequirementGrubs)
         {
+            Debug.LogFormat($"Trying to destroy {entry.Key} grub");
             Destroy(entry.Value.gameObject);
         }
 
@@ -350,6 +351,12 @@ public class UIManager : MonoBehaviour
         
         foreach (LevelRequirements flag in Enum.GetValues(typeof(LevelRequirements)))
         {
+            //Don't count none
+            if (flag == LevelRequirements.None)
+            {
+                continue;
+            }
+
             if (level.Data.LevelRequirements.HasFlag(flag))
             {
                 var newLevelRequirementGrub = Instantiate(LevelRequirementGrubTemplate);

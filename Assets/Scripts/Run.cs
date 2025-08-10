@@ -43,7 +43,7 @@ public class TimePip
 
     public float RemoveTime(float value)
     {
-        Debug.LogFormat($"Removing time from {this} of type {TimePoolType}");
+        //Debug.LogFormat($"Removing time from {this} of type {TimePoolType}");
         float removed = Mathf.Min(CurrentValue, value);
         CurrentValue -= removed;
 
