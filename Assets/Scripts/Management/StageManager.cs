@@ -10,74 +10,64 @@ public class StageManager : MonoBehaviour
         //Subscribe to quit to menu event
         BrainControl.Get().eventManager.e_quitToMenu.AddListener(() =>
         {
-            Initialise();
+            InitialiseGame();
         });
 
-        Initialise();
-
+        InitialiseGame();
     }
 
-    public void Initialise()
+    private void InitialiseGame()
     {
-        StartCoroutine(InitialiseGame());
-        BrainControl.Get().eventManager.e_gameInitialised.Invoke();
+        Task t = new Task(InitialiseGameRoutine());
     }
-
-    public void StartNewSession()
-    {
-        Task t = new Task(InitialiseSession());
-    }
-
-    IEnumerator InitialiseSession()
-    {
-        List<string> initialScenes = new List<string>() { "Cameras", "UI", "WordGame" };
-        Task t_initialiseScenes = new Task(LoadScenes(initialScenes, true));
-
-        while (t_initialiseScenes.Running)
-        {
-            Debug.Log("Scenes are being initialised");
-            yield return null;
-        }
-        Debug.Log("All scenes initialised");
-        //Fire off a new session
-        Brain.ins.eventManager.e_newSession.Invoke(BrainControl.Get().sessionManager.sessionSettings);
-    }
-
-
-
-    // IEnumerator LoadScenes(List<string> scenes, string camera, bool fade, bool cleanup)
-    // {
-    //     //Unload unwanted scenes (all loaded except scene 0)
-    //     if (cleanup) SceneUnloader(new List<string> { "Camera", "ClientControls", "Stage", "Backstage", "ControlRoom" });
-    //     //Load them asynchronously
-    //     SceneLoader(scenes);
-    //     //While they are not loaded - wait
-    //     while (!CheckLoaded(scenes))
-    //     {
-    //         yield return null;
-    //     }
-    //     //Once loaded, end of frame check
-    //     yield return new WaitForEndOfFrame();
-
-    //     //Set the stage
-    //     Brain.ins.stageManager.SetCameraPriority(camera, fade);
-    // }
-
-    IEnumerator InitialiseGame()
+    
+     
+    private IEnumerator InitialiseGameRoutine()
     {
 
-        Task t_initialiseGame = new Task(LoadScenes(new List<string>() { "MainMenu" }, true));
+        Task t_initialiseGame = new Task(LoadScenes(new List<string>() { "Cameras", "MainMenu" }, true));
 
         while (t_initialiseGame.Running)
         {
             Debug.Log("Game is being initialised");
             yield return null;
         }
+        
         Debug.Log("Game was initialised");
+        BrainControl.Get().eventManager.e_gameInitialised.Invoke();
     }
 
+    public void InitialiseRun(LevelSet levelSet)
+    {
+        Task t = new Task(InitialiseRunRoutine(levelSet));
+    }
 
-
+    private IEnumerator InitialiseRunRoutine(LevelSet levelSet)
+    {
+        //Actual scene load
+        List<string> initialScenes = new List<string>() { "UI", "WordGame" };
+        Task t_initialiseScenes = new Task(LoadScenes(initialScenes, true));
+        
+        while (t_initialiseScenes.Running)
+        {
+            Debug.Log("Scenes are being initialised");
+            yield return null;
+        }
+        
+        //We have entered the game scene
+        Debug.Log("All scenes initialised");
+        
+        //As soon as the appropriate scenes are loaded, we tacitly permit the run to start
+        Brain.ins.runManager.StartNewRun(Brain.ins.RunSettings, levelSet);
+        
+        //So we are ready to initialise the run
+        //This should be the entry point for the run kickoff
+        
+        //This should only be done to respond to an actually loaded run
+        //Brain.ins.eventManager.e_newRun.Invoke(Brain.ins.RunSettings, levelSet);
+        
+    }
+  
     IEnumerator LoadScenes(List<string> scenes, bool cleanup)
     {
         //Unload unwanted scenes (all loaded except scene 0)
