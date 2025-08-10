@@ -256,85 +256,107 @@ public static class GridTools
         return false;
     }
 
-    public static List<BlockLine> GetFilledCross(LetterBlock block)
+    public static List<BlockLine> GetCross(LetterBlock sourceBlock, bool countEmpty = false)
+{
+    BlockLine horiz = new BlockLine("horiz")
     {
-        //Horiz
-        BlockLine horiz = new BlockLine("horiz");
-        BlockLine vert = new BlockLine("vert");
+        lineOrientation = LineOrientation.Horiz
+    };
 
-        horiz.lineOrientation = LineOrientation.Horiz;
-        vert.lineOrientation = LineOrientation.Vert;
+    BlockLine vert = new BlockLine("vert")
+    {
+        lineOrientation = LineOrientation.Vert
+    };
 
+    horiz.blocks.Add(sourceBlock);
+    vert.blocks.Add(sourceBlock);
 
-        horiz.blocks.Add(block);
-        vert.blocks.Add(block);
+    bool left = true;
+    bool right = true;
+    bool up = true;
+    bool down = true;
 
-        bool left = true;
-        bool right = true;
-        bool up = true;
-        bool down = true;
+    int maxX = BrainControl.Get().grid.letterBlocks.GetLength(0);
+    int maxY = BrainControl.Get().grid.letterBlocks.GetLength(1);
+    int maxDistance = Mathf.Max(maxX, maxY);
 
-        for (int i = 1; i < Mathf.Max(BrainControl.Get().grid.letterBlocks.GetLength(0), BrainControl.Get().grid.letterBlocks.GetLength(1)); i++)
+    for (int i = 1; i < maxDistance; i++)
+    {
+        // Right
+        if (right)
         {
+            Vector2Int pos = new Vector2Int(sourceBlock.gridRef.x + i, sourceBlock.gridRef.y);
 
-
-
-            if (right == true)
+            if (IsInBounds(pos) && (countEmpty || !IsEmpty(pos)))
             {
-                if (IsInBounds(new Vector2Int(block.gridRef.x + i, block.gridRef.y)) && !IsEmpty(new Vector2Int(block.gridRef.x + i, block.gridRef.y)))
-                {
-                    horiz.blocks.Add(BrainControl.Get().grid.letterBlocks[block.gridRef.x + i, block.gridRef.y]);
-                    // right = true;
-                }
-                else right = false;
+                horiz.blocks.Add(BrainControl.Get().grid.letterBlocks[pos.x, pos.y]);
             }
-
-            if (left == true)
+            else
             {
-                if (IsInBounds(new Vector2Int(block.gridRef.x - i, block.gridRef.y)) && !IsEmpty(new Vector2Int(block.gridRef.x - i, block.gridRef.y)))
-                {
-                    horiz.blocks.Add(BrainControl.Get().grid.letterBlocks[block.gridRef.x - i, block.gridRef.y]);
-                    // left = true;
-                }
-                else left = false;
+                right = false;
             }
-
-            if (up == true)
-            {
-                if (IsInBounds(new Vector2Int(block.gridRef.x, block.gridRef.y + i)) && !IsEmpty(new Vector2Int(block.gridRef.x, block.gridRef.y + i)))
-                {
-                    vert.blocks.Add(BrainControl.Get().grid.letterBlocks[block.gridRef.x, block.gridRef.y + i]);
-                    // up = true;
-                }
-                else up = false;
-            }
-
-            if (down == true)
-            {
-                if (IsInBounds(new Vector2Int(block.gridRef.x, block.gridRef.y - i)) && !IsEmpty(new Vector2Int(block.gridRef.x, block.gridRef.y - i)))
-                {
-                    vert.blocks.Add(BrainControl.Get().grid.letterBlocks[block.gridRef.x, block.gridRef.y - i]);
-                    // down = true;
-                }
-                else down = false;
-            }
-
-            if (!right && !left && !up && !down)
-            {
-                Debug.Log("Word cross was completed");
-                return new List<BlockLine>() { horiz, vert };
-            }
-
         }
 
-        Debug.Log("Word cross was completed");
-        return new List<BlockLine>() { horiz, vert };
+        // Left
+        if (left)
+        {
+            Vector2Int pos = new Vector2Int(sourceBlock.gridRef.x - i, sourceBlock.gridRef.y);
 
+            if (IsInBounds(pos) && (countEmpty || !IsEmpty(pos)))
+            {
+                horiz.blocks.Add(BrainControl.Get().grid.letterBlocks[pos.x, pos.y]);
+            }
+            else
+            {
+                left = false;
+            }
+        }
+
+        // Up
+        if (up)
+        {
+            Vector2Int pos = new Vector2Int(sourceBlock.gridRef.x, sourceBlock.gridRef.y + i);
+
+            if (IsInBounds(pos) && (countEmpty || !IsEmpty(pos)))
+            {
+                vert.blocks.Add(BrainControl.Get().grid.letterBlocks[pos.x, pos.y]);
+            }
+            else
+            {
+                up = false;
+            }
+        }
+
+        // Down
+        if (down)
+        {
+            Vector2Int pos = new Vector2Int(sourceBlock.gridRef.x, sourceBlock.gridRef.y - i);
+
+            if (IsInBounds(pos) && (countEmpty || !IsEmpty(pos)))
+            {
+                vert.blocks.Add(BrainControl.Get().grid.letterBlocks[pos.x, pos.y]);
+            }
+            else
+            {
+                down = false;
+            }
+        }
+
+        // Stop if no directions left
+        if (!right && !left && !up && !down)
+        {
+            Debug.Log("Word cross was completed");
+            return new List<BlockLine> { horiz, vert };
+        }
     }
 
-    public static bool WordIntoLine(WordRequest request, bool lockBlock)
-    {
+    Debug.Log("Word cross was completed");
+    return new List<BlockLine> { horiz, vert };
+}
 
+
+    public static bool WordIntoLine(WordRequest request, bool validate, bool addScore)
+    {
         GridGenerator grid = BrainControl.Get().grid;
 
         Debug.Log("Placing word: Grid = " + grid + ", request = " + request.word + " into " + request.placementType.ToString());
@@ -359,8 +381,7 @@ public static class GridTools
                 break;
             }
         }
-
-
+        
         if (line != null)
         {
             if (GetLineDirection(line) == LineDirection.Forwards)
@@ -368,7 +389,7 @@ public static class GridTools
                 for (int i = 0; i < request.word.Length; i++)
                 {
                     //Build the block from desired letter
-                    line.blocks[i].BuildFromLetter(request.word[i]);
+                    line.blocks[i].BuildTokenised(request.word[i].ToString());
                 }
             }
             else
@@ -376,7 +397,7 @@ public static class GridTools
                 for (int i = request.word.Length - 1; i > -1; i--)
                 {
                     //Build the block from desired letter
-                    line.blocks[i].BuildFromLetter(request.word[i]);
+                    line.blocks[i].BuildTokenised(request.word[i].ToString());
                 }
             }
 
@@ -385,7 +406,7 @@ public static class GridTools
             //Add the assigned blocks to a level input
             //Oh I don't like this being assigned directly
             //TODO: fix
-            BrainControl.Get().sessionManager.currentSession.currentLevel.inputs.Add(new BlockInput(line.blocks, true, false));
+            BrainControl.Get().runManager.CurrentRun.ActiveLevel.inputs.Add(new BlockInput(line.blocks, validate, addScore));
 
             return true;
         }

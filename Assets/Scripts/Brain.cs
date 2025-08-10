@@ -1,11 +1,11 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class Brain : MonoBehaviour
 {
     public EventManager eventManager;
-    public ScoreManager scoreManager;
-
-    public SessionManager sessionManager;
+    
+    [FormerlySerializedAs("sessionManager")] public RunManager runManager;
 
     public UIManager uiManager;
 
@@ -23,7 +23,7 @@ public class Brain : MonoBehaviour
     public GridGenerator grid;
     public TileRack rack;
 
-
+    public RunSettings RunSettings = null;
 
     void Awake()
     {

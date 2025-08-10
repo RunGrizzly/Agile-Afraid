@@ -2,12 +2,13 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using System.Linq;
+using UnityEngine.Serialization;
 
 [ExecuteAlways]
 public class LetterTile : DraggableUI
 {
 
-    public Letter letter;
+    public Letter Letter;
 
     public TextMeshProUGUI letterBox;
     public TextMeshProUGUI scoreBox;
@@ -17,55 +18,55 @@ public class LetterTile : DraggableUI
         //    BuildWeighted();
     }
 
-    public void BuildFromLetter(char _letter)
+    public void BuildFromCharacter(char character)
     {
         // Debug.Log("Assigning random letter " + _letter + " to the tile");
 
 
         //Create a new copy of the letter entry found using the passed letters
-        letter = new Letter(BrainControl.Get().scoreManager.scoreSet.scoreset.Keys.FirstOrDefault(x => x.character == _letter));
+        Letter = new Letter(BrainControl.Get().runManager.CurrentRun.RunSettings.ActiveScoringRubrik.distribution.Keys.FirstOrDefault(x => char.ToLower(x.character) ==char.ToLower(character)));
 
-        letterBox.text = letter.character.ToString();
-        scoreBox.text = letter.score.ToString();
+        letterBox.text = Letter.character.ToString();
+        scoreBox.text = Letter.score.ToString();
     }
 
     public void BuildFromDistribution(float minDist, float maxDist)
     {
 
         //Create a new copy of the letter entry found using the random letter
-        letter = BrainControl.Get().scoreManager.scoreSet.LetterFromDistribution(minDist, maxDist);
+        Letter = BrainControl.Get().runManager.CurrentRun.RunSettings.ActiveScoringRubrik.LetterFromDistribution(minDist, maxDist);
 
-        letterBox.text = letter.character.ToString();
-        scoreBox.text = letter.score.ToString();
+        letterBox.text = Letter.character.ToString();
+        scoreBox.text = Letter.score.ToString();
     }
 
     public void BuildWeighted()
     {
         //Create a new copy of the letter entry found using the random letter
-        letter = BrainControl.Get().scoreManager.scoreSet.WeightedLetter();
+        Letter = BrainControl.Get().runManager.CurrentRun.RunSettings.ActiveScoringRubrik.WeightedRandom();
 
-        letterBox.text = letter.character.ToString();
-        scoreBox.text = letter.score.ToString();
+        letterBox.text = Letter.character.ToString();
+        scoreBox.text = Letter.score.ToString();
     }
 
 
     public void BuildVowel()
     {
         //Create a new copy of the letter entry found using the random letter
-        letter = BrainControl.Get().scoreManager.scoreSet.Vowel();
+        Letter = BrainControl.Get().runManager.CurrentRun.RunSettings.ActiveScoringRubrik.Vowel();
 
-        letterBox.text = letter.character.ToString();
-        scoreBox.text = letter.score.ToString();
+        letterBox.text = Letter.character.ToString();
+        scoreBox.text = Letter.score.ToString();
     }
 
 
     public void BuildConsonant()
     {
         //Create a new copy of the letter entry found using the random letter
-        letter = BrainControl.Get().scoreManager.scoreSet.Consonant();
+        Letter =BrainControl.Get().runManager.CurrentRun.RunSettings.ActiveScoringRubrik.Consonant();
 
-        letterBox.text = letter.character.ToString();
-        scoreBox.text = letter.score.ToString();
+        letterBox.text = Letter.character.ToString();
+        scoreBox.text = Letter.score.ToString();
     }
 
 
@@ -75,12 +76,39 @@ public class LetterTile : DraggableUI
         //Where the drag was initiated.
         startPos = gameObject.GetComponent<RectTransform>().localPosition;
     }
+    
+    // public override void OnBeginDrag(PointerEventData eventData)
+    // {
+    //     Vector2 localPoint;
+    //     
+    //     RectTransformUtility.ScreenPointToLocalPointInRectangle(
+    //         GameObject.FindGameObjectWithTag("Canvas").GetComponent<RectTransform>(), 
+    //         Input.mousePosition, 
+    //         GameObject.FindGameObjectWithTag("Canvas").GetComponent<Canvas>().worldCamera,
+    //         out localPoint
+    //     );
+    // }
 
     //While dragging.
     public override void OnDrag(PointerEventData eventData)
     {
         //While dragging, pointer event data allows us to use the pointer data to set the UI elements position.
-        gameObject.transform.position = eventData.position;
+        //gameObject.transform.position = eventData.position;
+        
+        Vector2 localPoint;
+        
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            GetComponent<RectTransform>().parent.GetComponent<RectTransform>(), 
+            eventData.position, 
+            eventData.pressEventCamera,
+            out localPoint
+        );
+        
+        
+        
+        //While dragging, pointer event data allows us to use the pointer data to set the UI elements position.
+        GetComponent<RectTransform>().localPosition = new Vector3(localPoint.x, localPoint.y, 0);
+
     }
 
     //When we end the drag.
@@ -93,9 +121,9 @@ public class LetterTile : DraggableUI
         {
             //Control session input
             ///////////
-            if (BrainControl.Get().sessionManager.currentSession.currentLevel.InputInProgress())
+            if (BrainControl.Get().runManager.CurrentRun.ActiveLevel.InputInProgress())
             {
-                if (BrainControl.Get().sessionManager.currentSession.currentLevel.LatestInput().BlockIsPossible(highlightedBlock))
+                if (BrainControl.Get().runManager.CurrentRun.ActiveLevel.LatestInput().BlockIsPossible(highlightedBlock))
                 {
                     BuildToBlock(highlightedBlock);
                     BrainControl.Get().eventManager.e_updateInput.Invoke(highlightedBlock);
@@ -121,7 +149,7 @@ public class LetterTile : DraggableUI
 
     void BuildToBlock(LetterBlock block)
     {
-        block.BuildFromLetter(letter.character);
+        block.BuildTokenised(Letter.character.ToString());
         BrainControl.Get().rack.letterTiles.Remove(this);
         DestroyImmediate(gameObject);
     }

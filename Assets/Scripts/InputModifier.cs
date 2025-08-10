@@ -29,7 +29,11 @@ public class InputModifier : MonoBehaviour
 
             case InputModification.Cancel:
                 Debug.Log("Input cancelled");
-                BrainControl.Get().eventManager.e_getTile.Invoke(BrainControl.Get().grid.selectedBlock.baseLetter, false);
+                
+                //This hangs
+                BrainControl.Get().eventManager.e_getTile.Invoke(BrainControl.Get().grid.selectedBlock.baseLetter, false, false);
+                
+                //This is fine
                 BrainControl.Get().eventManager.e_clearBlock.Invoke(BrainControl.Get().grid.selectedBlock);
                 break;
         }
@@ -39,7 +43,7 @@ public class InputModifier : MonoBehaviour
     void Update()
     {
 
-        Debug.Log("Button: " + modification.ToString() + " is hovered: " + isHovered);
+        //Debug.Log("Button: " + modification.ToString() + " is hovered: " + isHovered);
 
         ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
@@ -53,7 +57,11 @@ public class InputModifier : MonoBehaviour
                     isHovered = true;
                 }
 
-                if (Input.GetMouseButtonUp(0)) ApplyModification();
+                if (Input.GetMouseButtonUp(0))
+                {
+                    //Debug.LogFormat("Mouse button up.");
+                    ApplyModification();
+                }
             }
 
             else

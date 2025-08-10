@@ -12,9 +12,9 @@ public class WordRequest
 
     public PlacementType placementType = PlacementType.BottomLeft;
 
-    public List<LetterBlock> assignedBlocks = new List<LetterBlock>();
-
-    public List<BlockLine> possibleLines;
+    // public List<LetterBlock> assignedBlocks = new List<LetterBlock>();
+    //
+    // public List<BlockLine> possibleLines;
 
     public WordRequest(string _word, PlacementType _placementType)
     {

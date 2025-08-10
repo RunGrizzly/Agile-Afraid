@@ -5,7 +5,7 @@ public enum LetterType { Vowel, Consonant }
 [Serializable]
 public class Letter
 {
-    public char character;
+    public char character = '#';
     public int score;
 
     public LetterType type;

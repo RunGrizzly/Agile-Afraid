@@ -10,8 +10,8 @@ public class BlockSelector : MonoBehaviour
     void Update()
     {
 
-        if (BrainControl.Get().sessionManager.currentSession == null) return;
-        if (BrainControl.Get().sessionManager.currentSession.isPaused) return;
+        if (BrainControl.Get().runManager.Runs.Count == 0) return;
+        if (BrainControl.Get().runManager.CurrentRun.IsPaused) return;
 
 
         ray = Camera.main.ScreenPointToRay(Input.mousePosition);
