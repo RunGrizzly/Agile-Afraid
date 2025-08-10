@@ -12,23 +12,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  version: 5
+  version: 7
 --- !u!21 &2100000
 Material:
-  serializedVersion: 6
+  serializedVersion: 8
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: m_BlockEmpty
   m_Shader: {fileID: -6465566751694194690, guid: 7f54e177bafc41648882ba47f4679104, type: 3}
-  m_ShaderKeywords: 
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
+  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -118,7 +122,7 @@ Material:
     - Color_2: {r: 0, g: 0, b: 0, a: 0}
     - Color_2b3ee03714c246079c4386d09611e56e: {r: 0, g: 0, b: 0, a: 0}
     - Color_3e56a4ad9fce4a50ac4c33a93e322a7a: {r: 0.9716981, g: 0.9212798, b: 0.9212798, a: 0}
-    - Color_7387d6094abf49618726993854efcea5: {r: 1, g: 1, b: 1, a: 1}
+    - Color_7387d6094abf49618726993854efcea5: {r: 0.4056604, g: 0.4056604, b: 0.4056604, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []
