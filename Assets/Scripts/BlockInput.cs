@@ -160,8 +160,8 @@ public class BlockInput
         {
             isValidated = true;
             
-            //We have no way to actually mark the correct line
-            //So this validates the entire input
+            //We have no way to actually mark the correct line //This needs to change
+            //So this validates the entire input block by block
             foreach (LetterBlock block in PlacedBlocks)
             {
                 //Don't lock
@@ -256,41 +256,7 @@ public class BlockInput
             }
         }
         
+        //Can we pass on context (what was actually validated)
         SetValidatedState(isValid);
-        
-        //This is the possible lines for this input
-        //This should be set on the first input
-        foreach (var blockline in PossibleLines)
-        {
-            foreach (var block in blockline.blocks)
-            {
-                block.MeshRenderer.material.SetFloat("_normalEffect", 0.25f);
-            }
-        }
     }
-
-
-
-    // BlockLine DirectionFilter()
-    // {
-    //     //Else find out what direction we are going
-    //     //Find out which coords are the same
-    //     if (blocks[0].gridRef.x == blocks[1].gridRef.x)
-    //     {
-    //         inputOrientation = LineOrientation.Vert;
-    //         return GetColumn(blocks[blocks.Count - 1]);
-    //     }
-    //     else
-    //     {
-    //         inputOrientation = LineOrientation.Horiz;
-    //         return GetRow(blocks[blocks.Count - 1]);
-    //     }
-    // }
-
-    // List<LetterBlock> ExistingInputs()
-    // {
-    //     return BrainControl.Get().runManager.currentRun.ActiveLevel.inputs.Where(x => x != this).SelectMany(x => x.blocks).ToList();
-    // }
-
-
 }
