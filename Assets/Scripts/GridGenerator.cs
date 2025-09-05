@@ -14,10 +14,10 @@ public class GridGenerator : MonoBehaviour
 
     public LetterBlock blockTemplate;
 
-    public LetterBlock highlightedBlock;
-    public LetterBlock selectedBlock;
-
-    public float selectPop;
+    // public LetterBlock highlightedBlock;
+    // public LetterBlock selectedBlock;
+    //
+    // public float selectPop;
 
     public CinemachineTargetGroup targetGroup;
 
@@ -46,28 +46,28 @@ public class GridGenerator : MonoBehaviour
 
         //Level level event responses
         /////////////////////////////
-        Brain.ins.eventManager.e_blockSelected.AddListener((b) =>
-        {
-            if (b.lockState != LockState.locked) SelectBlock(b);
-        });
+        // Brain.ins.eventManager.e_blockSelected.AddListener((b) =>
+        // {
+        //     if (b.lockState != LockState.locked) SelectBlock(b);
+        // });
 
-        Brain.ins.eventManager.e_clearBlock.AddListener((c) =>
-        {
-            c.Empty();
-            c.SetLockState(LockState.unlocked);
-            selectedBlock = null;
-        });
+        // Brain.ins.eventManager.e_clearBlock.AddListener((c) =>
+        // {
+        //     c.Empty();
+        //     c.SetLockState(LockState.unlocked);
+        //     selectedBlock = null;
+        // });
 
         //Track input mode
-        Brain.ins.eventManager.e_beginInput.AddListener((a) =>
-        {
-            SelectBlock(a);
-        });
+        // Brain.ins.eventManager.e_beginInput.AddListener((a) =>
+        // {
+        //     SelectBlock(a);
+        // });
 
-        Brain.ins.eventManager.e_updateInput.AddListener((u) =>
-        {
-            SelectBlock(u);
-        });
+        // Brain.ins.eventManager.e_updateInput.AddListener((u) =>
+        // {
+        //     SelectBlock(u);
+        // });
         
         //When an input is validated
         Brain.ins.eventManager.e_validateSuccess.AddListener((BlockInput input) =>
@@ -138,6 +138,7 @@ public class GridGenerator : MonoBehaviour
                 if (grub != null)
                 {
                     grub.color = Color.red;
+                    BrainControl.Get().uiManager.PrintMessage("Challenge parameters not met");
                 }
                 
                 return false;
@@ -193,70 +194,63 @@ public class GridGenerator : MonoBehaviour
         
         if (path.status == NavMeshPathStatus.PathComplete)
         {
-            Debug.Log("A path was completed");
+            //Debug.Log("A path was completed");
             return true;
         }
 
         else
         {
-            Debug.Log("There is no available path");
+            //Debug.Log("There is no available path");
             return false;
         }
     }
 
-    public void HighlightBlock(LetterBlock b)
-    {
-        if (b == highlightedBlock)
-        {
-            return;
-        }
-
-        //If there is already a highlighted block
-        //Unhighlight it
-        if (highlightedBlock != null)
-        {
-            //Change the material to it's highlighted state
-            //We should cache this inside the block
-            highlightedBlock.MeshRenderer.material.SetInt("_isHighlighted", 0);
-            
-            //Tween it down
-            //This looks unmanaged - we should stop any tweens in progress
-            LeanTween.moveLocalY(highlightedBlock.MeshRenderer.gameObject, 0, 0.15f).setEase(LeanTweenType.easeOutExpo);
-        }
-
-      
-        highlightedBlock = b;
-        b.MeshRenderer.gameObject.GetComponent<MeshRenderer>().material.SetInt("_isHighlighted", 1);
-        LeanTween.moveLocalY(highlightedBlock.MeshRenderer.gameObject, selectPop, 0.15f).setEase(LeanTweenType.easeOutElastic);
-    }
-
-    public void SetLockAll(LockState state)
-    {
-        foreach (LetterBlock block in letterBlocks)
-        {
-            block.SetLockState(state);
-        }
-    }
-
-    public void Unhilight()
-    {
-
-        if (highlightedBlock == null) return;
-
-        else
-        {
-            highlightedBlock.MeshRenderer.gameObject.GetComponent<MeshRenderer>().material.SetInt("_isHighlighted", 0);
-            LeanTween.moveLocalY(highlightedBlock.MeshRenderer.gameObject, 0, 0.15f).setEase(LeanTweenType.easeOutExpo);
-            highlightedBlock = null;
-        }
-
-
-    }
-
-    public void SelectBlock(LetterBlock a)
-    {
-        selectedBlock = a;
-    }
+    // public void HighlightBlock(LetterBlock b)
+    // {
+    //     if (b == highlightedBlock)
+    //     {
+    //         return;
+    //     }
+    //
+    //     //If there is already a highlighted block
+    //     //Unhighlight it
+    //     if (highlightedBlock != null)
+    //     {
+    //         //Change the material to it's highlighted state
+    //         //We should cache this inside the block
+    //         highlightedBlock.MeshRenderer.material.SetInt("_isHighlighted", 0);
+    //         
+    //         //Tween it down
+    //         //This looks unmanaged - we should stop any tweens in progress
+    //         LeanTween.moveLocalY(highlightedBlock.MeshRenderer.gameObject, 0, 0.15f).setEase(LeanTweenType.easeOutExpo);
+    //     }
+    //
+    //   
+    //     highlightedBlock = b;
+    //     b.MeshRenderer.gameObject.GetComponent<MeshRenderer>().material.SetInt("_isHighlighted", 1);
+    //     LeanTween.moveLocalY(highlightedBlock.MeshRenderer.gameObject, selectPop, 0.15f).setEase(LeanTweenType.easeOutElastic);
+    // }
+    //
+    //
+    // public void Unhilight()
+    // {
+    //
+    //     if (highlightedBlock == null) return;
+    //
+    //     else
+    //     {
+    //         highlightedBlock.MeshRenderer.gameObject.GetComponent<MeshRenderer>().material.SetInt("_isHighlighted", 0);
+    //         LeanTween.moveLocalY(highlightedBlock.MeshRenderer.gameObject, 0, 0.15f).setEase(LeanTweenType.easeOutExpo);
+    //         highlightedBlock = null;
+    //     }
+    //
+    //
+    // }
+    //
+    // public void SelectBlock(LetterBlock a)
+    // {
+    //     selectedBlock = a;
+    // }
 
     public IEnumerator Generate(GridData gridData)
     {
@@ -281,7 +275,8 @@ public class GridGenerator : MonoBehaviour
 
                 newBlock.gridRef = new Vector2Int(x, y);
                 newBlock.name = newBlock.gridRef.ToString();
-
+                
+                Debug.LogFormat(newBlock.transform.gameObject,$"Attempting build a seeded block at {x},{y}");
                 newBlock.BuildFromGridSeed(gridData.gridSeed[x,y]);
 
                 newBlock.transform.SetParent(gridHolder.transform);

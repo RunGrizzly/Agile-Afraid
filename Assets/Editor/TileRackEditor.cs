@@ -11,15 +11,15 @@ public class TileRackEditor : Editor
 
         DrawDefaultInspector();
 
-        if (GUILayout.Button("Add Random Tile"))
-        {
-            t.AddRandomTile();
-        }
-
-        if (GUILayout.Button("Empty Rack"))
-        {
-            t.EmptyRack();
-        }
+        // if (GUILayout.Button("Add Random Tile"))
+        // {
+        //     t.AddRandomTile();
+        // }
+        //
+        // if (GUILayout.Button("Empty Rack"))
+        // {
+        //     t.EmptyRack();
+        // }
     }
 
 }

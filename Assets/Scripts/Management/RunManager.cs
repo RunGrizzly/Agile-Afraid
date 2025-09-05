@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-public enum RunResult {Win, Fail, Restarted, Quit}
+public enum Resolution {None, Win, Fail, Restarted, Aborted}
 
 public class RunManager : MonoBehaviour
 {
@@ -11,6 +11,8 @@ public class RunManager : MonoBehaviour
     public Run CurrentRun => Runs[0];
     public Task RunTracker;
 
+    public RunSettings ActiveRunSettings = null;
+    
     //Game framework broadly looks like this
     //Game////////////////
     //////////////////////
@@ -31,70 +33,53 @@ public class RunManager : MonoBehaviour
     ///     //Track run here
     private void OnEnable()
     {
-        // //Manager scope run controls
-        // BrainControl.Get().eventManager.e_winRun.AddListener(()=>
-        //     {
-        //         ResolveRun(RunResult.Win);
-        //     });
-        // BrainControl.Get().eventManager.e_failRun.AddListener(()=>
-        // {
-        //     ResolveRun(RunResult.Lose);
-        // });
-        //
-        // BrainControl.Get().eventManager.e_restartRun.AddListener(()=>
-        // {
-        //     ResolveRun(RunResult.Restarted);
-        // });
-        //
-        //
-        // BrainControl.Get().eventManager.e_quitToMenu.AddListener(()=>
-        // {
-        //     ResolveRun(RunResult.Quit);
-        // });
-        
-        //Why is this here?
-        Brain.ins.eventManager.e_clearBlock.AddListener((c) =>
-        {
-            CurrentRun.ActiveLevel.LatestInput().RemoveFromInput(c);
-            //If this would kill the input
-            if (CurrentRun.ActiveLevel.LatestInput().PlacedBlocks.Count == 0)
-            {
-                CurrentRun.ActiveLevel.RemoveInput(CurrentRun.ActiveLevel.LatestInput());
-            }
-        });
-
         //A new input is called
-        //Why is any of this here?
+        //This is prevalidated so thats good
         //////////////////////
-        Brain.ins.eventManager.e_beginInput.AddListener((a) =>
+        Brain.ins.eventManager.e_beginInput.AddListener((newLetterBlock) =>
         {
-            // //Check for any initial adjacency
-            CurrentRun.ActiveLevel.inputs.Add(new BlockInput(new List<LetterBlock>() { /*BrainControl.Get().grid.CheckAdjacency(a),*/ a }, false, false));
+            Debug.LogFormat($"Began a new input");
+            var newInput = new BlockInput(newLetterBlock, false, false);
+            CurrentRun.ActiveLevel.inputs.Add(newInput);
+            
+            //Show the new possible lines
+            //RevealPossibleLines(newInput.PossibleLines);
         });
         //////////////////////
 
         //The current input is updated
         //////////////////////
-        Brain.ins.eventManager.e_updateInput.AddListener((u) =>
+        Brain.ins.eventManager.e_updateInput.AddListener((newLetterBlock) =>
         {
-            CurrentRun.ActiveLevel.LatestInput().AddToInput(u);
+            var liveInput = CurrentRun.ActiveLevel.InputInProgress();
+
+            if (liveInput != null)
+            {
+                liveInput.AddToInput(newLetterBlock);         
+            }
+            //RevealPossibleLines(latestInput.PossibleLines);
         });
         //////////////////////
 
         //The current input is ended
         //////////////////////
-        Brain.ins.eventManager.e_endInput.AddListener(() =>
+        Brain.ins.eventManager.e_confirmInput.AddListener(() =>
         {
             Debug.LogFormat("Input ended");
-            CurrentRun.ActiveLevel.LatestInput().Compile();
+            var liveInput = CurrentRun.ActiveLevel.InputInProgress();
+
+            if (liveInput != null)
+            {
+                CurrentRun.ActiveLevel.InputInProgress().Compile();           
+            }
+        });
+        
+        Brain.ins.eventManager.e_cancelInput.AddListener((input) =>
+        {
+            Debug.LogFormat("Input cancelled");
+            CurrentRun.ActiveLevel.RemoveInput(input);
         });
         //////////////////////
-        ///
-        
-        
-        
-        //We actually want to be the source of this event - it should pass an already loaded run
-        //Brain.ins.eventManager.e_newRun.AddListener(StartNewRun);
     }
 
     private void OnDisable()
@@ -120,22 +105,66 @@ public class RunManager : MonoBehaviour
         //     ResolveRun(RunResult.Quit);
         // });
     }
+    
+    public void RevealInputBlocks(BlockInput blockInput)
+    {
+        foreach (LetterBlock latestInputPlacedBlock in blockInput.PlacedBlocks)
+        {
+            //A framework for animating the color of a block temporarily
+            //The grid should be able to request this effect (amongst others)
+            Material material = latestInputPlacedBlock.MeshRenderer.material;
+            Material animatedMaterial = new Material(material);
+            latestInputPlacedBlock.MeshRenderer.material = animatedMaterial;
+
+            LeanTween.value(0, 1, 1f).setEase(LeanTweenType.punch).setOnUpdate((val) =>
+            {
+                animatedMaterial.SetFloat("_normalEffect", Mathf.Lerp(material.GetFloat("_normalEffect"), 5, val));
+            }).setOnComplete(() =>
+            {
+                latestInputPlacedBlock.MeshRenderer.material = material;
+            });
+        }
+    }
+    
+    public void RevealPossibleLines(List<BlockLine> possibleLines)
+    {
+        foreach (var blockLine in possibleLines)
+        {
+            foreach (LetterBlock latestInputPlacedBlock in blockLine.blocks)
+            {
+                //A framework for animating the color of a block temporarily
+                //The grid should be able to request this effect (amongst others)
+                Material material = latestInputPlacedBlock.MeshRenderer.material;
+                Material animatedMaterial = new Material(material);
+                latestInputPlacedBlock.MeshRenderer.material = animatedMaterial;
+
+                LeanTween.value(0, 1, 1f).setEase(LeanTweenType.punch).setOnUpdate((val) => { animatedMaterial.SetFloat("_normalEffect", Mathf.Lerp(material.GetFloat("_normalEffect"), 5, val)); }).setOnComplete(() => { latestInputPlacedBlock.MeshRenderer.material = material; });
+            }
+        }
+    }
 
     //Prepare a new run with run settings and a level set
     public void LoadNewRun()
     {
         
     }
-    
+
+
+    public void SetRunSettings(RunSettings newSettings)
+    {
+        ActiveRunSettings = newSettings;
+    }
     
     //Kick off the currently loaded run
-    public void StartNewRun(RunSettings runSettings, LevelSet levelSet)
+    public void StartNewRun(LevelSet levelSet)
     {
         //Creates a new run from run settings
-        Runs.Insert(0, new Run(runSettings, levelSet));
+        Runs.Insert(0, new Run(ActiveRunSettings, levelSet));
         RunTracker = new Task(TrackRun(CurrentRun));
     }
     
+    
+    //This fails on restart from daily challenge
     public void StartNewRun(Run sourceRun)
     {
         //Creates a new run from run settings
@@ -143,68 +172,52 @@ public class RunManager : MonoBehaviour
         RunTracker = new Task(TrackRun(CurrentRun));
     }
     
-    public void ResolveRun(RunResult result)
+    
+    //This breaks specifically when in a pause state
+    //Win/Lose is fine
+    //But only on mobile ...
+    public void ResolveRun(Resolution result)
     {
+        //When the run is resolved
+        //We need to make sure to kill the current level
+        //And kill the current run tracker
+        Debug.LogFormat($"Resolving run with resolution {result}");
+        
         if (CurrentRun != null)
         {
-            //Can we move this to the actual run?
-            // BrainControl.Get().eventManager.e_newRackRequest.RemoveListener(CurrentRun.newRackListener);
-            // BrainControl.Get().eventManager.e_fillRackRequest.RemoveListener(CurrentRun.fillRackListener);
-            // BrainControl.Get().eventManager.e_getTile.RemoveListener(CurrentRun.getTileListener);
-            // BrainControl.Get().eventManager.e_getConsonantRequest.RemoveListener(CurrentRun.getConsonantListener);
-            // BrainControl.Get().eventManager.e_getVowelRequest.RemoveListener(CurrentRun.getVowelListener);
-
             //Input validation
             BrainControl.Get().eventManager.e_validateSuccess.RemoveListener(CurrentRun.validateSuccessListener);
             BrainControl.Get().eventManager.e_validateFail.RemoveListener(CurrentRun.validateFailListener);
-
             BrainControl.Get().eventManager.e_levelSuccess.RemoveListener(CurrentRun.levelSuccessListener);
         }
 
-        // CurrentRun.End();
-
+        CurrentRun.Resolution = result;
+        
         switch (result)
         {
-         case RunResult.Win:
+         case Resolution.Win:
              //CurrentRun = null;
-             BrainControl.Get().eventManager.e_winRun.Invoke();
+             BrainControl.Get().eventManager.e_winRun.Invoke(CurrentRun);
              break;
          
-         case RunResult.Fail:
+         case Resolution.Fail:
              //CurrentRun = null;
-             BrainControl.Get().eventManager.e_failRun.Invoke();
+             BrainControl.Get().eventManager.e_failRun.Invoke(CurrentRun);
              break;
          
-         case RunResult.Restarted:
+         case Resolution.Restarted:
              //Current run is the last run added (0) (so the one just played)
+             // CurrentRun.ActiveLevel.Resolution = Resolution.Restarted;
              StartNewRun(CurrentRun);
-             //BrainControl.Get().eventManager.e_restartRun.Invoke();
              break;
          
-         case RunResult.Quit:
-             //CurrentRun = null;
-             BrainControl.Get().eventManager.e_quitToMenu.Invoke();
+         case Resolution.Aborted:
+             //This will kill the active level
+             // CurrentRun.ActiveLevel.Resolution = Resolution.Aborted;
+             // BrainControl.Get().eventManager.e_quitToMenu.Invoke();
              break;
         }
     }
-
-    // public void OnQuitToMenu()
-    // {
-    //     CurrentRun = null;
-    // }
-
-    // public void RestartCurrentRun()
-    // {
-    //     var currentSettings = CurrentRun.RunSettings;
-    //     var currentLevelSet = CurrentRun.ActiveLevelSet;
-    //     
-    //     CurrentRun = new Run(currentSettings);
-    //     
-    //     //Kill old task?
-    //     
-    //     
-    //     RunTracker = new Task(TrackRun(currentLevelSet));
-    // }
     
     //Track the run - listen to events and execute method on its behalf
     //This happens whenever the player select a run type from the main menu
@@ -214,10 +227,10 @@ public class RunManager : MonoBehaviour
         Debug.LogFormat($"Started tracking a new run");
         
         //Initialise the current run
-        CurrentRun.Initialise(run.ActiveLevelSet);
+        run.Initialise();
         
          //We can wait while the current run is validated
-         while (CurrentRun.RunSettings == null)
+         while (run.RunSettings == null)
          {
              Debug.LogWarning($"Current run does not have a valid run settings yet.");
              yield return null;
@@ -231,13 +244,13 @@ public class RunManager : MonoBehaviour
          }
          
         while (
-            CurrentRun.newRackListener == null ||
-            CurrentRun.fillRackListener == null ||
-            CurrentRun.getTileListener == null ||
-            CurrentRun.getConsonantListener == null ||
-            CurrentRun.getVowelListener == null ||
-            CurrentRun.validateSuccessListener == null ||
-            CurrentRun.validateFailListener == null
+            run.newRackListener == null ||
+            run.fillRackListener == null ||
+            run.getTileListener == null ||
+            run.getConsonantListener == null ||
+            run.getVowelListener == null ||
+            run.validateSuccessListener == null ||
+            run.validateFailListener == null
         )
         {
             Debug.LogWarning($"Current run has not initialised its listeners");
@@ -245,41 +258,50 @@ public class RunManager : MonoBehaviour
         }
         
         #region Run Started Subscriptions
-         // BrainControl.Get().eventManager.e_newRackRequest.AddListener(CurrentRun.newRackListener);
-         // BrainControl.Get().eventManager.e_fillRackRequest.AddListener(CurrentRun.fillRackListener);
-         // BrainControl.Get().eventManager.e_getTile.AddListener(CurrentRun.getTileListener);
-         // BrainControl.Get().eventManager.e_getConsonantRequest.AddListener(CurrentRun.getConsonantListener);
-         // BrainControl.Get().eventManager.e_getVowelRequest.AddListener(CurrentRun.getVowelListener);
-         
-         BrainControl.Get().eventManager.e_validateSuccess.AddListener(CurrentRun.validateSuccessListener);
-         BrainControl.Get().eventManager.e_validateFail.AddListener(CurrentRun.validateFailListener);
-         
-         //When the level indicates success
-         BrainControl.Get().eventManager.e_levelSuccess.AddListener(CurrentRun.levelSuccessListener);   
+         BrainControl.Get().eventManager.e_validateSuccess.AddListener(run.validateSuccessListener);
+         BrainControl.Get().eventManager.e_validateFail.AddListener(run.validateFailListener);
+         BrainControl.Get().eventManager.e_levelSuccess.AddListener(run.levelSuccessListener);   
         #endregion
-         
-        //Fill the rack to prepare the run
-        BrainControl.Get().eventManager.e_newRackRequest.Invoke
-        (
-            CurrentRun.ActiveLevel.Data.RackSeeds,
-            CurrentRun.ActiveLevel.Data.rackSize, 
-            false, 
-            false
-        );
+        
+        // //Fill the rack to prepare the run
+        // BrainControl.Get().eventManager.e_newRackRequest.Invoke
+        // (
+        //     run.ActiveLevel.Data.RackSeeds,
+        //     run.ActiveLevel.Data.rackSize, 
+        //     false, 
+        //     false
+        // );
+        
+        //Directly fill the runs rack and let it broadcast
+        // CurrentRun.RackData.Fill( run.ActiveLevel.Data.RackSeeds, CurrentRun.ActiveLevelSet.ScoringRubrik);
+        
         
         //Run manager has prepared the current run
-        BrainControl.Get().eventManager.e_newRun.Invoke(CurrentRun);
+        BrainControl.Get().eventManager.e_newRun.Invoke(run);
+
         
             //So we can await each level here
-            foreach (var level in run.ActiveLevelSet.Levels)
+            //We need to be able to STOP this process
+            for(int i = 0; i < run.ActiveLevelSet.Levels.Count; i++)
             {
-                CurrentRun.ActiveLevel = new Level(level);
-                var levelTracker = CurrentRun.ActiveLevel.Track();
+                Debug.LogFormat($"New level index: {i}");
+                
+                var level = run.ActiveLevelSet.Levels[i];
+                run.ActiveLevel = new Level(level);
+                
+                //This invokes the level initialiser
+                var levelTracker = run.ActiveLevel.Track();
 
-                //While this runtracker is valid - track it
-                //This will pop when it changes
+                //So we dont actually track the run - we just wait for the levels to resolve
                 while (levelTracker.MoveNext())
                 {
+                    //If at any point the run has a resolution
+                    if (run.Resolution != Resolution.None)
+                    {
+                        //Stop this coroutine
+                        yield break;
+                    }
+                    
                     #region Dev Shortcuts
 
                     //Level skip
@@ -287,6 +309,7 @@ public class RunManager : MonoBehaviour
                     {
                         Debug.Log("DEVELOPER CONTROL: Skip Level");
                         CurrentRun.ActiveLevel.Complete();
+                        yield break;
                     }
 
                     //Pause
@@ -307,35 +330,43 @@ public class RunManager : MonoBehaviour
                     if (Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.LeftAlt) && Input.GetKeyUp(KeyCode.Alpha9))
                     {
                         Debug.Log("DEVELOPER CONTROL: Empty Rack");
-                        BrainControl.Get().rack.EmptyRack();
+                        CurrentRun.RackData.Empty();
                     }
 
                     #endregion
-
-                    //Do I really want to be updating the UI constantly?
-                    Brain.ins.eventManager.e_updateUI.Invoke();
-
-                    if (CurrentRun.WorkingTime <= 0)
+                    
+                    if (run.ActiveLevelSet.IsTimed)
                     {
-                        Debug.LogWarning("Run ran out of time and ended");
-                        ResolveRun(RunResult.Fail);
-                        yield break;
+                        CurrentRun.RemoveWorkingTime(Time.deltaTime * (run.IsPaused ? 0 : 1));
                     }
                     
-                    if (CurrentRun.ActiveLevel.Data.IsTimed)
+                    if (run.WorkingTime <= 0)
                     {
-                        CurrentRun.RemoveWorkingTime(Time.deltaTime * (run.IsPaused? 0: 1));
+                        Debug.LogWarning("Run ran out of time and ended");
+                        
+                        //Resolving the run would end this coroutine naturally
+                        ResolveRun(Resolution.Fail);
                     }
-
+                    
+                    //Should I send the run to confirm if its still valid?
+                    Brain.ins.eventManager.e_updateUI.Invoke();
+                    
                     //Debug.Log("Run is still being tracked");
-                    CurrentRun.Elapsed += Time.deltaTime * (run.IsPaused? 0: 1);
-
+                    run.Elapsed += Time.deltaTime * (run.IsPaused ? 0 : 1);
+                    
                     yield return levelTracker.Current;
                 }
+                
+                //This level ended its tracking phase
+                //It has resolved
+                Debug.LogFormat($"Level resolution: {run.ActiveLevel.Resolution}");
             }
-
-        #region Run Ended Subscription Cleanup
-       ResolveRun(RunResult.Win);
-        #endregion
+            
+            //We completed the iteration of levels
+            //This will end the run
+            ResolveRun(Resolution.Win);
+            
+            //Keep the coroutine in the station until it exits naturally
+            yield return new WaitUntil( ()=>run.Resolution != Resolution.None);
     }
 }

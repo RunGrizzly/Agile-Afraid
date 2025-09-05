@@ -5,6 +5,7 @@ using CodingJar;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Serialization;
 
 public enum TimePoolType
 {
@@ -24,7 +25,7 @@ public class TimePip
 
     public TimePip(TimePoolType timePoolType, float maxValue, float startValue)
     {
-        Debug.LogFormat("Added a new time pip");
+        //Debug.LogFormat("Added a new time pip");
         TimePoolType = timePoolType;
         MaxValue = maxValue;
         CurrentValue = startValue;
@@ -152,15 +153,27 @@ public class Run
     
     public bool IsPaused;
     
-    GridGenerator gridGenerator;
+    //Determines drop rates, available abilities, events etc
+    //Can this be consolidated into settings?
+    public Pet ActivePet = null;
+
+    private List<Toy> m_toys = new List<Toy>()
+    {
+
+    };
     
-    //public TileRack tileRack;
     
     public RunSettings RunSettings;
+    
+    public Resolution Resolution = Resolution.None;
+    
+    public GridGenerator GridGenerator = null;
     
     public int Score;
     
     public List<string> recentWords = new List<string>();
+
+    public RackData RackData = null;
     
     public float Elapsed;
     public float WorkingTime => SqueakyTime.CurrentValue + CoreTime.CurrentValue + GreyTime.CurrentValue;
@@ -185,6 +198,10 @@ public class Run
     public UnityAction validateFailListener = null;
     public UnityAction<Level> levelSuccessListener = null;
 
+    //Create a bunch of events that this run can call
+    public UnityEvent<Letter> LetterScored = new UnityEvent<Letter>();
+    public UnityEvent<LetterTile> LetterTileDiscarded = new UnityEvent<LetterTile>();
+    
     public int ActiveLevelIndex
     {
         get
@@ -206,15 +223,27 @@ public class Run
       RunSettings = runSettings;
       ActiveLevelSet = levelSet;
     }
+
+    private void SetPet(Pet pet)
+    {
+        LetterScored.AddListener(pet.Passive.OnLetterScored);
+        LetterTileDiscarded.AddListener(pet.Passive.OnLetterTileDiscarded); 
+    }
+
+    private void AddToy(Toy toy)
+    {
+        LetterScored.AddListener(toy.Passive.OnLetterScored);
+        LetterTileDiscarded.AddListener(toy.Passive.OnLetterTileDiscarded);
+    }
     
      //Nothing in here should actually kick off any dynamic data
     //It should only set up run data objects
-    public void Initialise(LevelSet levelSet)
+    public void Initialise()
     {
         ID = UnityEngine.Random.Range(0, 9999);
         
         //Initial level load
-        ActiveLevelSet = levelSet;
+        //ActiveLevelSet = levelSet;
         ActiveLevel = new Level(ActiveLevelSet.Levels[0]);
         
         Elapsed = 0;
@@ -257,6 +286,21 @@ public class Run
         
         //Grey time can be added and subtracted from - transient
         AddGreyPips(new List<TimePip>());
+
+        //Can we initialise it with a capacity and seed chars?
+        RackData = new RackData(ActiveLevelSet.RackSize);
+        RackData.Fill(ActiveLevelSet.RackSeeds, ActiveLevelSet.ScoringRubrik);
+        
+        //Should the run itself have the scoring rubrik? Not the level?
+        //Or the level set - rather
+        //I think so
+        
+        //Add the grid seeds of level 0
+        // foreach (var seedCharacter in ActiveLevel.Data.RackSeeds)
+        // {
+        //     Letter newLetter = new Letter(seedCharacter, 0);
+        //     RackData.Add(newLetter);
+        // }
         
         //Set up appropriate event responses for the run
         VerifyResponses();
@@ -272,7 +316,7 @@ public class Run
                 bool validated = true;
 
                 //If the active level has a live input don't allow new tiles
-                if (ActiveLevel.InputInProgress())
+                if (ActiveLevel.inputs.Count > 0 && ActiveLevel.InputInProgress() != null )
                 {
                     Debug.LogWarningFormat($"Cannot generate new tiles when there is a live input");
                     validated = false;
@@ -281,10 +325,10 @@ public class Run
                 //Did the request come with a score cost?
                 else if (costsScore)
                 {
-                    int scoreCost = RunSettings.ActiveScoringRubrik.newRackScoreCost;
+                    int scoreCost = ActiveLevelSet.ScoringRubrik.newRackScoreCost;
                     
                     //Do we have enough score to cover the cost?
-                    if (Score >= RunSettings.ActiveScoringRubrik.newRackScoreCost)
+                    if (Score >= ActiveLevelSet.ScoringRubrik.newRackScoreCost)
                     {
                         //Take the score away
                         ModifyScore(-scoreCost);
@@ -298,7 +342,7 @@ public class Run
                 //If we haven't already failed validation and the request wants to remove pips
                 if (validated && costsPips)
                 {
-                    int pipCost = RunSettings.ActiveScoringRubrik.newRackPipCost;
+                    int pipCost = ActiveLevelSet.ScoringRubrik.newRackPipCost;
                     
                     //If we have enough pips to cover the pip cost
                     if (WorkingPips.Count >= pipCost)
@@ -315,7 +359,8 @@ public class Run
                 //If we are still in a valid state - execute the request
                 if (validated)
                 {
-                    BrainControl.Get().eventManager.e_newRackRequest.Invoke(seedChars, fillTo, costsScore, costsPips);
+                    //Listener >> Gate >> Event    
+                    RackData.GetNew(ActiveLevelSet.ScoringRubrik);
                 }
             };
         }
@@ -327,17 +372,24 @@ public class Run
                 bool validated = true;
                 
                 //If the active level has a live input don't allow new tiles
-                if (ActiveLevel.LatestInput().PlacedBlocks.Count > 0)
+                if (ActiveLevel.inputs.Count > 0 && ActiveLevel.InputInProgress() != null)
                 {
                     Debug.LogWarningFormat($"Cannot generate new tiles when there is a live input");
                     validated = false;
+                    return;
+                }
+
+                if (RackData.AtCapacity())
+                {
+                    validated = false;
+                    return;
                 }
 
                else if (costsScore)
                 {
-                    int scoreCost = RunSettings.ActiveScoringRubrik.fillRackScoreCost;
+                    int scoreCost = ActiveLevelSet.ScoringRubrik.fillRackScoreCost;
                     
-                    if (Score >= RunSettings.ActiveScoringRubrik.fillRackScoreCost)
+                    if (Score >= ActiveLevelSet.ScoringRubrik.fillRackScoreCost)
                     {
                         ModifyScore(-scoreCost);
                     }
@@ -349,7 +401,7 @@ public class Run
 
                 if (validated && costsPips)
                 {
-                    int pipCost = RunSettings.ActiveScoringRubrik.fillRackPipCost;
+                    int pipCost = ActiveLevelSet.ScoringRubrik.fillRackPipCost;
                     
                     if (WorkingPips.Count >= pipCost)
                     {
@@ -364,7 +416,7 @@ public class Run
                 //If we are still in a valid state - execute the request
                 if (validated)
                 {
-                    BrainControl.Get().eventManager.e_fillRackRequest.Invoke(fillTo, costsScore, costsPips);
+                    RackData.Fill(null, ActiveLevelSet.ScoringRubrik);
                 }
             };
         }
@@ -376,7 +428,7 @@ public class Run
                 bool validated = true;
                 
                 //If the active level has a live input don't allow new tiles
-                if (ActiveLevel.LatestInput().PlacedBlocks.Count > 0)
+                if (ActiveLevel.inputs.Count > 0 && ActiveLevel.InputInProgress() != null)
                 {
                     Debug.LogWarningFormat($"Cannot generate new tiles when there is a live input");
                     validated = false;
@@ -384,7 +436,7 @@ public class Run
 
                 else if (costsScore)
                 {
-                    int scoreCost = RunSettings.ActiveScoringRubrik.specificTileScoreCost;
+                    int scoreCost = ActiveLevelSet.ScoringRubrik.specificTileScoreCost;
                     
                     if (Score >= scoreCost)
                     {
@@ -398,7 +450,7 @@ public class Run
 
                 if (validated && costsPips)
                 {
-                    int pipCost = RunSettings.ActiveScoringRubrik.specificTilePipCost;
+                    int pipCost = ActiveLevelSet.ScoringRubrik.specificTilePipCost;
                     
                     if (WorkingPips.Count >= pipCost)
                     {
@@ -424,7 +476,7 @@ public class Run
                 bool validated = true;
                 
                 //If the active level has a live input don't allow new tiles
-                if (ActiveLevel.LatestInput().PlacedBlocks.Count > 0)
+                if (ActiveLevel.inputs.Count > 0 && ActiveLevel.InputInProgress() != null )
                 {
                     Debug.LogWarningFormat($"Cannot generate new tiles when there is a live input");
                     validated = false;
@@ -432,7 +484,7 @@ public class Run
 
                 else if (costsScore)
                 {
-                    int scoreCost = RunSettings.ActiveScoringRubrik.consonantScoreCost;
+                    int scoreCost = ActiveLevelSet.ScoringRubrik.consonantScoreCost;
                     
                     if (Score >= scoreCost)
                     {
@@ -446,7 +498,7 @@ public class Run
 
                 if (validated && costsPips)
                 {
-                    int pipCost = RunSettings.ActiveScoringRubrik.consonantPipCost;
+                    int pipCost = ActiveLevelSet.ScoringRubrik.consonantPipCost;
                     
                     if (WorkingPips.Count >= pipCost)
                     {
@@ -460,7 +512,7 @@ public class Run
 
                 if (validated)
                 {
-                    BrainControl.Get().eventManager.e_getConsonantRequest.Invoke(costsScore, costsPips);
+                    RackData.Add(ActiveLevelSet.ScoringRubrik.Consonant());
                 }
             };
         }
@@ -472,7 +524,7 @@ public class Run
                 bool validated = true;
                 
                 //If the active level has a live input don't allow new tiles
-                if (ActiveLevel.LatestInput().PlacedBlocks.Count > 0)
+                if (ActiveLevel.inputs.Count > 0 && ActiveLevel.InputInProgress() != null )
                 {
                     Debug.LogWarningFormat($"Cannot generate new tiles when there is a live input");
                     validated = false;
@@ -480,7 +532,7 @@ public class Run
 
                 else if (costsScore)
                 {
-                    int scoreCost = RunSettings.ActiveScoringRubrik.vowelScoreCost;
+                    int scoreCost = ActiveLevelSet.ScoringRubrik.vowelScoreCost;
                     
                     if (Score >= scoreCost)
                     {
@@ -494,7 +546,7 @@ public class Run
 
                 if (validated && costsPips)
                 {
-                    int pipCost = RunSettings.ActiveScoringRubrik.vowelPipCost;
+                    int pipCost = ActiveLevelSet.ScoringRubrik.vowelPipCost;
                     
                     if (WorkingPips.Count >= pipCost)
                     {
@@ -508,7 +560,8 @@ public class Run
 
                 if (validated)
                 {
-                    BrainControl.Get().eventManager.e_getVowelRequest.Invoke(costsScore, costsPips);
+                    RackData.Add(ActiveLevelSet.ScoringRubrik.Vowel());
+                    // BrainControl.Get().eventManager.e_getVowelRequest.Invoke(costsScore, costsPips);
                 }
             };
         }
@@ -526,9 +579,9 @@ public class Run
                     // Debug.Log("Compiled word set: " + GridTools.WordFromLine(b));
                 
                     //Figure out how much the compiled block line is worth
-                    int scoreAdd = RunSettings.ActiveScoringRubrik.ScoreFromBlocks(blockLine);
+                    int scoreAdd = ActiveLevelSet.ScoringRubrik.ScoreFromBlocks(blockLine);
                     
-                    Debug.Log("Compiled word set is worth: " + scoreAdd);
+                    //Debug.Log("Compiled word set is worth: " + scoreAdd);
                     
                     score += scoreAdd;
                    
@@ -550,7 +603,7 @@ public class Run
             validateFailListener = () =>
             {
                 Debug.Log("Validation failed");
-                ModifyScore(-RunSettings.ActiveScoringRubrik.validateFailPenalty);
+                ModifyScore(-ActiveLevelSet.ScoringRubrik.validateFailPenalty);
             };
         }
         
@@ -676,9 +729,10 @@ public class Run
         //Reflect it in the UI
         BrainControl.Get().eventManager.e_updateUI.Invoke();
             
+        //We don't want to fail on scores
         if (Score <= 0)
         {
-            Brain.ins.eventManager.e_failRun.Invoke();
+            //Brain.ins.eventManager.e_failRun.Invoke();
         }
     }
 }

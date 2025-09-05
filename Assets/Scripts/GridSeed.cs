@@ -6,7 +6,7 @@ using UnityEngine;
 public enum GridElementFlags
 {
     None = 0,
-    Start =1 << 0,
+    Start = 1 << 0,
     End = 1 << 1,
     Bonus = 1 << 2,
     Required = 1 << 3,
@@ -17,10 +17,12 @@ public enum GridElementFlags
 [Serializable]
 public class GridSeed
 {
+    //Should this directly take a letter block?
     public string Content;
-    public GridElementFlags Flags;
+    public GridElementFlags Flags = GridElementFlags.None;
     public Color Color;
-
+    public bool OpenForEdit = false;
+    
     public GridSeed(string content, GridElementFlags flags )
     {
         Content = content;

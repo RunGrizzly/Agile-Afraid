@@ -1,100 +1,58 @@
+using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using System.Linq;
+using Sirenix.OdinInspector;
 using UnityEngine.Serialization;
 
 [ExecuteAlways]
-public class LetterTile : DraggableUI
+public class LetterTile : DraggableUI, ILetterDestination
 {
-
     public Letter Letter;
 
     public TextMeshProUGUI letterBox;
     public TextMeshProUGUI scoreBox;
 
-    void Start()
+    [ShowInInspector]
+    [ReadOnly]
+    private ILetterDestination m_destination = null;
+    
+    [Button]
+    public void Build(Letter letter)
     {
-        //    BuildWeighted();
-    }
-
-    public void BuildFromCharacter(char character)
-    {
-        // Debug.Log("Assigning random letter " + _letter + " to the tile");
-
-
-        //Create a new copy of the letter entry found using the passed letters
-        Letter = new Letter(BrainControl.Get().runManager.CurrentRun.RunSettings.ActiveScoringRubrik.distribution.Keys.FirstOrDefault(x => char.ToLower(x.character) ==char.ToLower(character)));
-
+        Debug.LogFormat($"Letter tile received instruction to build a {letter.character}");
+        Debug.LogFormat($"As a string this is {letter.character.ToString()}");
+        
+        Letter = letter;
+        
         letterBox.text = Letter.character.ToString();
-        scoreBox.text = Letter.score.ToString();
+        scoreBox.text = Letter.score.ToString(); 
+        
+        Debug.LogFormat($"Letterbox text is now {letterBox.text}");
     }
 
-    public void BuildFromDistribution(float minDist, float maxDist)
+    //This should be a generic letter destination
+    private void SetDestination(ILetterDestination destination)
     {
-
-        //Create a new copy of the letter entry found using the random letter
-        Letter = BrainControl.Get().runManager.CurrentRun.RunSettings.ActiveScoringRubrik.LetterFromDistribution(minDist, maxDist);
-
-        letterBox.text = Letter.character.ToString();
-        scoreBox.text = Letter.score.ToString();
+        m_destination = destination;
     }
-
-    public void BuildWeighted()
-    {
-        //Create a new copy of the letter entry found using the random letter
-        Letter = BrainControl.Get().runManager.CurrentRun.RunSettings.ActiveScoringRubrik.WeightedRandom();
-
-        letterBox.text = Letter.character.ToString();
-        scoreBox.text = Letter.score.ToString();
-    }
-
-
-    public void BuildVowel()
-    {
-        //Create a new copy of the letter entry found using the random letter
-        Letter = BrainControl.Get().runManager.CurrentRun.RunSettings.ActiveScoringRubrik.Vowel();
-
-        letterBox.text = Letter.character.ToString();
-        scoreBox.text = Letter.score.ToString();
-    }
-
-
-    public void BuildConsonant()
-    {
-        //Create a new copy of the letter entry found using the random letter
-        Letter =BrainControl.Get().runManager.CurrentRun.RunSettings.ActiveScoringRubrik.Consonant();
-
-        letterBox.text = Letter.character.ToString();
-        scoreBox.text = Letter.score.ToString();
-    }
-
-
+    
     //When we begin to drag.
     public override void OnBeginDrag(PointerEventData eventData)
     {
         //Where the drag was initiated.
-        startPos = gameObject.GetComponent<RectTransform>().localPosition;
+        m_startPos = gameObject.GetComponent<RectTransform>().localPosition;
+
+        //BrainControl.Get().eventManager.e_blockHighlighted.AddListener(SetDestination);
     }
     
-    // public override void OnBeginDrag(PointerEventData eventData)
-    // {
-    //     Vector2 localPoint;
-    //     
-    //     RectTransformUtility.ScreenPointToLocalPointInRectangle(
-    //         GameObject.FindGameObjectWithTag("Canvas").GetComponent<RectTransform>(), 
-    //         Input.mousePosition, 
-    //         GameObject.FindGameObjectWithTag("Canvas").GetComponent<Canvas>().worldCamera,
-    //         out localPoint
-    //     );
-    // }
-
     //While dragging.
     public override void OnDrag(PointerEventData eventData)
     {
         //While dragging, pointer event data allows us to use the pointer data to set the UI elements position.
         //gameObject.transform.position = eventData.position;
-        
         Vector2 localPoint;
         
         RectTransformUtility.ScreenPointToLocalPointInRectangle(
@@ -104,58 +62,97 @@ public class LetterTile : DraggableUI
             out localPoint
         );
         
-        
-        
         //While dragging, pointer event data allows us to use the pointer data to set the UI elements position.
         GetComponent<RectTransform>().localPosition = new Vector3(localPoint.x, localPoint.y, 0);
-
+        
+        FindDestination(eventData);
     }
 
     //When we end the drag.
+    //We should have a generic (tile target) thing that has a "send tile" method that
+    //Does some transformation or process
     public override void OnEndDrag(PointerEventData eventData) //Once the image is let go.
     {
-        LetterBlock highlightedBlock = BrainControl.Get().grid.highlightedBlock;
-
-
-        if (highlightedBlock != null && highlightedBlock.lockState == LockState.unlocked)
+        if (m_destination != null)
         {
-            //Control session input
-            ///////////
-            if (BrainControl.Get().runManager.CurrentRun.ActiveLevel.InputInProgress())
+            if (m_destination.IsValid())
             {
-                if (BrainControl.Get().runManager.CurrentRun.ActiveLevel.LatestInput().BlockIsPossible(highlightedBlock))
-                {
-                    BuildToBlock(highlightedBlock);
-                    BrainControl.Get().eventManager.e_updateInput.Invoke(highlightedBlock);
-                }
-                else
-                {
-                    ReturnToRack();
-                }
+                //It shouldn't be able to fail at this point
+                m_destination.SendLetter(Letter);
+                BrainControl.Get().Rack.RackData.Remove(Letter);
             }
             else
             {
-                BuildToBlock(highlightedBlock);
-                BrainControl.Get().eventManager.e_beginInput.Invoke(highlightedBlock);
+                Debug.LogWarning("Destination is not valid");
+                ReturnToRack();
             }
-            ///////////
         }
         else
         {
-            Debug.LogWarning("The requested block is not valid or is locked");
+            Debug.LogWarning("Destination is null");
             ReturnToRack();
         }
     }
-
-    void BuildToBlock(LetterBlock block)
+    
+    private void ReturnToRack()
     {
-        block.BuildTokenised(Letter.character.ToString());
-        BrainControl.Get().rack.letterTiles.Remove(this);
-        DestroyImmediate(gameObject);
+        gameObject.transform.localPosition = m_startPos;
     }
-
-    void ReturnToRack()
+    
+    public bool IsValid()
     {
-        gameObject.transform.localPosition = startPos;
+        return true;
+    }
+    
+    public void SendLetter(Letter letter)
+    {
+       //Send a letter to this tile
+    }
+    
+    private void FindDestination(PointerEventData pointerData)
+    {
+        //Find UI Targets
+        var uiResults = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(pointerData, uiResults);
+        
+        for (int i = 0; i < uiResults.Count; i++)
+        {
+            ILetterDestination result = uiResults[i].gameObject.GetComponent<ILetterDestination>();
+            
+            if (result != null)
+            {
+                Debug.LogFormat($"Found UI result {result}");
+                if (result is MonoBehaviour mono)
+                {
+                    if (mono is not LetterTile)
+                    {
+                        Debug.LogFormat(mono.gameObject,$"Found a valid UI destination {mono.name}");
+                        SetDestination(result);
+                        return;
+                    }
+                }
+            }
+        }
+
+        //Find world Targets
+        var worldResults = Physics.RaycastAll(Camera.main.ScreenPointToRay(Input.mousePosition), 200f);
+        
+        for (int i = 0; i < worldResults.Length; i++)
+        {
+            ILetterDestination result = worldResults[i].transform.GetComponent<ILetterDestination>();
+        
+            if (result != null)
+            {
+                Debug.LogFormat($"Found world result {result}");
+                if (result is MonoBehaviour mono)
+                {
+                        Debug.LogFormat(mono.gameObject,$"Found a valid UI destination {mono.name}");
+                        SetDestination(result);
+                        return;
+                }
+            }
+        }
+        
+        SetDestination(null);
     }
 }

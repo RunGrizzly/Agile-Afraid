@@ -5,7 +5,7 @@ public class Brain : MonoBehaviour
 {
     public EventManager eventManager;
     
-    [FormerlySerializedAs("sessionManager")] public RunManager runManager;
+    public RunManager runManager;
 
     public UIManager uiManager;
 
@@ -17,13 +17,15 @@ public class Brain : MonoBehaviour
 
     public ButtonControls buttonControls;
 
+    public AssetManager AssetManager = null;
+    
     public static Brain ins;
 
-    //Key items
-    public GridGenerator grid;
-    public TileRack rack;
+    //Key items //CSR
+     public GridGenerator Grid;
+     public TileRack Rack;
 
-    public RunSettings RunSettings = null;
+    // public RunSettings RunSettings = null;
 
     void Awake()
     {

@@ -10,6 +10,7 @@ public class EventManager : MonoBehaviour
     //Game Events
     /////////////////////
     public BlockSelectEvent e_blockSelected;
+    public BlockHighlightedEvent e_blockHighlighted;
     public ClearBlockEvent e_clearBlock;
     public QuitToMenuEvent e_quitToMenu;
     public GameInitialisedEvent e_gameInitialised;
@@ -27,7 +28,8 @@ public class EventManager : MonoBehaviour
     public LevelFailEvent e_levelFail; //This currently does nothing as nothing listens to it
     public BeginInputEvent e_beginInput;
     public UpdateInputEvent e_updateInput;
-    public EndInputEvent e_endInput;
+    public EndInputEvent e_confirmInput;
+    public CancelInputEvent e_cancelInput;
     /////////////////////
 
     //Scoring
@@ -38,7 +40,7 @@ public class EventManager : MonoBehaviour
 
     //Tile Rack Events
     /////////////////////
-    public EmptyRackEvent e_emptyRack;
+    public RackEmptyEvent e_rackEmptied;
 
     public GetTileEvent e_getTile;
 
@@ -46,6 +48,10 @@ public class EventManager : MonoBehaviour
     public GetConsonantEvent e_getConsonantRequest;
     public NewRackEvent e_newRackRequest;
     public FillRackEvent e_fillRackRequest;
+
+    public AddedToRackEvent e_addedToRack;
+
+    public RemovedFromRackEvent e_removedFromRack;
     /////////////////////
 
     public UpdateUIEvent e_updateUI;
@@ -59,12 +65,11 @@ public class EventManager : MonoBehaviour
         //Game events
         /////////////////////
         if (e_blockSelected == null) e_blockSelected = new BlockSelectEvent();
+        if (e_blockHighlighted == null) e_blockHighlighted = new BlockHighlightedEvent();
         if (e_clearBlock == null) e_clearBlock = new ClearBlockEvent();
         if (e_quitToMenu == null) e_quitToMenu = new QuitToMenuEvent();
         if (e_gameInitialised == null) e_gameInitialised = new GameInitialisedEvent();
         if (e_newRun == null) e_newRun = new NewRunEvent();
-        //if (e_restartRun == null) e_restartRun = new RestartRunEvent();
-        //if (e_restartLevel == null) e_restartLevel = new RestartLevelEvent();
         if (e_pauseRun == null) e_pauseRun = new PauseRunEvent();
         if (e_unpauseRun == null) e_unpauseRun = new UnpauseRunEvent();
         // if (e_navUpdate == null) e_navUpdate = new NavUpdateEvent();
@@ -73,7 +78,8 @@ public class EventManager : MonoBehaviour
         // if (e_juiceChange == null) e_juiceChange = new JuiceChangeEvent();
         if (e_beginInput == null) e_beginInput = new BeginInputEvent();
         if (e_updateInput == null) e_updateInput = new UpdateInputEvent();
-        if (e_endInput == null) e_endInput = new EndInputEvent();
+        if (e_confirmInput == null) e_confirmInput = new EndInputEvent();
+        if (e_cancelInput == null) e_cancelInput = new CancelInputEvent();
         /////////////////////
 
         //Score Events
@@ -84,12 +90,15 @@ public class EventManager : MonoBehaviour
 
         //Tile Rack Events
         /////////////////////
-        if (e_emptyRack == null) e_emptyRack = new EmptyRackEvent();
+        if (e_rackEmptied == null) e_rackEmptied = new RackEmptyEvent();
         if (e_getTile == null) e_getTile = new GetTileEvent();
         if (e_getVowelRequest == null) e_getVowelRequest = new GetVowelEvent();
         if (e_getConsonantRequest == null) e_getConsonantRequest = new GetConsonantEvent();
         if (e_newRackRequest == null) e_newRackRequest = new NewRackEvent();
         if (e_fillRackRequest == null) e_fillRackRequest = new FillRackEvent();
+
+        if (e_addedToRack == null) e_addedToRack = new AddedToRackEvent();
+        if (e_removedFromRack == null) e_removedFromRack = new RemovedFromRackEvent();
         /////////////////////
 
         //End Session Events

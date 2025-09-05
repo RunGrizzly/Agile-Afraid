@@ -37,6 +37,11 @@ public class StageManager : MonoBehaviour
         BrainControl.Get().eventManager.e_gameInitialised.Invoke();
     }
 
+    public void InitialiseDailyRun()
+    {
+        Task t = new Task(InitialiseRunRoutine(BrainControl.Get().AssetManager.DeliveredLevelSet));
+    }
+    
     public void InitialiseRun(LevelSet levelSet)
     {
         Task t = new Task(InitialiseRunRoutine(levelSet));
@@ -58,7 +63,7 @@ public class StageManager : MonoBehaviour
         Debug.Log("All scenes initialised");
         
         //As soon as the appropriate scenes are loaded, we tacitly permit the run to start
-        Brain.ins.runManager.StartNewRun(Brain.ins.RunSettings, levelSet);
+        Brain.ins.runManager.StartNewRun(levelSet);
         
         //So we are ready to initialise the run
         //This should be the entry point for the run kickoff
@@ -124,19 +129,30 @@ public class StageManager : MonoBehaviour
             Debug.Log("Scene: " + scene + " is loaded? - " + l);
             if (l == false) return false;
         }
-
+        
         return true;
     }
 
-    public void QuitGame()
+    
+    
+    public static void QuitGame() // {
     {
-        // save any game data here
 #if UNITY_EDITOR
-        // Application.Quit() does not work in the editor so
-        // UnityEditor.EditorApplication.isPlaying need to be set to false to end the game
         UnityEditor.EditorApplication.isPlaying = false;
+
+#elif UNITY_STANDALONE
+        Application.Quit();
+
+#elif UNITY_WEBGL
+        Debug.Log("Quit requested on WebGL - showing exit screen instead.");
+        Screen.fullScreen = false;
+        
+#elif UNITY_ANDROID || UNITY_IOS
+        Application.Quit();
+        Debug.Log("Quit requested on mobile.");
+
 #else
-             Application.Quit();
+        Application.Quit();
 #endif
     }
 }

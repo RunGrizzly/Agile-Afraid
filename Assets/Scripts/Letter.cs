@@ -24,4 +24,13 @@ public class Letter
         score = _letter.score;
     }
 
+    public void OnValidated()
+    {
+        //letter was validated as part of an input
+    }
+
+    public void OnDiscarded()
+    {
+        //This letter was discarded
+    }
 }

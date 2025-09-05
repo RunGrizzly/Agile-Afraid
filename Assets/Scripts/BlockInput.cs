@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Sirenix.OdinInspector;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public enum LineOrientation { Horiz, Vert, Unknown }
 public enum LineDirection { Forwards, Backwards, Unknown }
@@ -13,99 +12,144 @@ public enum LineDirection { Forwards, Backwards, Unknown }
 public class BlockInput
 {
     //Raw placed blocks
-    public List<LetterBlock> PlacedBlocks = new List<LetterBlock>();
-    
-    //Granular access to validated info
-    public List<BlockLine> ValidatedLines = new List<BlockLine>();
+    [ShowInInspector]
+    public List<LetterBlock> PlacedBlocks { get; private set; } = new List<LetterBlock>();
+    public List<BlockLine> ValidatedLines { get; private set; } = new List<BlockLine>();
     public List<LetterBlock>  ValidatedBlocks => ValidatedLines.SelectMany(x => x.blocks).ToList();
-    public List<char> ValidatedCharacters => ValidatedBlocks.Select(y => y.baseLetter.character).ToList();
+    public List<char> ValidatedCharacters => ValidatedBlocks.Select(y => y.BaseLetter.character).ToList();
 
     [ReadOnly]
     public List<string> ValidatedStrings = new List<string>();
     
+    [ReadOnly]
+    public List<BlockLine> PossibleLines = new List<BlockLine>();
+
     public bool isValidated = false;
-
-    public BlockInput(List<LetterBlock> blocks, bool validate, bool score)
+    
+    public BlockInput(LetterBlock initialBlock, bool validate, bool score)
     {
-        foreach (LetterBlock block in blocks)
-        {
-            AddToInput(block);
-        }
-
+        //We initialise the input with the block
+        AddToInput(initialBlock);
+        
+        var adjacentBlocks = GridTools.GetAdjacentBlocks(initialBlock);
+        
+        //We now have the input block
+        //And its adjacencies
         if (validate)
         {
             SetValidatedState(validate);
         }
     }
-    public List<BlockLine> PossibleLines()
+    
+    //Set possible lines with current input blocks
+    private List<BlockLine> UpdatePossibleLines()
     {
-        // if (blocks.Count >= 2)
-        // {
-        //     Debug.Log("Calculating input direction");
-        //     return new List<BlockLine>() { DirectionFilter() };
-        // }
-
-        //Get the full cross by counting empties
-        var cross = GridTools.GetCross(PlacedBlocks[PlacedBlocks.Count - 1],true);
+        List<BlockLine> possibleLines = new List<BlockLine>();
         
-        //Return the cross row and column
-        return new List<BlockLine>() { cross[0], cross[1] };
-    }
+        
+        //Only count first two
+        for (int i = 0; i < Mathf.Min(2,PlacedBlocks.Count); i++)
+        {
+            Debug.LogFormat($"Updating possible line with input block {i}");
+            
+            var cross = GridTools.GetCross(PlacedBlocks[i],true);
+            //Remove anything that doesn't match
+            if (i > 0)
+            {
+                Debug.LogFormat($"block {i} will confirm the line direction");
+                //If both inputs share the horizontal line
+                //Set it
+                
+                if( new HashSet<LetterBlock>(possibleLines[0].blocks).SetEquals(cross[0].blocks))
+                {
+                    Debug.LogFormat($"Second line is colinear with the horizontal line");
+                    possibleLines = new List<BlockLine>()
+                    {
+                    possibleLines[0]
+                    };
+                }
 
-    //So this is failing
-    public bool BlockIsPossible(LetterBlock checkBlock)
+                //If both inputs share the vertical line
+                //Set it
+                else if( new HashSet<LetterBlock>(possibleLines[1].blocks).SetEquals(cross[1].blocks))
+                {
+                    Debug.LogFormat($"Second line is colinear with the vertical line");
+                    possibleLines = new List<BlockLine>()
+                    {
+                        possibleLines[1]
+                    }; 
+                }
+            }
+            else
+            {
+                possibleLines.Add(cross[0]);
+                possibleLines.Add(cross[1]);
+                Debug.LogFormat($"possibleLines 0 count = {possibleLines[0].blocks.Count}");
+                Debug.LogFormat($"possibleLines 1 count = {possibleLines[1].blocks.Count}");
+            }
+        }
+
+        return possibleLines;
+    }
+    
+    public void RevealPossibleLines()
     {
-        var possibleLines = PossibleLines();
-        
-        if (possibleLines.Count < 1)
+        foreach (var blockLine in PossibleLines)
         {
-            Debug.LogFormat($"Block possible lines <1 - possible");
-            return true;
+            foreach (LetterBlock latestInputPlacedBlock in blockLine.blocks)
+            {
+                //A framework for animating the color of a block temporarily
+                //The grid should be able to request this effect (amongst others)
+                Material material = latestInputPlacedBlock.MeshRenderer.material;
+                Material animatedMaterial = new Material(material);
+                latestInputPlacedBlock.MeshRenderer.material = animatedMaterial;
+    
+                LeanTween.value(0, 1, 0.25f).setEase(LeanTweenType.easeOutExpo)
+                .setOnUpdate((val) =>
+                {
+                    animatedMaterial.SetFloat("_normalEffect", Mathf.Lerp(material.GetFloat("_normalEffect"), 1.5f, val));
+                })
+                .setOnComplete(() =>
+                {
+                    LeanTween.value(0, 1, 0.25f).setEase(LeanTweenType.easeOutExpo)
+                        .setOnUpdate((val) =>
+                        {
+                            animatedMaterial.SetFloat("_normalEffect", Mathf.Lerp( 1.5f, material.GetFloat("_normalEffect"), val));
+                        })
+                        .setOnComplete(() =>
+                        {
+                            latestInputPlacedBlock.MeshRenderer.material = material;
+                        });
+                });
+            }
         }
-        
-        if (possibleLines.SelectMany(x => x.blocks).ToList().Contains(checkBlock))
-        {
-            Debug.LogFormat($"Possible lines containes the check block");
-            return true;
-        }
-        
-        Debug.LogFormat($"Block not possible.");
-        return false;
     }
-
+    
     //Add a letter block to the input
     public void AddToInput(LetterBlock newLetterBlock)
     { 
-        //Ongoing input orientation check
-        Debug.Log("A new block was added to the current input");
-        
         PlacedBlocks.Add(newLetterBlock);
-        //characters.Add(newLetterBlock.baseLetter.character);
-        
-        //possibleLines = PossibleLines();
+        PossibleLines = UpdatePossibleLines();
+        RevealPossibleLines();
     }
 
-    public void RemoveFromInput(LetterBlock r)
+    public void RemoveFromInput(LetterBlock letterBlock)
     {
-        Debug.Log("Removing active block: " + r);
+        PlacedBlocks.Remove(letterBlock);
+       
+        BrainControl.Get().runManager.CurrentRun.RackData.Add(letterBlock.letter);
+        letterBlock.SetLockState(LockState.unlocked);
+        letterBlock.Empty();
         
-        PlacedBlocks.Remove(r);
-        //characters.Remove(r.baseLetter.character);
-        
-        r.SetLockState(LockState.unlocked);
-        r.Empty();
-        
-        if (PlacedBlocks.Count > 0)
+        if (PlacedBlocks.Count < 1)
         {
-            //possibleLines = SetPossibleLines();
+            BrainControl.Get().eventManager.e_cancelInput.Invoke(this);
         }
-        
         else
         {
-            //possibleLines = new List<BlockLine>() { };
+            PossibleLines = UpdatePossibleLines();
+            RevealPossibleLines();   
         }
-
-        Debug.Log("Removal complete");
     }
 
     [Button]
@@ -116,43 +160,26 @@ public class BlockInput
         {
             isValidated = true;
             
+            //We have no way to actually mark the correct line
+            //So this validates the entire input
             foreach (LetterBlock block in PlacedBlocks)
             {
                 //Don't lock
                 block.SetLockState(LockState.locked);
                 block.gameObject.layer = LayerMask.NameToLayer("Navigable");
+
+                block.letter.OnValidated();
             }
 
-            //So
-            //We want to check if this validate WOULD trigger a grid success
-            
-            //If so
-            //Go ahead an call the grid done
-            
-            //If not
-            //Just lock the input and continue
-            
-            //So the validation flow needs to be different
-            
-            //Input
-            //Compiles
-            //'Validates' that an acceptable word was made
-            
-            //Grid
-            //When a word is validated
-            //'Validates' the grid that a path has been made
-            
+            //The input was validated - we know here that we can bestow bonuses etc
             BrainControl.Get().eventManager.e_validateSuccess.Invoke(this);
-            
-            //So maybe this shouldn't happen automatically
-            //Or it should centrally do the check 
-            //BrainControl.Get().eventManager.e_navUpdate.Invoke();
         }
 
         else
         {
             isValidated = false;
             BrainControl.Get().eventManager.e_validateFail.Invoke();
+            BrainControl.Get().uiManager.PrintMessage("Invalid word");
         }
     }
     
@@ -163,7 +190,7 @@ public class BlockInput
         //Go through blocks
         for (int i = 0; i < PlacedBlocks.Count; i++)
         {
-            Debug.LogFormat($"Checking lines for block {PlacedBlocks[i].baseLetter.character}");
+            Debug.LogFormat($"Checking lines for block {PlacedBlocks[i].BaseLetter.character}");
             
             var filledCross = GridTools.GetCross(PlacedBlocks[i]);
             
@@ -209,27 +236,37 @@ public class BlockInput
 
             if (forwardValid && !ValidatedStrings.Contains(input.forwards))
             {
-                Debug.LogFormat($"Blockline {blockLine.lineOrientation} validated forward: {input.forwards}");
+                //Debug.LogFormat($"Blockline {blockLine.lineOrientation} validated forward: {input.forwards}");
                 ValidatedLines.Add(blockLine);
                 ValidatedStrings.Add(input.forwards);
             }
             
             if (backwardValid && !ValidatedStrings.Contains(input.backwards))
             {
-                Debug.LogFormat($"Blockline {blockLine.lineOrientation} validated backwards: {input.backwards}");
+                //Debug.LogFormat($"Blockline {blockLine.lineOrientation} validated backwards: {input.backwards}");
                 ValidatedLines.Add(blockLine);
                 ValidatedStrings.Add(input.backwards);
             }
             
             if (!forwardValid && !backwardValid)
             {
-                Debug.LogWarning($"Invalid word in both directions for line {blockLine.lineOrientation}: '{input.forwards}' and '{input.backwards}'");
+                //Debug.LogWarning($"Invalid word in both directions for line {blockLine.lineOrientation}: '{input.forwards}' and '{input.backwards}'");
                 isValid = false;
                 break;
             }
         }
         
         SetValidatedState(isValid);
+        
+        //This is the possible lines for this input
+        //This should be set on the first input
+        foreach (var blockline in PossibleLines)
+        {
+            foreach (var block in blockline.blocks)
+            {
+                block.MeshRenderer.material.SetFloat("_normalEffect", 0.25f);
+            }
+        }
     }
 
 

@@ -1,5 +1,6 @@
 using System;
 using Sirenix.OdinInspector;
+using Sirenix.Utilities;
 using UnityEditor;
 using UnityEngine;
 
@@ -38,24 +39,19 @@ public class GridData: SerializedScriptableObject
          {
              elementColor = Color.gray;
          }
-
-         
-         // // Full rect for the element (passed in)
-         // EditorGUI.DrawRect(rect, elementColor);
          
          // Split the rect
          var inputRect = new Rect(rect);
          inputRect.height = rect.height * 0.25f;
 
          var buttonRect = new Rect(rect);
-         buttonRect.height = rect.height *0.25f;
-         buttonRect.y = rect.y + rect.height*0.75f;
-         
-         // elementRect.x /= 4;
-         // elementRect.y /= 4;
-         //
-         // elementRect.width /= 4;
-         // elementRect.height /= 4;
+         buttonRect.height = rect.height * 0.25f;
+         buttonRect.y = rect.y + rect.height * 0.5f;
+
+         var boolRect = new Rect(rect);
+         boolRect.height = rect.height * 0.25f;
+         boolRect.y = rect.y + rect.height * 0.75f;
+
          
          // Draw text field in top half
          var customStyle = new GUIStyle(EditorStyles.textField)
@@ -69,22 +65,8 @@ public class GridData: SerializedScriptableObject
          EditorGUI.DrawRect(rect,elementColor);
          
          value.Content = EditorGUI.TextField(inputRect, value.Content.ToString(), customStyle);
-         
-         // Draw button in bottom half
-         // if (GUI.Button(buttonRect, "⋮"))
-         // {
-         //     Debug.Log("Right-click menu triggered for: " + value.Content);
-         //
-         //     var menu = new UnityEditor.GenericMenu();
-         //     menu.AddItem(new GUIContent("Set As Start Seed"), false, () => value.Flags = GridElementFlags.start);
-         //     menu.AddItem(new GUIContent("Set As End Seed"), false, () => value.Flags = GridElementFlags.end);
-         //     menu.AddItem(new GUIContent("Set As Neutral Seed"), false, () => value.Flags = GridElementFlags.none);
-         //     menu.AddItem(new GUIContent("Set As Blocked Seed"), false, () => value.Flags = GridElementFlags.blocked);
-         //     menu.ShowAsContext();
-         // }
-         
-         // Draw enum flags as dropdown
          value.Flags = (GridElementFlags)EditorGUI.EnumFlagsField(buttonRect, value.Flags);
+         value.OpenForEdit = EditorGUI.Toggle(boolRect, value.OpenForEdit);
          
          return value;
      }
@@ -94,6 +76,68 @@ public class GridData: SerializedScriptableObject
     public void InterpretFromCSV()
     {
         
+    }
+
+    [Button]
+    public void ClearAll()
+    {
+        for (int x = 0; x < gridSeed.GetLength(0); x++)
+        {
+            for (int y = 0; y < gridSeed.GetLength(1); y++)
+            {
+                gridSeed[x, y] = null;
+            }
+        }
+    }
+    
+    [Button]
+    public void SetAllFlags(GridElementFlags flags)
+    {
+        for (int x = 0; x < gridSeed.GetLength(0); x++)
+        {
+            for (int y = 0; y < gridSeed.GetLength(1); y++)
+            {
+                if (gridSeed[x, y] == null)
+                {
+                    gridSeed[x, y] = new GridSeed("", GridElementFlags.Empty);
+                }
+                else
+                {
+                    gridSeed[x, y].Flags |= GridElementFlags.Empty;
+                }
+            }
+        }
+    }
+
+    [Button]
+    public void SetFlags(GridElementFlags flags)
+    {
+        for (int x = 0; x < gridSeed.GetLength(0); x++)
+        {
+            for (int y = 0; y < gridSeed.GetLength(1); y++)
+            {
+                if (gridSeed[x, y] != null && gridSeed[x, y].OpenForEdit)
+                {
+                    gridSeed[x, y].Flags = flags;
+                }
+            }
+        }
+    }
+
+    [Button]
+    public void Evaluate()
+    {
+        for (int x = 0; x < gridSeed.GetLength(0); x++)
+        {
+            for (int y = 0; y < gridSeed.GetLength(1); y++)
+            {
+                if (gridSeed[x, y] != null && !gridSeed[x, y].Content.IsNullOrWhitespace() && gridSeed[x, y].Content != "")
+                {
+                    //A filled string cannot be empty
+                    gridSeed[x, y].Flags &= ~GridElementFlags.Empty;
+                }
+            }
+        }
     }
     
 }

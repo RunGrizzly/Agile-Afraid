@@ -18,13 +18,13 @@ public class ButtonControls : MonoBehaviour
     }
     public void NewRack()
     {
-        BrainControl.Get().runManager.CurrentRun.newRackListener.Invoke(null,BrainControl.Get().runManager.CurrentRun.ActiveLevel.Data.rackSize, false,true);
+        BrainControl.Get().runManager.CurrentRun.newRackListener.Invoke(null,BrainControl.Get().runManager.CurrentRun.ActiveLevelSet.RackSize, false,true);
             
         //BrainControl.Get().eventManager.e_newRackRequest.Invoke(null,BrainControl.Get().runManager.CurrentRun.ActiveLevel.Data.rackSize, false,true);
     }
     public void FillRack()
     {
-        BrainControl.Get().runManager.CurrentRun.fillRackListener.Invoke(BrainControl.Get().runManager.CurrentRun.ActiveLevel.Data.rackSize, false, true);
+        BrainControl.Get().runManager.CurrentRun.fillRackListener.Invoke(BrainControl.Get().runManager.CurrentRun.ActiveLevelSet.RackSize, false, true);
         
         //BrainControl.Get().eventManager.e_fillRackRequest.Invoke(BrainControl.Get().runManager.CurrentRun.ActiveLevel.Data.rackSize, false, true);
     }
@@ -36,7 +36,7 @@ public class ButtonControls : MonoBehaviour
 
     public void EmptyRack()
     {
-        BrainControl.Get().runManager.CurrentRun.newRackListener.Invoke(null,0, false, false);
+        BrainControl.Get().runManager.CurrentRun.RackData.Empty();
         
         //BrainControl.Get().eventManager.e_emptyRack.Invoke();
     }

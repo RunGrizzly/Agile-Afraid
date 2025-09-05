@@ -38,7 +38,7 @@ MonoBehaviour:
       Data: D
     - Name: Flags
       Entry: 3
-      Data: 1
+      Data: 33
     - Name: Color
       Entry: 7
       Data: UnityEngine.Color, UnityEngine.CoreModule
@@ -68,7 +68,7 @@ MonoBehaviour:
       Data: O
     - Name: Flags
       Entry: 3
-      Data: 1
+      Data: 33
     - Name: Color
       Entry: 7
       Data: UnityEngine.Color, UnityEngine.CoreModule
@@ -98,7 +98,7 @@ MonoBehaviour:
       Data: O
     - Name: Flags
       Entry: 3
-      Data: 1
+      Data: 33
     - Name: Color
       Entry: 7
       Data: UnityEngine.Color, UnityEngine.CoreModule
@@ -128,7 +128,7 @@ MonoBehaviour:
       Data: G
     - Name: Flags
       Entry: 3
-      Data: 1
+      Data: 33
     - Name: Color
       Entry: 7
       Data: UnityEngine.Color, UnityEngine.CoreModule
@@ -398,7 +398,7 @@ MonoBehaviour:
       Data: M
     - Name: Flags
       Entry: 3
-      Data: 2
+      Data: 34
     - Name: Color
       Entry: 7
       Data: UnityEngine.Color, UnityEngine.CoreModule
@@ -428,7 +428,7 @@ MonoBehaviour:
       Data: A
     - Name: Flags
       Entry: 3
-      Data: 2
+      Data: 34
     - Name: Color
       Entry: 7
       Data: UnityEngine.Color, UnityEngine.CoreModule
@@ -458,7 +458,7 @@ MonoBehaviour:
       Data: H
     - Name: Flags
       Entry: 3
-      Data: 2
+      Data: 34
     - Name: Color
       Entry: 7
       Data: UnityEngine.Color, UnityEngine.CoreModule

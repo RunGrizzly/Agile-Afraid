@@ -7,9 +7,7 @@ using UnityEngine.EventSystems;
 //Activated slots have a draggable UI component activated.
 public class DraggableUI : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler
 {
-
-
-    public Vector3 startPos;
+   protected Vector3 m_startPos;
 
     //When we begin to drag.
     public virtual void OnBeginDrag(PointerEventData eventData)

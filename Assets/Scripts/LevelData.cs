@@ -17,12 +17,11 @@ public enum LevelRequirements
 public class LevelData
 {
     public GridData gridData = new GridData();
-
-    public PlayableClip music;
+    public PlayableClip Music;
     public Color DeadZoneColorA;
     public Color DeadZoneColorB;
     public LevelRequirements LevelRequirements;
-    public bool IsTimed = true;
+    //public bool IsTimed = true;
     public bool AllowTileRequests = true;
     
     //Seeds
@@ -34,8 +33,7 @@ public class LevelData
 
     //A target score to beat - this or more counts towards a trophy
     public int trophyScore;
-    public List<char> RackSeeds = new List<char>();
-    public int rackSize;
+    // public List<char> RackSeeds = new List<char>();
+    // public int rackSize;
     public int repeatLimit;
-
 }

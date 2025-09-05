@@ -117,6 +117,7 @@ Material:
     - _isSelected: 0
     - _isStart: 0
     - _isTarget: 0
+    - _normalEffect: 0.25
     m_Colors:
     - Color_1: {r: 1, g: 1, b: 1, a: 1}
     - Color_2: {r: 0, g: 0, b: 0, a: 0}

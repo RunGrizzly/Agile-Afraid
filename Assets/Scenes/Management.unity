@@ -266,6 +266,7 @@ GameObject:
   - component: {fileID: 938982175}
   - component: {fileID: 938982169}
   - component: {fileID: 938982176}
+  - component: {fileID: 938982177}
   m_Layer: 0
   m_Name: Management
   m_TagString: Brain
@@ -332,9 +333,9 @@ MonoBehaviour:
   taskManager: {fileID: 938982175}
   audioManager: {fileID: 1652736062}
   buttonControls: {fileID: 938982176}
-  grid: {fileID: 0}
-  rack: {fileID: 0}
-  RunSettings: {fileID: 11400000, guid: 8cdc3118955cc3a4ea98dce126b9bc6b, type: 2}
+  AssetManager: {fileID: 938982177}
+  Grid: {fileID: 0}
+  Rack: {fileID: 0}
 --- !u!114 &938982173
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -353,20 +354,25 @@ MonoBehaviour:
   TileRackGroup: {fileID: 0}
   TileRequestGroup: {fileID: 0}
   LevelRequirementsGroup: {fileID: 0}
-  gameCanvas: {fileID: 0}
-  recentHolder: {fileID: 0}
-  levelTrack: {fileID: 0}
+  LevelTrackGroup: {fileID: 0}
+  RecentWordGroup: {fileID: 0}
+  RecentWordHolder: {fileID: 0}
+  LevelPipHolder: {fileID: 0}
   TimeBar: {fileID: 0}
   TimePipHolder: {fileID: 0}
   scoreText: {fileID: 0}
   levelText: {fileID: 0}
   messageBox: {fileID: 0}
-  inputControlTemplate: {fileID: 2820702500035625035, guid: fbb95001e239b3b4ab129f830e2ea7ed, type: 3}
+  inputControlTemplate: {fileID: 3367445172493855983, guid: fbb95001e239b3b4ab129f830e2ea7ed, type: 3}
   m_interruptPanelTemplate: {fileID: 1638279720682749569, guid: 35caf8b585127404287e897236004bc4, type: 3}
   recentWordTemplate: {fileID: 7910235621893071442, guid: 4ee2454551d21504993949f5306f62c9, type: 3}
   levelPipTemplate: {fileID: 2504070363903430941, guid: f7f77a36514740c4d8a16662b9ae8e2f, type: 3}
   TimePipWidgetTemplate: {fileID: 5932449589687278403, guid: 2206d3bd1cbcaf34c89977f0dccaa8ab, type: 3}
   LevelRequirementGrubTemplate: {fileID: 1449135074601833485, guid: c4bb8f6110c783846b0be3e01302b0bb, type: 3}
+  LevelRequirementGrubs:
+    m_keys: 
+    m_values: []
+  m_tileHolder: {fileID: 0}
 --- !u!114 &938982174
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -380,6 +386,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Runs: []
+  ActiveRunSettings: {fileID: 0}
 --- !u!114 &938982175
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -404,6 +411,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f3b1edaaa7c4cb409811a9b57c8d926, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &938982177
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 938982167}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c65411be7d853ba4da5897c7483b8ec0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TestRunSettings: {fileID: 0}
+  DeliveredLevelSet: {fileID: 0}
 --- !u!850595691 &1025749669
 LightingSettings:
   m_ObjectHideFlags: 0
@@ -501,7 +522,7 @@ MonoBehaviour:
   _version: 2
   _crossSceneReferences:
   - _sourceObject: {fileID: 938982171}
-    _sourceField: grid
+    _sourceField: Grid
     DEPRECATED_fromObject:
       scene:
         editorAssetGUID: 
@@ -518,7 +539,7 @@ MonoBehaviour:
         editorAssetGUID: 6ef2b6432a170f344880dae6ed4c2166
         name: WordGame
         _path: Assets/Scenes/WordGame.unity
-      fullPath: /SpacesGrid
+      fullPath: /Grid
       componentName: GridGenerator, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
       componentIndex: 0
@@ -572,11 +593,11 @@ MonoBehaviour:
         editorAssetGUID: 1410d76adbb43f746b49c8df674a9654
         name: UI
         _path: Assets/Scenes/UI.unity
-      fullPath: /UICanvas/LevelPanel/Value
+      fullPath: /UICanvas/RecentWordPanel/Title/Label
       componentName: TMPro.TextMeshProUGUI, Unity.TextMeshPro, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
       componentIndex: 0
-      editorLocalId: 1151570557
+      editorLocalId: 444927145
       editorPrefabRelativePath: 
       version: 1
     _data:
@@ -599,7 +620,7 @@ MonoBehaviour:
         editorAssetGUID: 1410d76adbb43f746b49c8df674a9654
         name: UI
         _path: Assets/Scenes/UI.unity
-      fullPath: /UICanvas/JuicePanel/Value
+      fullPath: /UICanvas/ScorePanel/Value
       componentName: TMPro.TextMeshProUGUI, Unity.TextMeshPro, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
       componentIndex: 0
@@ -663,7 +684,7 @@ MonoBehaviour:
     _data:
       data: []
   - _sourceObject: {fileID: 938982173}
-    _sourceField: levelTrack
+    _sourceField: LevelPipHolder
     DEPRECATED_fromObject:
       scene:
         editorAssetGUID: 
@@ -690,7 +711,7 @@ MonoBehaviour:
     _data:
       data: []
   - _sourceObject: {fileID: 938982173}
-    _sourceField: recentHolder
+    _sourceField: RecentWordHolder
     DEPRECATED_fromObject:
       scene:
         editorAssetGUID: 
@@ -717,7 +738,7 @@ MonoBehaviour:
     _data:
       data: []
   - _sourceObject: {fileID: 938982173}
-    _sourceField: gameCanvas
+    _sourceField: RecentWordGroup
     DEPRECATED_fromObject:
       scene:
         editorAssetGUID: 
@@ -734,11 +755,38 @@ MonoBehaviour:
         editorAssetGUID: 1410d76adbb43f746b49c8df674a9654
         name: UI
         _path: Assets/Scenes/UI.unity
-      fullPath: /UICanvas
-      componentName: UnityEngine.RectTransform, UnityEngine.CoreModule, Version=0.0.0.0,
+      fullPath: /UICanvas/RecentWordPanel
+      componentName: UnityEngine.CanvasGroup, UnityEngine.UIModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
       componentIndex: 0
-      editorLocalId: 1125546525
+      editorLocalId: 1039735320
+      editorPrefabRelativePath: 
+      version: 1
+    _data:
+      data: []
+  - _sourceObject: {fileID: 938982173}
+    _sourceField: LevelTrackGroup
+    DEPRECATED_fromObject:
+      scene:
+        editorAssetGUID: 
+        name: 
+        _path: 
+      fullPath: 
+      componentName: 
+      componentIndex: 0
+      editorLocalId: 0
+      editorPrefabRelativePath: 
+      version: 0
+    _toObject:
+      scene:
+        editorAssetGUID: 1410d76adbb43f746b49c8df674a9654
+        name: UI
+        _path: Assets/Scenes/UI.unity
+      fullPath: /UICanvas/LevelPanel
+      componentName: UnityEngine.CanvasGroup, UnityEngine.UIModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+      componentIndex: 0
+      editorLocalId: 1827199175
       editorPrefabRelativePath: 
       version: 1
     _data:
@@ -878,6 +926,33 @@ MonoBehaviour:
       version: 1
     _data:
       data: []
+  - _sourceObject: {fileID: 938982171}
+    _sourceField: Rack
+    DEPRECATED_fromObject:
+      scene:
+        editorAssetGUID: 
+        name: 
+        _path: 
+      fullPath: 
+      componentName: 
+      componentIndex: 0
+      editorLocalId: 0
+      editorPrefabRelativePath: 
+      version: 0
+    _toObject:
+      scene:
+        editorAssetGUID: 1410d76adbb43f746b49c8df674a9654
+        name: UI
+        _path: Assets/Scenes/UI.unity
+      fullPath: /UICanvas/TIleRack
+      componentName: TileRack, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      componentIndex: 0
+      editorLocalId: 1566520538
+      editorPrefabRelativePath: 
+      version: 1
+    _data:
+      data: []
   - _sourceObject: {fileID: 938982173}
     _sourceField: MainMenuCanvas
     DEPRECATED_fromObject:
@@ -901,33 +976,6 @@ MonoBehaviour:
         PublicKeyToken=null
       componentIndex: 0
       editorLocalId: 1920690336
-      editorPrefabRelativePath: 
-      version: 1
-    _data:
-      data: []
-  - _sourceObject: {fileID: 938982171}
-    _sourceField: rack
-    DEPRECATED_fromObject:
-      scene:
-        editorAssetGUID: 
-        name: 
-        _path: 
-      fullPath: 
-      componentName: 
-      componentIndex: 0
-      editorLocalId: 0
-      editorPrefabRelativePath: 
-      version: 0
-    _toObject:
-      scene:
-        editorAssetGUID: 1410d76adbb43f746b49c8df674a9654
-        name: UI
-        _path: Assets/Scenes/UI.unity
-      fullPath: /UICanvas/TIleRack
-      componentName: TileRack, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
-      componentIndex: 0
-      editorLocalId: 1566520538
       editorPrefabRelativePath: 
       version: 1
     _data:
@@ -970,7 +1018,7 @@ MonoBehaviour:
       editorAssetGUID: c282660f956924543a0e62c8d797e9d3
       name: MainMenu
       _path: Assets/Scenes/MainMenu.unity
-    loadInEditor: 0
+    loadInEditor: 1
     loadMethod: 3
   _isMainScene: 0
   _version: 1

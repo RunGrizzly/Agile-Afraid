@@ -17,6 +17,7 @@ MonoBehaviour:
     SerializedBytes: 
     ReferencedUnityObjects:
     - {fileID: 11400000, guid: d0922ce1c7bff1a4e9d92f07e922e50b, type: 2}
+    - {fileID: 11400000, guid: aebfadb60de633940abe86b8b7ef09f6, type: 2}
     - {fileID: 8300000, guid: de891938733ba17419d5b29242df7608, type: 3}
     - {fileID: 11400000, guid: 1724b1bb905afd14183a57ef75e79f87, type: 2}
     - {fileID: 11400000, guid: ee74d6a284a43e64aa48f22ac240e47f, type: 2}
@@ -39,6 +40,9 @@ MonoBehaviour:
     - Name: gridData
       Entry: 10
       Data: 0
+    - Name: ScoringRubrik
+      Entry: 10
+      Data: 1
     - Name: music
       Entry: 7
       Data: 2|PlayableClip, Assembly-CSharp
@@ -47,7 +51,7 @@ MonoBehaviour:
       Data: 
     - Name: AudioClip
       Entry: 10
-      Data: 1
+      Data: 2
     - Name: 
       Entry: 8
       Data: 
@@ -119,7 +123,10 @@ MonoBehaviour:
       Data: 3|LevelData, Assembly-CSharp
     - Name: gridData
       Entry: 10
-      Data: 2
+      Data: 3
+    - Name: ScoringRubrik
+      Entry: 10
+      Data: 1
     - Name: music
       Entry: 7
       Data: 4|PlayableClip, Assembly-CSharp
@@ -128,7 +135,7 @@ MonoBehaviour:
       Data: 
     - Name: AudioClip
       Entry: 10
-      Data: 1
+      Data: 2
     - Name: 
       Entry: 8
       Data: 
@@ -200,7 +207,10 @@ MonoBehaviour:
       Data: 5|LevelData, Assembly-CSharp
     - Name: gridData
       Entry: 10
-      Data: 3
+      Data: 4
+    - Name: ScoringRubrik
+      Entry: 10
+      Data: 1
     - Name: music
       Entry: 7
       Data: 6|PlayableClip, Assembly-CSharp
@@ -209,7 +219,7 @@ MonoBehaviour:
       Data: 
     - Name: AudioClip
       Entry: 10
-      Data: 1
+      Data: 2
     - Name: 
       Entry: 8
       Data: 
@@ -281,7 +291,10 @@ MonoBehaviour:
       Data: 7|LevelData, Assembly-CSharp
     - Name: gridData
       Entry: 10
-      Data: 4
+      Data: 5
+    - Name: ScoringRubrik
+      Entry: 10
+      Data: 1
     - Name: music
       Entry: 7
       Data: 8|PlayableClip, Assembly-CSharp
@@ -290,7 +303,7 @@ MonoBehaviour:
       Data: 
     - Name: AudioClip
       Entry: 10
-      Data: 1
+      Data: 2
     - Name: 
       Entry: 8
       Data: 
@@ -362,7 +375,10 @@ MonoBehaviour:
       Data: 9|LevelData, Assembly-CSharp
     - Name: gridData
       Entry: 10
-      Data: 5
+      Data: 6
+    - Name: ScoringRubrik
+      Entry: 10
+      Data: 1
     - Name: music
       Entry: 7
       Data: 10|PlayableClip, Assembly-CSharp
@@ -371,7 +387,7 @@ MonoBehaviour:
       Data: 
     - Name: AudioClip
       Entry: 10
-      Data: 1
+      Data: 2
     - Name: 
       Entry: 8
       Data: 
@@ -445,5 +461,4 @@ MonoBehaviour:
       Entry: 8
       Data: 
   LevelSetID: JazzDungeon
-  SqueakyTime: 5
-  CoreTime: 10
+  ScoringRubrik: {fileID: 11400000, guid: aebfadb60de633940abe86b8b7ef09f6, type: 2}

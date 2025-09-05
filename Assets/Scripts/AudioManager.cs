@@ -34,27 +34,20 @@ public class AudioManager : MonoBehaviour
 
     void Start()
     {
-
         //Event subscriptions
         BrainControl.Get().eventManager.e_gameInitialised.AddListener(() =>
         {
             SetMusic(menuClip.AudioClip);
         });
+
+        BrainControl.Get().eventManager.e_levelLoaded.AddListener(OnLevelLoaded);
         
-        BrainControl.Get().eventManager.e_levelLoaded.AddListener((l) =>
-        {
-            if (l != null && l.Data.music !=null)
-            {
-                SetMusic(l.Data.music.AudioClip);   
-            }
-        });
-        
-        BrainControl.Get().eventManager.e_failRun.AddListener(() =>
+        BrainControl.Get().eventManager.e_failRun.AddListener((run) =>
         {
                 SetMusic(m_failMusic.AudioClip);   
         });
         
-        BrainControl.Get().eventManager.e_winRun.AddListener(() =>
+        BrainControl.Get().eventManager.e_winRun.AddListener((run) =>
         {
             SetMusic(m_winMusic.AudioClip);   
         });
@@ -78,6 +71,14 @@ public class AudioManager : MonoBehaviour
 
     }
 
+    public void OnLevelLoaded(Level level)
+    {
+        if (level != null && level.Data.Music !=null)
+        {
+            SetMusic(level.Data.Music.AudioClip);   
+        }
+    }
+    
     public void SetMusic(AudioClip _music, bool freshStart = false)
     {
         //Should I restart same music?

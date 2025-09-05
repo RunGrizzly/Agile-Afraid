@@ -43,7 +43,7 @@ public static class GridValidations
     
     public static bool UsedAllTiles(GridGenerator gridSnapshot)
     {
-        return BrainControl.Get().rack.letterTiles.Count == 0;
+        return BrainControl.Get().Rack.RackData.Letters.Count == 0;
     }
     
     public static bool NoWordsRepeatCharacter(GridGenerator gridSnapshot)

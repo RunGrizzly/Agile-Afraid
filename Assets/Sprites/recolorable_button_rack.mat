@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: recolorable_button_rack
-  m_Shader: {fileID: -6465566751694194690, guid: 95b417779aa8902408a221a3850d7795, type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: bc92fc0d9c2f91841ab271194e360d8f, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -16,7 +16,7 @@ Material:
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 3000
+  m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
   m_LockedProperties: 
@@ -118,15 +118,16 @@ Material:
     - _ZTest: 4
     - _ZWrite: 1
     - _ZWriteControl: 0
+    - _step: 0.12
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _ColorA: {r: 0.31190953, g: 0.105909556, b: 0.6415094, a: 0}
-    - _ColorB: {r: 0.38431376, g: 0.3254902, b: 1, a: 1}
+    - _ColorA: {r: 0, g: 0, b: 0, a: 1}
+    - _ColorB: {r: 0.21404415, g: 0.6981132, b: 0.53689307, a: 1}
     - _ColorC: {r: 0, g: 0, b: 0, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _GradientOverlay: {r: 0.5306878, g: 0.48584908, b: 1, a: 1}
-    - _ShineOverlay: {r: 0.40534115, g: 0.30015132, b: 0.8962264, a: 1}
+    - _GradientOverlay: {r: 1, g: 1, b: 1, a: 1}
+    - _ShineOverlay: {r: 1, g: 1, b: 1, a: 1}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
     - _TFS: {r: 23.1, g: -10.6, b: 0.01, a: 0}
     - _TFS_Gradient: {r: 5.1, g: 1, b: 0.1, a: 0}

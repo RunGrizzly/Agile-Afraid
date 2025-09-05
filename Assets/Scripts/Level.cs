@@ -14,35 +14,37 @@ public class Level
     
     //Transient
     public List<BlockInput> inputs = new List<BlockInput>();
-    public List<BlockInput> ScoredInputs => inputs.Where(x => x.isValidated).ToList();
-    public BlockInput startInput;
-    public BlockInput targetInput;
+
+    public List<BlockInput> ScoredInputs
+    {
+        get
+        {
+            return inputs.Where(x => x.isValidated).ToList();
+        }
+    }
+    // public BlockInput startInput;
+    // public BlockInput targetInput;
 
     public int Score = 0;
 
-    public bool passed = false;
+    public Resolution Resolution = Resolution.None;
 
+    // //This can be used in conjuction with a scoring rubrik
+    // public Rack Rack = null;
+    
     //Initialiser for the new level
     public Level(LevelData data)
     {
         Data = data;
     }
-
-    //Should this just be accessible via brain?
-    //Do we really need to pass the level?
-    // private void Complete(Level level)
-    // {
-    //     //This triggers the level passed trigger
-    //     passed = true;
-    // }
-
+    
     public IEnumerator Track()
     {
         //Tracking this level - kicks off a new grid generation
         int randomID = Random.Range(000, 999);
         
         //Call the generation method on the grid generator
-        Task g = new Task(BrainControl.Get().grid.Generate(Data.gridData));
+        Task g = new Task(BrainControl.Get().Grid.Generate(Data.gridData));
         
         //Wait while the grid is still generating
         yield return new WaitWhile(() => g.Running);
@@ -52,7 +54,8 @@ public class Level
         BrainControl.Get().eventManager.e_updateUI.Invoke();
         BrainControl.Get().eventManager.e_levelLoaded.Invoke(this);
         
-        while (!passed)
+        //While we don't have a resolution yet
+        while (Resolution == Resolution.None)
         {
             //Debug.LogFormat($"Level {randomID} is being tracked");
             yield return null;
@@ -62,11 +65,24 @@ public class Level
         BrainControl.Get().eventManager.e_levelSuccess.Invoke(this);
     }
     
-    public Boolean InputInProgress()
+    public BlockInput InputInProgress()
     {
-        bool p = (inputs.Count > 0) ? !LatestInput().isValidated : false;
-        //Debug.Log("Input in progress?: " + p);
-        return p;
+        if (LatestInput() == null)
+        {
+            return null;
+        }
+        
+        else
+        {
+            if (LatestInput().isValidated)
+            {
+                return null;
+            }
+            else
+            {
+                return LatestInput();
+            }
+        }
     }
 
     public void RemoveInput(BlockInput r)
@@ -75,17 +91,18 @@ public class Level
     }
 
     //get latest(current) input
-    public BlockInput LatestInput()
+    //I think this counts the intial seed input
+    private BlockInput LatestInput()
     {
-        return inputs[inputs.Count - 1];
+        return inputs.Count > 0? inputs[inputs.Count - 1]: null;
     }
 
     void SetStartInput(BlockInput input)
     {
-        startInput = input;
-        BrainControl.Get().grid.startPosition = startInput.PlacedBlocks[0].transform.position;
+        // startInput = input;
+        BrainControl.Get().Grid.startPosition = input.PlacedBlocks[0].transform.position;
 
-        foreach (LetterBlock block in startInput.PlacedBlocks)
+        foreach (LetterBlock block in input.PlacedBlocks)
         {
             block.SetAsStart();
         }
@@ -93,10 +110,9 @@ public class Level
 
     void SetTargetInput(BlockInput input)
     {
-        targetInput = input;
-        BrainControl.Get().grid.targetPosition = targetInput.PlacedBlocks[0].transform.position;
+        BrainControl.Get().Grid.targetPosition = input.PlacedBlocks[0].transform.position;
 
-        foreach (LetterBlock block in targetInput.PlacedBlocks)
+        foreach (LetterBlock block in input.PlacedBlocks)
         {
             block.SetAsTarget();
         }
@@ -116,7 +132,7 @@ public class Level
         {
             foreach (LetterBlock letterBlock in scoredInput.PlacedBlocks)
             {
-                letterScore += letterBlock.baseLetter.score;
+                letterScore += letterBlock.BaseLetter.score;
             }
         }
 
@@ -131,12 +147,12 @@ public class Level
         Score += inputs.Count;
         
         //This triggers the level passed trigger
-        passed = true;
+        Resolution = Resolution.Win;
     }
     
-    public void ScoreInput(BlockInput scoredInput)
-    {
-     ScoredInputs.Add(scoredInput);
-    }
+    // public void ScoreInput(BlockInput scoredInput)
+    // {
+    //  ScoredInputs.Add(scoredInput);
+    // }
 }
 

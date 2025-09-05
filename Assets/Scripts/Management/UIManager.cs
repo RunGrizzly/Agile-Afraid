@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using Unity.Mathematics;
 using UnityEngine;
@@ -16,12 +14,15 @@ public class UIManager : MonoBehaviour
     public CanvasGroup TileRackGroup = null;
     public CanvasGroup TileRequestGroup = null;
     public CanvasGroup LevelRequirementsGroup = null;
+    public CanvasGroup LevelTrackGroup = null;
+    public CanvasGroup RecentWordGroup = null;
     
     //Holders, panels, canvasses
     ////////////////////
-    public Transform gameCanvas;
-    public Transform recentHolder;
-    public Transform levelTrack;
+    // public Transform gameCanvas;
+    public Transform RecentWordHolder;
+    public Transform LevelPipHolder;
+    // public Transform levelTrack;
     public Image TimeBar;
     public Transform TimePipHolder;
     ////////////////////
@@ -36,8 +37,8 @@ public class UIManager : MonoBehaviour
     //UI Element spawning
     ////////////////////
     
-    public GameObject inputControlTemplate;
-    GameObject inputControlInstance;
+    public InputModificationWidget inputControlTemplate;
+    private InputModificationWidget inputControlInstance;
     
     [SerializeField]
     private InterruptPanel m_interruptPanelTemplate;
@@ -53,7 +54,43 @@ public class UIManager : MonoBehaviour
     public Image LevelRequirementGrubTemplate = null;
     ////////////////////
 
-    public Dictionary<LevelRequirements, Image> LevelRequirementGrubs = new Dictionary<LevelRequirements, Image>();
+    public SerializableDictionary<LevelRequirements, Image> LevelRequirementGrubs = new SerializableDictionary<LevelRequirements, Image>();
+
+    private int m_printMessageTween = -99;
+    private int m_clearMessageTween = -99;
+    
+    [SerializeField]
+    private Transform m_tileHolder;
+    private LetterTile m_tileTemplate;
+    private SerializableDictionary<Letter, LetterTile> LetterTiles = new SerializableDictionary<Letter, LetterTile>();
+
+    // public void OnLetterAdded(Letter newLetter)
+    // {
+    //     //Add a new blank tile 
+    //     //Should the actual instantiantation take place on the UI?
+    //     LetterTile newTile = GameObject.Instantiate(m_tileTemplate, Vector3.zero, Quaternion.identity);
+    //     newTile.transform.SetParent(m_tileHolder);
+    //     newTile.transform.SetAsLastSibling();
+    //     newTile.transform.localScale = Vector3.one;
+    //     newTile.transform.localEulerAngles = Vector3.zero;
+    //     newTile.transform.localPosition = Vector3.zero;
+    //     
+    //     //Here we build on the tile itself
+    //     newTile.Build(newLetter);     
+    //     
+    //     LetterTiles.Add(newLetter,newTile);
+    // }
+    //
+    // public void OnLetterRemoved(Letter letter)
+    // {
+    //     LetterTile targetLetter = null;
+    //     
+    //     if (LetterTiles.TryGetValue(letter, out targetLetter) && targetLetter != null)
+    //     {
+    //         LetterTiles.Remove(letter);
+    //         Destroy(targetLetter.gameObject);
+    //     }
+    // }
     
     void SetLevelText(int level)
     {
@@ -63,54 +100,51 @@ public class UIManager : MonoBehaviour
     //This is cancer
     void UpdateUI()
     {
+        //Max time
+        var currentRun = Brain.ins.runManager.CurrentRun;
+
+        if (currentRun == null)
+        {
+            return;
+        }
+        
         scoreText.text = (Brain.ins.runManager.CurrentRun.Score).ToString();
         SetLevelText(Brain.ins.runManager.CurrentRun.ActiveLevelIndex);
         
-        // //Max time
-        var currentRun = Brain.ins.runManager.CurrentRun;
-        
+        //This is apparently being called on a run that hasn't initialised them yet
         TimeBar.fillAmount = currentRun.WorkingTime / currentRun.MaxTime;
     }
 
     void Start()
     {
-        BrainControl.Get().eventManager.e_updateUI.AddListener(() =>
-        {
-            UpdateUI();
-        });
+        // BrainControl.Get().eventManager.e_addedToRack.AddListener(OnLetterAdded);
+        //
+        // BrainControl.Get().eventManager.e_removedFromRack.AddListener(OnLetterRemoved);
+        
+        BrainControl.Get().eventManager.e_updateUI.AddListener(UpdateUI);
 
-        BrainControl.Get().eventManager.e_blockSelected.AddListener((block) =>
-         {
-             ShowInputWidget(block);
-         });
-
-        BrainControl.Get().eventManager.e_beginInput.AddListener((block) =>
-        {
-            ShowInputWidget(block);
-        });
-
-        BrainControl.Get().eventManager.e_updateInput.AddListener((block) =>
-        {
-            ShowInputWidget(block);
-        });
-
+        BrainControl.Get().eventManager.e_blockSelected.AddListener(ShowInputWidget);
+        
+        BrainControl.Get().eventManager.e_beginInput.AddListener(ShowInputWidget);
+        
+        //This flow aint great
         BrainControl.Get().eventManager.e_validateSuccess.AddListener((s) =>
         {
-            foreach (var t in s.ValidatedLines)
+            foreach (var t in s.ValidatedStrings)
             {
-                PrintRecentWord((GridTools.WordFromLine(t).forwards) + " " + BrainControl.Get().runManager.CurrentRun.RunSettings.ActiveScoringRubrik.ScoreFromBlocks(t));
+                PrintRecentWord(t + " " + BrainControl.Get().runManager.CurrentRun.ActiveLevelSet.ScoringRubrik.ScoreFromBlocks(s.ValidatedLines[0]));
             }
         });
-
-        BrainControl.Get().eventManager.e_endInput.AddListener(() =>
-        {
-            ClearInputWidget();
-        });
-
-        BrainControl.Get().eventManager.e_clearBlock.AddListener((c) =>
-        {
-            ClearInputWidget();
-        });
+        //
+        // BrainControl.Get().eventManager.e_endInput.AddListener(() =>
+        // {
+        //     ClearInputWidget();
+        // });
+        //
+        // BrainControl.Get().eventManager.e_clearBlock.AddListener((c) =>
+        // {
+        //     ClearInputWidget();
+        // });
 
         //LEVEL scope UI
         BrainControl.Get().eventManager.e_levelLoaded.AddListener((level) =>
@@ -123,11 +157,17 @@ public class UIManager : MonoBehaviour
         //   InitialiseLevelUI(BrainControl.Get().runManager.currentRun.ActiveLevel);
         // });
         
-        BrainControl.Get().eventManager.e_levelSuccess.AddListener((l) =>
+        BrainControl.Get().eventManager.e_levelSuccess.AddListener((level) =>
         {
             Debug.Log("PATH COMPLETE: UI Mangager");
-            Debug.Log("Completed level was: " + l);
-            levelTrack.GetChild(BrainControl.Get().runManager.CurrentRun.ActiveLevelIndex).GetComponent<Image>().color = Color.cyan;
+            Debug.Log("Completed level was: " + level);
+            if (inputControlInstance != null)
+            {
+                Destroy(inputControlInstance.gameObject);
+            }
+            
+            LevelPipHolder.transform.GetChild(BrainControl.Get().runManager.CurrentRun.ActiveLevelIndex).GetComponent<Image>().color = Color.cyan;
+            ClearLevelUI();
             // /UpdateUI();
         });
 
@@ -163,7 +203,7 @@ public class UIManager : MonoBehaviour
             }
 
             interruptPanelInstance = Instantiate(m_interruptPanelTemplate, Vector3.zero, Quaternion.identity);
-            interruptPanelInstance.transform.SetParent(gameCanvas.transform, false);
+            interruptPanelInstance.transform.SetParent(GameCanvas.transform, false);
             interruptPanelInstance.transform.localPosition = Vector3.zero;
             interruptPanelInstance.transform.localPosition = Vector3.one;
             interruptPanelInstance.BuildPause();
@@ -177,32 +217,42 @@ public class UIManager : MonoBehaviour
             }
         });
         
-        BrainControl.Get().eventManager.e_failRun.AddListener(() =>
+        BrainControl.Get().eventManager.e_failRun.AddListener((run) =>
         {
+            if (inputControlInstance != null)
+            {
+                Destroy(inputControlInstance.gameObject);
+            }
+            
             if (interruptPanelInstance != null)
             {
                 interruptPanelInstance.KillPanel();
             }
 
             interruptPanelInstance = Instantiate(m_interruptPanelTemplate, Vector3.zero, Quaternion.identity);
-            interruptPanelInstance.transform.SetParent(gameCanvas.transform, false);
+            interruptPanelInstance.transform.SetParent(GameCanvas.transform, false);
             interruptPanelInstance.transform.localPosition = Vector3.zero;
             interruptPanelInstance.transform.localPosition = Vector3.one;
-            interruptPanelInstance.BuildFail();
+            interruptPanelInstance.BuildFail(run);
         });
 
-        BrainControl.Get().eventManager.e_winRun.AddListener(() =>
+        BrainControl.Get().eventManager.e_winRun.AddListener((run) =>
         {
+            if (inputControlInstance != null)
+            {
+                Destroy(inputControlInstance.gameObject);
+            }
+          
             if (interruptPanelInstance != null)
             {
                 interruptPanelInstance.KillPanel();
             }
 
             interruptPanelInstance = Instantiate(m_interruptPanelTemplate, Vector3.zero, Quaternion.identity);
-            interruptPanelInstance.transform.SetParent(gameCanvas.transform, false);
+            interruptPanelInstance.transform.SetParent(GameCanvas.transform, false);
             interruptPanelInstance.transform.localPosition = Vector3.zero;
             interruptPanelInstance.transform.localPosition = Vector3.one;
-            interruptPanelInstance.BuildWin();
+            interruptPanelInstance.BuildWin(run);
         });
         ///////////////////////
         
@@ -213,7 +263,7 @@ public class UIManager : MonoBehaviour
             {
                 interruptPanelInstance.KillPanel();
             }
-            
+            ClearRunUI();
             ClearInputWidget();
         });
         
@@ -270,16 +320,15 @@ public class UIManager : MonoBehaviour
         }
         
         //Clear level requirements grubs
-        foreach (Transform child in LevelRequirementsGroup.transform)
+        ClearLevelRequirementsGrubs();
+        
+        //Clear level pip
+        foreach (Transform child in LevelPipHolder)
         {
             Destroy(child.gameObject);
         }
         
-        //Clear level pip
-        foreach (Transform child in levelTrack.transform)
-        {
-            Destroy(child.gameObject);
-        }
+        ClearInputWidget();
     }
 
     private void InitialiseRunUI(Run run)
@@ -291,7 +340,7 @@ public class UIManager : MonoBehaviour
         foreach (LevelData level in run.ActiveLevelSet.Levels)
         {
             GameObject newPip = Instantiate(levelPipTemplate, Vector3.zero, Quaternion.identity);
-            newPip.transform.SetParent(levelTrack);
+            newPip.transform.SetParent(LevelPipHolder);
             newPip.transform.localPosition = Vector3.zero;
             newPip.transform.localEulerAngles = Vector3.zero;
             newPip.transform.localScale = Vector3.one;
@@ -322,6 +371,9 @@ public class UIManager : MonoBehaviour
                     break;
             }    
         }
+        
+        //The timer group alpha is based on if the level is timed or not
+        TimerGroup.alpha = run.ActiveLevelSet.IsTimed ? 1 : 0;
     }
     
     private void ClearLevelUI()
@@ -330,24 +382,26 @@ public class UIManager : MonoBehaviour
       //InitialiseRecentWords();
 
       ClearLevelRequirementsGrubs();
+      ClearInputWidget();
     }
 
     private void ClearLevelRequirementsGrubs()
     {
+        Debug.LogFormat($"Clearing level requirements grubs");
         foreach (var entry in LevelRequirementGrubs)
         {
             Debug.LogFormat($"Trying to destroy {entry.Key} grub");
             Destroy(entry.Value.gameObject);
         }
 
-        LevelRequirementGrubs = new Dictionary<LevelRequirements, Image>();
+        LevelRequirementGrubs = new SerializableDictionary<LevelRequirements, Image>();
     }
     
     private void InitialiseLevelUI(Level level)
     {
         ClearLevelUI();
         
-        levelTrack.GetChild(BrainControl.Get().runManager.CurrentRun.ActiveLevelIndex).GetComponent<Image>().color = Color.green;
+        LevelPipHolder.GetChild(BrainControl.Get().runManager.CurrentRun.ActiveLevelIndex).GetComponent<Image>().color = Color.green;
         
         foreach (LevelRequirements flag in Enum.GetValues(typeof(LevelRequirements)))
         {
@@ -376,13 +430,10 @@ public class UIManager : MonoBehaviour
 
         //This should always fail but it initialises the challenge grubs
         //But its circular - it wall call back to this
-        BrainControl.Get().grid.ValidateChallenges();
+        BrainControl.Get().Grid.ValidateChallenges();
         
         //Only show level requirements if there are some
         LevelRequirementsGroup.alpha = level.Data.LevelRequirements == LevelRequirements.None ? 0 : 1;
-        
-        //The timer group alpha is based on if the level is timed or not
-        TimerGroup.alpha = level.Data.IsTimed ? 1 : 0;
         
         //Tile request buttons disabled if the level does not allow them
         TileRequestGroup.alpha = level.Data.AllowTileRequests ? 1 : 0;
@@ -393,35 +444,48 @@ public class UIManager : MonoBehaviour
     {
         if (inputControlInstance != null)
         {
-            Destroy(inputControlInstance);
+            Destroy(inputControlInstance.gameObject);
         }
     }
 
     private void ShowInputWidget(LetterBlock block)
     {
-        if (block.lockState == LockState.locked) return;
-        if (block.fillState == FillState.empty) return;
+        //Debug.LogFormat($"Showing input control widget");
+        
+        if (block.lockState == LockState.locked)
+        {
+            Debug.LogWarningFormat(block.gameObject, $"Input block is locked");
+            return;
+        }
+
+        // if (block.fillState == FillState.empty)
+        // {
+        //     Debug.LogWarningFormat(block.gameObject, $"Input block is empty");
+        //     return;
+        // }
         
         if (inputControlInstance == null)
         {
             inputControlInstance = Instantiate(inputControlTemplate, block.transform.position, Quaternion.identity);
+            inputControlInstance.AssignTarget(block);
+            //Debug.LogFormat(inputControlInstance,$"New control widget was spawned");
         }
-            
+        
         //Ensure it faces up
-        inputControlInstance.transform.localEulerAngles = new Vector3(90, 0, 0);
+        //inputControlInstance.transform.localEulerAngles = new Vector3(90, 0, 0);
         //Set Position
-        LeanTween.move(inputControlInstance, new Vector3(block.transform.position.x, 0.75f, block.transform.position.z), 0.35f).setEase(LeanTweenType.easeOutExpo);
+        // LeanTween.move(inputControlInstance, new Vector3(block.transform.position.x, 0.75f, block.transform.position.z), 0.35f).setEase(LeanTweenType.easeOutExpo);
     }
 
     private void InitialiseRecentWords()
     {
-        if (inputControlInstance != null)
-        {
-            Destroy(inputControlInstance);
-        }
+        // if (inputControlInstance != null)
+        // {
+        //     Destroy(inputControlInstance);
+        // }
         
         //Reset the word lists
-        foreach (Transform child in recentHolder)
+        foreach (Transform child in RecentWordHolder)
         {
             Destroy((child.gameObject));
         }
@@ -429,23 +493,35 @@ public class UIManager : MonoBehaviour
     
     public void PrintMessage(string message)
     {
+        LeanTween.cancel(m_printMessageTween);
+        LeanTween.cancel(m_clearMessageTween);
+        
         messageBox.text = message;
-
-        LeanTween.delayedCall(3f, () => LeanTween.value(messageBox.gameObject, 0, -50f, 0.35f).setEase(LeanTweenType.easeOutExpo).setOnUpdate((v) => messageBox.GetComponent<RectTransform>().anchoredPosition = new Vector3(0, v, 0)));
-
-        LeanTween.value(messageBox.gameObject, -50f, 0, 0.35f).setEase(LeanTweenType.easeOutExpo).setOnUpdate((v) => messageBox.GetComponent<RectTransform>().anchoredPosition = new Vector3(0, v, 0));
+        
+        var animatedTransform =   messageBox.GetComponent<RectTransform>();
+        
+        
+        m_printMessageTween = LeanTween.value(messageBox.gameObject, -50f, 0, 0.35f).setEase(LeanTweenType.easeSpring).setOnUpdate((v) =>
+        {
+            animatedTransform.anchoredPosition = new Vector3(0, v, 0);
+        }).id;
+        
+        m_clearMessageTween =LeanTween.delayedCall(0.4f, () =>
+        {
+            messageBox.text = "";
+        }).id;
     }
 
     void PrintRecentWord(string recent)
     {
-        if (recentHolder.childCount >= BrainControl.Get().runManager.CurrentRun.RunSettings.recentWordBias)
+        if (RecentWordHolder.childCount >= BrainControl.Get().runManager.CurrentRun.RunSettings.recentWordBias)
         {
-            Destroy(recentHolder.GetChild(recentHolder.childCount - 1).gameObject);
+            Destroy(RecentWordHolder.GetChild(RecentWordHolder.childCount - 1).gameObject);
         }
 
         TextMeshProUGUI newRecent = Instantiate(recentWordTemplate, Vector3.zero, Quaternion.identity).GetComponentInChildren<TextMeshProUGUI>();
 
-        newRecent.transform.SetParent(recentHolder);
+        newRecent.transform.SetParent(RecentWordHolder);
         newRecent.transform.SetAsFirstSibling();
 
         newRecent.text = recent;

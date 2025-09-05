@@ -65,21 +65,21 @@ public class LevelSetBatchEditor : EditorWindow
 
             EditorGUILayout.BeginHorizontal();
 
-            levelSelectionStates[i] = EditorGUILayout.ToggleLeft(
-                $"Level {i + 1} (Rack: {level.rackSize}, Par: {level.par}, Requirements: {level.LevelRequirements})",
-                levelSelectionStates[i]);
+            // levelSelectionStates[i] = EditorGUILayout.ToggleLeft(
+            //     $"Level {i + 1} (Rack: {level.rackSize}, Par: {level.par}, Requirements: {level.LevelRequirements})",
+            //     levelSelectionStates[i]);
 
             if (GUILayout.Button("Load", GUILayout.Width(60)))
             {
-                newRackSize = level.rackSize;
+                //newRackSize = level.rackSize;
                 newColorA = level.DeadZoneColorA;
                 newColorB = level.DeadZoneColorB;
-                newMusicClip = level.music != null ? level.music.AudioClip : null;
+                //newMusicClip = level.music != null ? level.music.AudioClip : null;
                 newPar = level.par;
                 newTrophyScore = level.trophyScore;
                 newRepeatLimit = level.repeatLimit;
                 newLevelRequirements = level.LevelRequirements;
-                newIsTimed = level.IsTimed;
+                //newIsTimed = level.IsTimed;
             }
 
             EditorGUILayout.EndHorizontal();
@@ -143,19 +143,19 @@ public class LevelSetBatchEditor : EditorWindow
 
                 var level = levelSet.Levels[i];
 
-                if (applyRackSize) level.rackSize = newRackSize;
+                //if (applyRackSize) level.rackSize = newRackSize;
                 if (applyColorA) level.DeadZoneColorA = newColorA;
                 if (applyColorB) level.DeadZoneColorB = newColorB;
                 if (applyMusicClip)
                 {
-                    if (level.music == null) level.music = new PlayableClip();
-                    level.music.AudioClip = newMusicClip;
+                    // if (level.music == null) level.music = new PlayableClip();
+                    // level.music.AudioClip = newMusicClip;
                 }
                 if (applyPar) level.par = newPar;
                 if (applyTrophyScore) level.trophyScore = newTrophyScore;
                 if (applyRepeatLimit) level.repeatLimit = newRepeatLimit;
                 if (applyLevelRequirements) level.LevelRequirements = newLevelRequirements;
-                if (applyIsTimed) level.IsTimed = newIsTimed;
+                //if (applyIsTimed) level.IsTimed = newIsTimed;
             }
 
             EditorUtility.SetDirty(levelSet);

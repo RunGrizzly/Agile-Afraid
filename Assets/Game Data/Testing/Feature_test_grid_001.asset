@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 250ed8572ba72164a9be926e1c3e8629, type: 3}
-  m_Name: TestChallenge02
+  m_Name: Feature_test_grid_001
   m_EditorClassIdentifier: 
   serializationData:
     SerializedFormat: 2
@@ -26,13 +26,46 @@ MonoBehaviour:
       Data: 0|GridSeed[,], Assembly-CSharp
     - Name: 
       Entry: 12
-      Data: 25
+      Data: 36
     - Name: ranks
       Entry: 1
-      Data: 5|5
+      Data: 6|6
     - Name: 
       Entry: 7
       Data: 1|GridSeed, Assembly-CSharp
+    - Name: Content
+      Entry: 1
+      Data: C
+    - Name: Flags
+      Entry: 3
+      Data: 34
+    - Name: Color
+      Entry: 7
+      Data: UnityEngine.Color, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0.5
+    - Name: 
+      Entry: 4
+      Data: 0.5
+    - Name: 
+      Entry: 4
+      Data: 0.5
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: OpenForEdit
+      Entry: 5
+      Data: true
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 2|GridSeed, Assembly-CSharp
     - Name: Content
       Entry: 1
       Data: 
@@ -57,36 +90,9 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 2|GridSeed, Assembly-CSharp
-    - Name: Content
-      Entry: 1
-      Data: H
-    - Name: Flags
-      Entry: 3
-      Data: 34
-    - Name: Color
-      Entry: 7
-      Data: UnityEngine.Color, UnityEngine.CoreModule
-    - Name: 
-      Entry: 4
-      Data: 0.5
-    - Name: 
-      Entry: 4
-      Data: 0.5
-    - Name: 
-      Entry: 4
-      Data: 0.5
-    - Name: 
-      Entry: 4
-      Data: 1
-    - Name: 
-      Entry: 8
-      Data: 
+    - Name: OpenForEdit
+      Entry: 5
+      Data: false
     - Name: 
       Entry: 8
       Data: 
@@ -117,12 +123,48 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: OpenForEdit
+      Entry: 5
+      Data: false
     - Name: 
       Entry: 8
       Data: 
     - Name: 
       Entry: 7
       Data: 4|GridSeed, Assembly-CSharp
+    - Name: Content
+      Entry: 1
+      Data: R
+    - Name: Flags
+      Entry: 3
+      Data: 32
+    - Name: Color
+      Entry: 7
+      Data: UnityEngine.Color, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0.5
+    - Name: 
+      Entry: 4
+      Data: 0.5
+    - Name: 
+      Entry: 4
+      Data: 0.5
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: OpenForEdit
+      Entry: 5
+      Data: false
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 5|GridSeed, Assembly-CSharp
     - Name: Content
       Entry: 1
       Data: 
@@ -147,36 +189,9 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 5|GridSeed, Assembly-CSharp
-    - Name: Content
-      Entry: 1
-      Data: B
-    - Name: Flags
-      Entry: 3
-      Data: 33
-    - Name: Color
-      Entry: 7
-      Data: UnityEngine.Color, UnityEngine.CoreModule
-    - Name: 
-      Entry: 4
-      Data: 0.5
-    - Name: 
-      Entry: 4
-      Data: 0.5
-    - Name: 
-      Entry: 4
-      Data: 0.5
-    - Name: 
-      Entry: 4
-      Data: 1
-    - Name: 
-      Entry: 8
-      Data: 
+    - Name: OpenForEdit
+      Entry: 5
+      Data: false
     - Name: 
       Entry: 8
       Data: 
@@ -207,6 +222,9 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: OpenForEdit
+      Entry: 5
+      Data: false
     - Name: 
       Entry: 8
       Data: 
@@ -237,6 +255,9 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: OpenForEdit
+      Entry: 5
+      Data: true
     - Name: 
       Entry: 8
       Data: 
@@ -267,6 +288,9 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: OpenForEdit
+      Entry: 5
+      Data: false
     - Name: 
       Entry: 8
       Data: 
@@ -297,6 +321,9 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: OpenForEdit
+      Entry: 5
+      Data: false
     - Name: 
       Entry: 8
       Data: 
@@ -308,7 +335,7 @@ MonoBehaviour:
       Data: E
     - Name: Flags
       Entry: 3
-      Data: 33
+      Data: 32
     - Name: Color
       Entry: 7
       Data: UnityEngine.Color, UnityEngine.CoreModule
@@ -327,6 +354,9 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: OpenForEdit
+      Entry: 5
+      Data: false
     - Name: 
       Entry: 8
       Data: 
@@ -357,42 +387,15 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: OpenForEdit
+      Entry: 5
+      Data: false
     - Name: 
       Entry: 8
       Data: 
     - Name: 
       Entry: 7
       Data: 12|GridSeed, Assembly-CSharp
-    - Name: Content
-      Entry: 1
-      Data: N
-    - Name: Flags
-      Entry: 3
-      Data: 34
-    - Name: Color
-      Entry: 7
-      Data: UnityEngine.Color, UnityEngine.CoreModule
-    - Name: 
-      Entry: 4
-      Data: 0.5
-    - Name: 
-      Entry: 4
-      Data: 0.5
-    - Name: 
-      Entry: 4
-      Data: 0.5
-    - Name: 
-      Entry: 4
-      Data: 1
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 13|GridSeed, Assembly-CSharp
     - Name: Content
       Entry: 1
       Data: 
@@ -417,6 +420,42 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: OpenForEdit
+      Entry: 5
+      Data: false
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 13|GridSeed, Assembly-CSharp
+    - Name: Content
+      Entry: 1
+      Data: L
+    - Name: Flags
+      Entry: 3
+      Data: 34
+    - Name: Color
+      Entry: 7
+      Data: UnityEngine.Color, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0.5
+    - Name: 
+      Entry: 4
+      Data: 0.5
+    - Name: 
+      Entry: 4
+      Data: 0.5
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: OpenForEdit
+      Entry: 5
+      Data: true
     - Name: 
       Entry: 8
       Data: 
@@ -447,12 +486,114 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: OpenForEdit
+      Entry: 5
+      Data: false
     - Name: 
       Entry: 8
       Data: 
     - Name: 
       Entry: 7
       Data: 15|GridSeed, Assembly-CSharp
+    - Name: Content
+      Entry: 1
+      Data: 
+    - Name: Flags
+      Entry: 3
+      Data: 16
+    - Name: Color
+      Entry: 7
+      Data: UnityEngine.Color, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0.5
+    - Name: 
+      Entry: 4
+      Data: 0.5
+    - Name: 
+      Entry: 4
+      Data: 0.5
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: OpenForEdit
+      Entry: 5
+      Data: false
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 16|GridSeed, Assembly-CSharp
+    - Name: Content
+      Entry: 1
+      Data: A
+    - Name: Flags
+      Entry: 3
+      Data: 32
+    - Name: Color
+      Entry: 7
+      Data: UnityEngine.Color, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0.5
+    - Name: 
+      Entry: 4
+      Data: 0.5
+    - Name: 
+      Entry: 4
+      Data: 0.5
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: OpenForEdit
+      Entry: 5
+      Data: false
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 17|GridSeed, Assembly-CSharp
+    - Name: Content
+      Entry: 1
+      Data: 
+    - Name: Flags
+      Entry: 3
+      Data: 16
+    - Name: Color
+      Entry: 7
+      Data: UnityEngine.Color, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0.5
+    - Name: 
+      Entry: 4
+      Data: 0.5
+    - Name: 
+      Entry: 4
+      Data: 0.5
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: OpenForEdit
+      Entry: 5
+      Data: false
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 18|GridSeed, Assembly-CSharp
     - Name: Content
       Entry: 1
       Data: G
@@ -477,45 +618,18 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: OpenForEdit
+      Entry: 5
+      Data: false
     - Name: 
       Entry: 8
       Data: 
     - Name: 
       Entry: 7
-      Data: 16|GridSeed, Assembly-CSharp
+      Data: 19|GridSeed, Assembly-CSharp
     - Name: Content
       Entry: 1
-      Data: 
-    - Name: Flags
-      Entry: 3
-      Data: 16
-    - Name: Color
-      Entry: 7
-      Data: UnityEngine.Color, UnityEngine.CoreModule
-    - Name: 
-      Entry: 4
-      Data: 0.5
-    - Name: 
-      Entry: 4
-      Data: 0.5
-    - Name: 
-      Entry: 4
-      Data: 0.5
-    - Name: 
-      Entry: 4
-      Data: 1
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 17|GridSeed, Assembly-CSharp
-    - Name: Content
-      Entry: 1
-      Data: D
+      Data: L
     - Name: Flags
       Entry: 3
       Data: 34
@@ -537,66 +651,9 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 18|GridSeed, Assembly-CSharp
-    - Name: Content
-      Entry: 1
-      Data: 
-    - Name: Flags
-      Entry: 3
-      Data: 16
-    - Name: Color
-      Entry: 7
-      Data: UnityEngine.Color, UnityEngine.CoreModule
-    - Name: 
-      Entry: 4
-      Data: 0.5
-    - Name: 
-      Entry: 4
-      Data: 0.5
-    - Name: 
-      Entry: 4
-      Data: 0.5
-    - Name: 
-      Entry: 4
-      Data: 1
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 19|GridSeed, Assembly-CSharp
-    - Name: Content
-      Entry: 1
-      Data: 
-    - Name: Flags
-      Entry: 3
-      Data: 16
-    - Name: Color
-      Entry: 7
-      Data: UnityEngine.Color, UnityEngine.CoreModule
-    - Name: 
-      Entry: 4
-      Data: 0.5
-    - Name: 
-      Entry: 4
-      Data: 0.5
-    - Name: 
-      Entry: 4
-      Data: 0.5
-    - Name: 
-      Entry: 4
-      Data: 1
-    - Name: 
-      Entry: 8
-      Data: 
+    - Name: OpenForEdit
+      Entry: 5
+      Data: true
     - Name: 
       Entry: 8
       Data: 
@@ -627,6 +684,9 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: OpenForEdit
+      Entry: 5
+      Data: false
     - Name: 
       Entry: 8
       Data: 
@@ -657,6 +717,9 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: OpenForEdit
+      Entry: 5
+      Data: false
     - Name: 
       Entry: 8
       Data: 
@@ -665,10 +728,10 @@ MonoBehaviour:
       Data: 22|GridSeed, Assembly-CSharp
     - Name: Content
       Entry: 1
-      Data: 
+      Data: P
     - Name: Flags
       Entry: 3
-      Data: 16
+      Data: 32
     - Name: Color
       Entry: 7
       Data: UnityEngine.Color, UnityEngine.CoreModule
@@ -687,6 +750,9 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: OpenForEdit
+      Entry: 5
+      Data: false
     - Name: 
       Entry: 8
       Data: 
@@ -717,6 +783,9 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: OpenForEdit
+      Entry: 5
+      Data: false
     - Name: 
       Entry: 8
       Data: 
@@ -725,10 +794,10 @@ MonoBehaviour:
       Data: 24|GridSeed, Assembly-CSharp
     - Name: Content
       Entry: 1
-      Data: 
+      Data: R
     - Name: Flags
       Entry: 3
-      Data: 16
+      Data: 33
     - Name: Color
       Entry: 7
       Data: UnityEngine.Color, UnityEngine.CoreModule
@@ -747,12 +816,48 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: OpenForEdit
+      Entry: 5
+      Data: false
     - Name: 
       Entry: 8
       Data: 
     - Name: 
       Entry: 7
       Data: 25|GridSeed, Assembly-CSharp
+    - Name: Content
+      Entry: 1
+      Data: S
+    - Name: Flags
+      Entry: 3
+      Data: 34
+    - Name: Color
+      Entry: 7
+      Data: UnityEngine.Color, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0.5
+    - Name: 
+      Entry: 4
+      Data: 0.5
+    - Name: 
+      Entry: 4
+      Data: 0.5
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: OpenForEdit
+      Entry: 5
+      Data: true
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 26|GridSeed, Assembly-CSharp
     - Name: Content
       Entry: 1
       Data: 
@@ -777,6 +882,339 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: OpenForEdit
+      Entry: 5
+      Data: false
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 27|GridSeed, Assembly-CSharp
+    - Name: Content
+      Entry: 1
+      Data: 
+    - Name: Flags
+      Entry: 3
+      Data: 16
+    - Name: Color
+      Entry: 7
+      Data: UnityEngine.Color, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0.5
+    - Name: 
+      Entry: 4
+      Data: 0.5
+    - Name: 
+      Entry: 4
+      Data: 0.5
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: OpenForEdit
+      Entry: 5
+      Data: false
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 28|GridSeed, Assembly-CSharp
+    - Name: Content
+      Entry: 1
+      Data: E
+    - Name: Flags
+      Entry: 3
+      Data: 32
+    - Name: Color
+      Entry: 7
+      Data: UnityEngine.Color, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0.5
+    - Name: 
+      Entry: 4
+      Data: 0.5
+    - Name: 
+      Entry: 4
+      Data: 0.5
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: OpenForEdit
+      Entry: 5
+      Data: false
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 29|GridSeed, Assembly-CSharp
+    - Name: Content
+      Entry: 1
+      Data: 
+    - Name: Flags
+      Entry: 3
+      Data: 16
+    - Name: Color
+      Entry: 7
+      Data: UnityEngine.Color, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0.5
+    - Name: 
+      Entry: 4
+      Data: 0.5
+    - Name: 
+      Entry: 4
+      Data: 0.5
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: OpenForEdit
+      Entry: 5
+      Data: false
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 30|GridSeed, Assembly-CSharp
+    - Name: Content
+      Entry: 1
+      Data: I
+    - Name: Flags
+      Entry: 3
+      Data: 33
+    - Name: Color
+      Entry: 7
+      Data: UnityEngine.Color, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0.5
+    - Name: 
+      Entry: 4
+      Data: 0.5
+    - Name: 
+      Entry: 4
+      Data: 0.5
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: OpenForEdit
+      Entry: 5
+      Data: false
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 31|GridSeed, Assembly-CSharp
+    - Name: Content
+      Entry: 1
+      Data: 
+    - Name: Flags
+      Entry: 3
+      Data: 16
+    - Name: Color
+      Entry: 7
+      Data: UnityEngine.Color, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0.5
+    - Name: 
+      Entry: 4
+      Data: 0.5
+    - Name: 
+      Entry: 4
+      Data: 0.5
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: OpenForEdit
+      Entry: 5
+      Data: false
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 32|GridSeed, Assembly-CSharp
+    - Name: Content
+      Entry: 1
+      Data: 
+    - Name: Flags
+      Entry: 3
+      Data: 16
+    - Name: Color
+      Entry: 7
+      Data: UnityEngine.Color, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0.5
+    - Name: 
+      Entry: 4
+      Data: 0.5
+    - Name: 
+      Entry: 4
+      Data: 0.5
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: OpenForEdit
+      Entry: 5
+      Data: false
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 33|GridSeed, Assembly-CSharp
+    - Name: Content
+      Entry: 1
+      Data: 
+    - Name: Flags
+      Entry: 3
+      Data: 16
+    - Name: Color
+      Entry: 7
+      Data: UnityEngine.Color, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0.5
+    - Name: 
+      Entry: 4
+      Data: 0.5
+    - Name: 
+      Entry: 4
+      Data: 0.5
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: OpenForEdit
+      Entry: 5
+      Data: false
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 34|GridSeed, Assembly-CSharp
+    - Name: Content
+      Entry: 1
+      Data: R
+    - Name: Flags
+      Entry: 3
+      Data: 32
+    - Name: Color
+      Entry: 7
+      Data: UnityEngine.Color, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0.5
+    - Name: 
+      Entry: 4
+      Data: 0.5
+    - Name: 
+      Entry: 4
+      Data: 0.5
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: OpenForEdit
+      Entry: 5
+      Data: false
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 35|GridSeed, Assembly-CSharp
+    - Name: Content
+      Entry: 1
+      Data: 
+    - Name: Flags
+      Entry: 3
+      Data: 16
+    - Name: Color
+      Entry: 7
+      Data: UnityEngine.Color, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0.5
+    - Name: 
+      Entry: 4
+      Data: 0.5
+    - Name: 
+      Entry: 4
+      Data: 0.5
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: OpenForEdit
+      Entry: 5
+      Data: false
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 36|GridSeed, Assembly-CSharp
+    - Name: Content
+      Entry: 1
+      Data: M
+    - Name: Flags
+      Entry: 3
+      Data: 33
+    - Name: Color
+      Entry: 7
+      Data: UnityEngine.Color, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0.5
+    - Name: 
+      Entry: 4
+      Data: 0.5
+    - Name: 
+      Entry: 4
+      Data: 0.5
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: OpenForEdit
+      Entry: 5
+      Data: false
     - Name: 
       Entry: 8
       Data: 

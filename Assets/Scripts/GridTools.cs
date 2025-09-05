@@ -17,8 +17,6 @@ public class BlockLine
     public BlockLine(string _name)
     {
         Name = _name;
-        // lineDirection = GridTools.GetLineDirection(this);
-        // lineOrientation = GridTools.GetLineOrientation(this);
     }
 
     public BlockLine(string _name, List<LetterBlock> _blocks)
@@ -28,17 +26,13 @@ public class BlockLine
         lineDirection = GridTools.GetLineDirection(this);
         lineOrientation = GridTools.GetLineOrientation(this);
     }
-
-
 }
 
 public static class GridTools
 {
-
     //Get lines of blocks
     public static List<BlockLine> GetEmptyLines(GridGenerator grid, LetterBlock startBlock)
     {
-
         //Our list that hold up right down left empty lines
         List<BlockLine> emptyLines = new List<BlockLine>();
 
@@ -52,9 +46,7 @@ public static class GridTools
         emptyLines.AddRange(new BlockLine[] { rightLine, downLine, leftLine, upLine });
 
         //If the desired start block isn't empty
-        if (!IsInBounds(new Vector2Int(startBlock.gridRef.x, startBlock.gridRef.y)) ||
-            !IsEmpty(new Vector2Int(startBlock.gridRef.x, startBlock.gridRef.y)) ||
-            HasAdjacencies(new Vector2Int(startBlock.gridRef.x, startBlock.gridRef.y)))
+        if (!IsInBounds(new Vector2Int(startBlock.gridRef.x, startBlock.gridRef.y)) || !IsEmpty(new Vector2Int(startBlock.gridRef.x, startBlock.gridRef.y)) || HasAdjacencies(new Vector2Int(startBlock.gridRef.x, startBlock.gridRef.y)))
         {
             Debug.Log("The desired start block is not valid - there are no empty lines");
             //Return our empty lists
@@ -67,8 +59,7 @@ public static class GridTools
             downLine.blocks.Add(startBlock);
             upLine.blocks.Add(startBlock);
             leftLine.blocks.Add(startBlock);
-
-
+            
             Debug.Log("The desired start block was validated");
 
             //Add to rightline
@@ -78,7 +69,7 @@ public static class GridTools
                 if (!IsInBounds(new Vector2Int(startBlock.gridRef.x + i, startBlock.gridRef.y))) break;
 
                 if (IsEmpty(new Vector2Int(startBlock.gridRef.x + i, startBlock.gridRef.y)) &&
-                !HasAdjacencies(new Vector2Int(startBlock.gridRef.x + i, startBlock.gridRef.y)))
+                    !HasAdjacencies(new Vector2Int(startBlock.gridRef.x + i, startBlock.gridRef.y)))
                 {
                     rightLine.blocks.Add(grid.letterBlocks[startBlock.gridRef.x + i, startBlock.gridRef.y]);
                 }
@@ -93,7 +84,7 @@ public static class GridTools
                 if (!IsInBounds(new Vector2Int(startBlock.gridRef.x, startBlock.gridRef.y - i))) break;
 
                 if (IsEmpty(new Vector2Int(startBlock.gridRef.x, startBlock.gridRef.y - i)) &&
-                !HasAdjacencies(new Vector2Int(startBlock.gridRef.x, startBlock.gridRef.y - i)))
+                    !HasAdjacencies(new Vector2Int(startBlock.gridRef.x, startBlock.gridRef.y - i)))
                 {
                     downLine.blocks.Add(grid.letterBlocks[startBlock.gridRef.x, startBlock.gridRef.y - i]);
                 }
@@ -108,7 +99,7 @@ public static class GridTools
                 if (!IsInBounds(new Vector2Int(startBlock.gridRef.x, startBlock.gridRef.y + i))) break;
 
                 if (IsEmpty(new Vector2Int(startBlock.gridRef.x, startBlock.gridRef.y + i)) &&
-                !HasAdjacencies(new Vector2Int(startBlock.gridRef.x, startBlock.gridRef.y + i)))
+                    !HasAdjacencies(new Vector2Int(startBlock.gridRef.x, startBlock.gridRef.y + i)))
                 {
                     upLine.blocks.Add(grid.letterBlocks[startBlock.gridRef.x, startBlock.gridRef.y + i]);
                 }
@@ -123,7 +114,7 @@ public static class GridTools
                 if (!IsInBounds(new Vector2Int(startBlock.gridRef.x - i, startBlock.gridRef.y))) break;
 
                 if (IsEmpty(new Vector2Int(startBlock.gridRef.x - i, startBlock.gridRef.y)) &&
-                !HasAdjacencies(new Vector2Int(startBlock.gridRef.x - i, startBlock.gridRef.y)))
+                    !HasAdjacencies(new Vector2Int(startBlock.gridRef.x - i, startBlock.gridRef.y)))
                 {
                     leftLine.blocks.Add(grid.letterBlocks[startBlock.gridRef.x - i, startBlock.gridRef.y]);
                 }
@@ -137,7 +128,6 @@ public static class GridTools
             upLine.blocks.OrderBy(x => x.gridRef.y);
 
 
-
             Debug.Log("Upline count = " + upLine.blocks.Count);
             Debug.Log("Rightline count = " + rightLine.blocks.Count);
             Debug.Log("Downline count = " + downLine.blocks.Count);
@@ -149,10 +139,15 @@ public static class GridTools
 
     public static LineDirection GetLineDirection(BlockLine line)
     {
+        if (line.lineOrientation == LineOrientation.Unknown)
+        {
+            line.lineOrientation = GetLineOrientation(line);
+        }
 
-        if (line.lineOrientation == LineOrientation.Unknown) line.lineOrientation = GetLineOrientation(line);
-
-        if (line.lineOrientation == LineOrientation.Unknown) return LineDirection.Unknown;
+        if (line.lineOrientation == LineOrientation.Unknown)
+        {
+            return LineDirection.Unknown;
+        }
 
 
         //Find out if its a column or a row
@@ -170,12 +165,10 @@ public static class GridTools
         }
 
         else return LineDirection.Unknown;
-
     }
 
     public static LineOrientation GetLineOrientation(BlockLine line)
     {
-
         if (line.blocks.Count < 2) return LineOrientation.Unknown;
         //Find out if its a column or a row
         //Same x // column
@@ -188,8 +181,7 @@ public static class GridTools
 
     public static bool IsInBounds(Vector2Int checkRef)
     {
-
-        GridGenerator grid = BrainControl.Get().grid;
+        GridGenerator grid = BrainControl.Get().Grid;
 
         //If the grid ref is outwith the bounds of grid
         if (checkRef.x < 0 || checkRef.x > grid.letterBlocks.GetLength(0) - 1 || checkRef.y < 0 || checkRef.y > grid.letterBlocks.GetLength(1) - 1) return false;
@@ -198,9 +190,8 @@ public static class GridTools
 
     public static bool IsEmpty(Vector2Int checkRef)
     {
-
         LetterBlock checkBlock = null;
-        GridGenerator grid = BrainControl.Get().grid;
+        GridGenerator grid = BrainControl.Get().Grid;
 
         //If it has been assigned
         if (grid.letterBlocks[checkRef.x, checkRef.y] != null) checkBlock = grid.letterBlocks[checkRef.x, checkRef.y];
@@ -212,12 +203,45 @@ public static class GridTools
         else return true;
     }
 
+    public static List<LetterBlock> GetAdjacentBlocks(LetterBlock checkBlock)
+    {
+        List<LetterBlock> adjacentBlocks = new List<LetterBlock>();
+        GridGenerator grid = BrainControl.Get().Grid;
+
+        List<Vector2Int> checkRefs = new List<Vector2Int>()
+        {
+            //Check above
+            new Vector2Int(checkBlock.gridRef.x, checkBlock.gridRef.y + 1),
+            //Check right
+            new Vector2Int(checkBlock.gridRef.x +1, checkBlock.gridRef.y),
+            //Check below
+            new Vector2Int(checkBlock.gridRef.x, checkBlock.gridRef.y - 1),
+            //Check left
+            new Vector2Int(checkBlock.gridRef.x - 1, checkBlock.gridRef.y)
+        };
+        
+        foreach (var checkRef in checkRefs)
+        {
+            //If its in bounds
+            if (IsInBounds(checkRef))
+            {
+                //And isn't empty
+                if (!IsEmpty(checkRef))
+                {
+                    adjacentBlocks.Add(grid.letterBlocks[checkRef.x,checkRef.y]);
+                };
+            }    
+        }
+        
+        return adjacentBlocks;
+    }
+    
     //TODO: Make this return a list of adjacencies and check the count for a bool
     public static bool HasAdjacencies(Vector2Int blockRef)
     {
-
         Vector2Int checkRef;
-        GridGenerator grid = BrainControl.Get().grid;
+        
+        GridGenerator grid = BrainControl.Get().Grid;
 
         //Check above
         checkRef = new Vector2Int(blockRef.x, blockRef.y + 1);
@@ -257,165 +281,165 @@ public static class GridTools
     }
 
     public static List<BlockLine> GetCross(LetterBlock sourceBlock, bool countEmpty = false)
-{
-    BlockLine horiz = new BlockLine("horiz")
     {
-        lineOrientation = LineOrientation.Horiz
-    };
-
-    BlockLine vert = new BlockLine("vert")
-    {
-        lineOrientation = LineOrientation.Vert
-    };
-
-    horiz.blocks.Add(sourceBlock);
-    vert.blocks.Add(sourceBlock);
-
-    bool left = true;
-    bool right = true;
-    bool up = true;
-    bool down = true;
-
-    int maxX = BrainControl.Get().grid.letterBlocks.GetLength(0);
-    int maxY = BrainControl.Get().grid.letterBlocks.GetLength(1);
-    int maxDistance = Mathf.Max(maxX, maxY);
-
-    for (int i = 1; i < maxDistance; i++)
-    {
-        // Right
-        if (right)
+        BlockLine horiz = new BlockLine("horiz")
         {
-            Vector2Int pos = new Vector2Int(sourceBlock.gridRef.x + i, sourceBlock.gridRef.y);
+            lineOrientation = LineOrientation.Horiz
+        };
 
-            if (IsInBounds(pos) && (countEmpty || !IsEmpty(pos)))
-            {
-                horiz.blocks.Add(BrainControl.Get().grid.letterBlocks[pos.x, pos.y]);
-            }
-            else
-            {
-                right = false;
-            }
-        }
-
-        // Left
-        if (left)
+        BlockLine vert = new BlockLine("vert")
         {
-            Vector2Int pos = new Vector2Int(sourceBlock.gridRef.x - i, sourceBlock.gridRef.y);
+            lineOrientation = LineOrientation.Vert
+        };
 
-            if (IsInBounds(pos) && (countEmpty || !IsEmpty(pos)))
-            {
-                horiz.blocks.Add(BrainControl.Get().grid.letterBlocks[pos.x, pos.y]);
-            }
-            else
-            {
-                left = false;
-            }
-        }
+        horiz.blocks.Add(sourceBlock);
+        vert.blocks.Add(sourceBlock);
 
-        // Up
-        if (up)
+        bool left = true;
+        bool right = true;
+        bool up = true;
+        bool down = true;
+
+        int maxX = BrainControl.Get().Grid.letterBlocks.GetLength(0);
+        int maxY = BrainControl.Get().Grid.letterBlocks.GetLength(1);
+        int maxDistance = Mathf.Max(maxX, maxY);
+
+        for (int i = 1; i < maxDistance; i++)
         {
-            Vector2Int pos = new Vector2Int(sourceBlock.gridRef.x, sourceBlock.gridRef.y + i);
-
-            if (IsInBounds(pos) && (countEmpty || !IsEmpty(pos)))
+            // Right
+            if (right)
             {
-                vert.blocks.Add(BrainControl.Get().grid.letterBlocks[pos.x, pos.y]);
-            }
-            else
-            {
-                up = false;
-            }
-        }
+                Vector2Int pos = new Vector2Int(sourceBlock.gridRef.x + i, sourceBlock.gridRef.y);
 
-        // Down
-        if (down)
-        {
-            Vector2Int pos = new Vector2Int(sourceBlock.gridRef.x, sourceBlock.gridRef.y - i);
-
-            if (IsInBounds(pos) && (countEmpty || !IsEmpty(pos)))
-            {
-                vert.blocks.Add(BrainControl.Get().grid.letterBlocks[pos.x, pos.y]);
-            }
-            else
-            {
-                down = false;
-            }
-        }
-
-        // Stop if no directions left
-        if (!right && !left && !up && !down)
-        {
-            Debug.Log("Word cross was completed");
-            return new List<BlockLine> { horiz, vert };
-        }
-    }
-
-    Debug.Log("Word cross was completed");
-    return new List<BlockLine> { horiz, vert };
-}
-
-
-    public static bool WordIntoLine(WordRequest request, bool validate, bool addScore)
-    {
-        GridGenerator grid = BrainControl.Get().grid;
-
-        Debug.Log("Placing word: Grid = " + grid + ", request = " + request.word + " into " + request.placementType.ToString());
-
-        //Get a placement
-        Vector2Int placement = GetPlacement(grid, request.word, request.placementType);
-
-        Debug.Log("Block at placement start is " + grid.letterBlocks[placement.x, placement.y]);
-
-        //Get possible placements
-        List<BlockLine> possibleLines = GetEmptyLines(grid, grid.letterBlocks[placement.x, placement.y]);
-
-        //The returned line
-        BlockLine line = null;
-
-        //Find an empty line
-        for (int i = 0; i < possibleLines.Count - 1; i++)
-        {
-            if (possibleLines[i].blocks.Count >= request.word.Length)
-            {
-                line = possibleLines[i];
-                break;
-            }
-        }
-        
-        if (line != null)
-        {
-            if (GetLineDirection(line) == LineDirection.Forwards)
-            {
-                for (int i = 0; i < request.word.Length; i++)
+                if (IsInBounds(pos) && (countEmpty || !IsEmpty(pos)))
                 {
-                    //Build the block from desired letter
-                    line.blocks[i].BuildTokenised(request.word[i].ToString());
+                    horiz.blocks.Add(BrainControl.Get().Grid.letterBlocks[pos.x, pos.y]);
                 }
-            }
-            else
-            {
-                for (int i = request.word.Length - 1; i > -1; i--)
+                else
                 {
-                    //Build the block from desired letter
-                    line.blocks[i].BuildTokenised(request.word[i].ToString());
+                    right = false;
                 }
             }
 
+            // Left
+            if (left)
+            {
+                Vector2Int pos = new Vector2Int(sourceBlock.gridRef.x - i, sourceBlock.gridRef.y);
 
+                if (IsInBounds(pos) && (countEmpty || !IsEmpty(pos)))
+                {
+                    horiz.blocks.Add(BrainControl.Get().Grid.letterBlocks[pos.x, pos.y]);
+                }
+                else
+                {
+                    left = false;
+                }
+            }
 
-            //Add the assigned blocks to a level input
-            //Oh I don't like this being assigned directly
-            //TODO: fix
-            BrainControl.Get().runManager.CurrentRun.ActiveLevel.inputs.Add(new BlockInput(line.blocks, validate, addScore));
+            // Up
+            if (up)
+            {
+                Vector2Int pos = new Vector2Int(sourceBlock.gridRef.x, sourceBlock.gridRef.y + i);
 
-            return true;
+                if (IsInBounds(pos) && (countEmpty || !IsEmpty(pos)))
+                {
+                    vert.blocks.Add(BrainControl.Get().Grid.letterBlocks[pos.x, pos.y]);
+                }
+                else
+                {
+                    up = false;
+                }
+            }
+
+            // Down
+            if (down)
+            {
+                Vector2Int pos = new Vector2Int(sourceBlock.gridRef.x, sourceBlock.gridRef.y - i);
+
+                if (IsInBounds(pos) && (countEmpty || !IsEmpty(pos)))
+                {
+                    vert.blocks.Add(BrainControl.Get().Grid.letterBlocks[pos.x, pos.y]);
+                }
+                else
+                {
+                    down = false;
+                }
+            }
+
+            // Stop if no directions left
+            if (!right && !left && !up && !down)
+            {
+                Debug.Log("Word cross was completed");
+                return new List<BlockLine> { horiz, vert };
+            }
         }
-        else
-        {
-            Debug.Log("None of the lines were long enough");
-            return false;
-        }
+
+        Debug.Log("Word cross was completed");
+        return new List<BlockLine> { horiz, vert };
     }
+
+
+    // public static bool WordIntoLine(WordRequest request, bool validate, bool addScore)
+    // {
+    //     GridGenerator grid = BrainControl.Get().Grid;
+    //
+    //     Debug.Log("Placing word: Grid = " + grid + ", request = " + request.word + " into " + request.placementType.ToString());
+    //
+    //     //Get a placement
+    //     Vector2Int placement = GetPlacement(grid, request.word, request.placementType);
+    //
+    //     Debug.Log("Block at placement start is " + grid.letterBlocks[placement.x, placement.y]);
+    //
+    //     //Get possible placements
+    //     List<BlockLine> possibleLines = GetEmptyLines(grid, grid.letterBlocks[placement.x, placement.y]);
+    //
+    //     //The returned line
+    //     BlockLine line = null;
+    //
+    //     //Find an empty line
+    //     for (int i = 0; i < possibleLines.Count - 1; i++)
+    //     {
+    //         if (possibleLines[i].blocks.Count >= request.word.Length)
+    //         {
+    //             line = possibleLines[i];
+    //             break;
+    //         }
+    //     }
+    //     
+    //     if (line != null)
+    //     {
+    //         if (GetLineDirection(line) == LineDirection.Forwards)
+    //         {
+    //             for (int i = 0; i < request.word.Length; i++)
+    //             {
+    //                 //Build the block from desired letter
+    //                 line.blocks[i].BuildTokenised(request.word[i].ToString());
+    //             }
+    //         }
+    //         else
+    //         {
+    //             for (int i = request.word.Length - 1; i > -1; i--)
+    //             {
+    //                 //Build the block from desired letter
+    //                 line.blocks[i].BuildTokenised(request.word[i].ToString());
+    //             }
+    //         }
+    //
+    //
+    //
+    //         //Add the assigned blocks to a level input
+    //         //Oh I don't like this being assigned directly
+    //         //TODO: fix
+    //         BrainControl.Get().runManager.CurrentRun.ActiveLevel.inputs.Add(new BlockInput(line.blocks, validate, addScore));
+    //
+    //         return true;
+    //     }
+    //     else
+    //     {
+    //         Debug.Log("None of the lines were long enough");
+    //         return false;
+    //     }
+    // }
 
     public static Vector2Int GetPlacement(GridGenerator grid, string word, PlacementType p)
     {
@@ -435,8 +459,8 @@ public static class GridTools
                 {
                     r = new Vector2Int(Random.Range(0, grid.letterBlocks.GetLength(0) - 1), Random.Range(0, grid.letterBlocks.GetLength(1) - 1));
                     t += 1;
-                }
-                while ((GetEmptyLines(grid, grid.letterBlocks[r.x, r.y]).Where(x => x.blocks.Count >= word.Length)).Count() < 1 && t < 20);
+                } while ((GetEmptyLines(grid, grid.letterBlocks[r.x, r.y]).Where(x => x.blocks.Count >= word.Length)).Count() < 1 && t < 20);
+
                 return r;
 
             default: return new Vector2Int(0, 0);
@@ -445,7 +469,6 @@ public static class GridTools
 
     public static (string forwards, string backwards) WordFromLine(BlockLine line)
     {
-
         string forwards = "";
         string backwards = "";
 
@@ -460,10 +483,5 @@ public static class GridTools
         }
 
         return (forwards, backwards);
-
     }
-
-
-
-
 }

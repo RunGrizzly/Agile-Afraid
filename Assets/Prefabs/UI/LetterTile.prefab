@@ -211,10 +211,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e5768f3d0cfdd3479870e74bb162b98, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startPos: {x: 0, y: 0, z: 0}
   Letter:
-    character: 0
-    score: 0
+    character: 100
+    score: 2
     type: 0
   letterBox: {fileID: 6863605217233002131}
   scoreBox: {fileID: 8299899393227897111}
@@ -277,13 +276,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 4
+  m_text: 2
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 703e07e985b531c4e8e39b93cce90127, type: 2}
   m_sharedMaterial: {fileID: 7944010305469628600, guid: 703e07e985b531c4e8e39b93cce90127, type: 2}
@@ -411,13 +410,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: w
+  m_text: d
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 703e07e985b531c4e8e39b93cce90127, type: 2}
   m_sharedMaterial: {fileID: 7944010305469628600, guid: 703e07e985b531c4e8e39b93cce90127, type: 2}
