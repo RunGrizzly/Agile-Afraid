@@ -22,11 +22,7 @@ public class Level
             return inputs.Where(x => x.isValidated).ToList();
         }
     }
-    // public BlockInput startInput;
-    // public BlockInput targetInput;
-
-    public int Score = 0;
-
+    
     public Resolution Resolution = Resolution.None;
 
     // //This can be used in conjuction with a scoring rubrik
@@ -100,7 +96,7 @@ public class Level
     void SetStartInput(BlockInput input)
     {
         // startInput = input;
-        BrainControl.Get().Grid.startPosition = input.PlacedBlocks[0].transform.position;
+        BrainControl.Get().Grid.StartPosition = input.PlacedBlocks[0].transform.position;
 
         foreach (LetterBlock block in input.PlacedBlocks)
         {
@@ -110,7 +106,7 @@ public class Level
 
     void SetTargetInput(BlockInput input)
     {
-        BrainControl.Get().Grid.targetPosition = input.PlacedBlocks[0].transform.position;
+        BrainControl.Get().Grid.TargetPosition = input.PlacedBlocks[0].transform.position;
 
         foreach (LetterBlock block in input.PlacedBlocks)
         {
@@ -122,30 +118,6 @@ public class Level
     public void Complete()
     {
         Debug.Log("Level complete called");
-        
-        Score = 0;
-        
-        int letterScore = 0;
-        
-        //Calculate score
-        foreach (BlockInput scoredInput in ScoredInputs)
-        {
-            foreach (LetterBlock letterBlock in scoredInput.PlacedBlocks)
-            {
-                letterScore += letterBlock.BaseLetter.score;
-            }
-        }
-
-      
-        //Flat completion
-        Score += 2;      
-        
-        //Add letter score
-        Score += letterScore;
-        
-        //Add word amount
-        Score += inputs.Count;
-        
         //This triggers the level passed trigger
         Resolution = Resolution.Win;
     }

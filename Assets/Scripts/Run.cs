@@ -1,11 +1,22 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using CodingJar;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Serialization;
+
+public class ScoreData
+{
+    public int Amount = 0;
+
+    public ScoreData(int amount)
+    {
+        Amount = amount;
+    }
+}
+
+public enum InterruptType { Pause, Win, Fail }
 
 public enum TimePoolType
 {
@@ -16,160 +27,41 @@ public enum TimePoolType
 }
 
 [Serializable]
-public class TimePip
-{
-    public TimePoolType TimePoolType = TimePoolType.Unknown;
-    public float MaxValue = 5;
-    public float CurrentValue = 5;
-    public TimePipWidget Widget = null;
-
-    public TimePip(TimePoolType timePoolType, float maxValue, float startValue)
-    {
-        //Debug.LogFormat("Added a new time pip");
-        TimePoolType = timePoolType;
-        MaxValue = maxValue;
-        CurrentValue = startValue;
-    }
-    
-    public float AddTime(float value)
-    {
-        float space = MaxValue - CurrentValue;
-        float added = Mathf.Min(space, value);
-        CurrentValue += added;
-        
-        Widget.PipFace.fillAmount = CurrentValue / MaxValue;
-        
-        return value - added; // leftover
-    }
-
-    public float RemoveTime(float value)
-    {
-        //Debug.LogFormat($"Removing time from {this} of type {TimePoolType}");
-        float removed = Mathf.Min(CurrentValue, value);
-        CurrentValue -= removed;
-
-        Widget.PipFace.fillAmount = CurrentValue / MaxValue;
-        
-        return value - removed; // leftover to remove
-    }
-}
-
-
-[Serializable]
-public class TimePool
-{
-    [Readonly]
-    public List<TimePip> TimePips = new List<TimePip>();
-    
-    public float CurrentValue
-    {
-        get
-        {
-            float current = 0;
-            
-            foreach (TimePip pip in TimePips)
-            {
-                current += pip.CurrentValue;
-            }
-
-            return current;
-        }
-    }
-    
-    public float MaxValue
-    {
-        get
-        {
-            float max = 0;
-            
-            foreach (TimePip pip in TimePips)
-            {
-                max += pip.MaxValue;
-            }
-            
-            return max;
-        }
-    }
-    
-    public TimePool(List<TimePip> timePips)
-    {
-        TimePips = timePips;
-    }
-
-    public float AddWithOverflow(float addValue)
-    {
-        float remaining = addValue;
-
-        foreach (var pip in TimePips)
-        {
-            if (remaining <= 0)
-            {
-                break;
-            }
-            
-            remaining = pip.AddTime(remaining);
-        }
-
-        return remaining; // overflow left after filling all pips
-    }
-
-    public float RemoveWithOverflow(float elapseValue, bool killOnDeplete = false)
-    {
-        float remaining = elapseValue;
-        
-        foreach (var pip in TimePips.AsEnumerable().Reverse())
-        {
-            if (remaining <= 0)
-            {
-                break;
-            }
-          
-            remaining = pip.RemoveTime(remaining);
-            
-            //If a pip depleted remove it
-            if (killOnDeplete)
-            {
-                //If there is still grey remaining
-                //Then the previous pip was depleted
-                if (remaining > 0)
-                {
-                    GameObject.Destroy(pip.Widget.gameObject);
-                    TimePips.Remove(pip);
-                    BrainControl.Get().eventManager.e_pipRemoved.Invoke(pip);
-                }
-            }
-        }
-
-        return remaining; // amount we tried to remove but couldn’t
-    }
-}
-
-public enum InterruptType { Pause, Win, Fail }
-
-[Serializable]
 public class Run
 {
-    public int ID = 0000;
+    private int ID = 0000;
     
     public bool IsPaused;
     
     //Determines drop rates, available abilities, events etc
     //Can this be consolidated into settings?
+    [ReadOnly]
     public Pet ActivePet = null;
 
-    private List<Toy> m_toys = new List<Toy>()
-    {
+    [ReadOnly]
+    private List<Toy> m_toys = new List<Toy>();
 
-    };
-    
-    
+    [ReadOnly]
     public RunSettings RunSettings;
-    
+
+    [FormerlySerializedAs("ActiveLevelSet")]
+    [ReadOnly]
+    public BossDungeon activeBossDungeon = null;
+
+    public Level ActiveLevel = null;
+
+    [ReadOnly]
     public Resolution Resolution = Resolution.None;
-    
-    public GridGenerator GridGenerator = null;
-    
+
+    //Score is decoupled from energy
+    //But they are achieved from the same source (scoring words)
     public int Score;
+
+    //So there should be multiple ways to earn K
+    //But not intrinsically linked to score
+    //Awarded K at end of run
+    //Pets can also have K generation
+    public int Energy;
     
     public List<string> recentWords = new List<string>();
 
@@ -179,38 +71,41 @@ public class Run
     public float WorkingTime => SqueakyTime.CurrentValue + CoreTime.CurrentValue + GreyTime.CurrentValue;
     public float MaxTime => SqueakyTime.MaxValue + CoreTime.MaxValue + GreyTime.MaxValue;
 
-    public TimePool SqueakyTime = null;
-    public TimePool CoreTime = null;
-    public TimePool GreyTime = null;
+    private TimePool SqueakyTime = null;
+    private TimePool CoreTime = null;
+    private TimePool GreyTime = null;
     public List<TimePip> AllPips => SqueakyTime.TimePips.Concat(CoreTime.TimePips).Concat(GreyTime.TimePips).ToList();
     public List<TimePip> WorkingPips => CoreTime.TimePips.Where(x => x.CurrentValue == x.MaxValue).ToList();
     
-    public LevelSet ActiveLevelSet = null;
-    public Level ActiveLevel = null;
-    
     //Scoring actions
+    [HideInInspector]
+    public UnityAction<bool, bool> emptyRackListener = null;
+    [HideInInspector]
     public UnityAction<List<char>, int, bool, bool> newRackListener = null;
+    [HideInInspector]
     public UnityAction<int, bool, bool> fillRackListener = null;
+    [HideInInspector]
     public UnityAction<Letter, bool, bool> getTileListener = null;
+    [HideInInspector]
     public UnityAction<bool, bool> getConsonantListener = null;
+    [HideInInspector]
     public UnityAction<bool, bool> getVowelListener = null;
+    [HideInInspector]
     public UnityAction<BlockInput> validateSuccessListener = null;
+    [HideInInspector]
     public UnityAction validateFailListener = null;
+    [HideInInspector]
     public UnityAction<Level> levelSuccessListener = null;
-
-    //Create a bunch of events that this run can call
-    public UnityEvent<Letter> LetterScored = new UnityEvent<Letter>();
-    public UnityEvent<LetterTile> LetterTileDiscarded = new UnityEvent<LetterTile>();
     
     public int ActiveLevelIndex
     {
         get
         {
-            if (ActiveLevelSet != null && ActiveLevel != null)
+            if (activeBossDungeon != null && ActiveLevel != null)
             {
 
 
-                return ActiveLevelSet.GetLevelIndex(ActiveLevel);
+                return activeBossDungeon.GetLevelIndex(ActiveLevel);
             }
 
             return 0;
@@ -218,22 +113,48 @@ public class Run
     }
     
     //Creates a new run and assigns run settings
-    public Run(RunSettings runSettings, LevelSet levelSet)
+    public Run(RunSettings runSettings, BossDungeon bossDungeon, Pet pet)
     {
-      RunSettings = runSettings;
-      ActiveLevelSet = levelSet;
+        RunSettings = runSettings;
+        activeBossDungeon = bossDungeon;
+        SetPet(pet);
     }
 
+    public Run()
+    {
+        RunSettings = null;
+        activeBossDungeon = null;
+        ActivePet = null;
+    }
+
+    public Run(RunSettings runSettings)
+    {
+        RunSettings = runSettings;
+        activeBossDungeon = null;
+        ActivePet = null;
+    }
+
+    public Run(BossDungeon bossDungeon)
+    {
+        RunSettings = null;
+        activeBossDungeon = bossDungeon;
+        ActivePet = null;
+    }
+
+    [Button]
     private void SetPet(Pet pet)
     {
-        LetterScored.AddListener(pet.Passive.OnLetterScored);
-        LetterTileDiscarded.AddListener(pet.Passive.OnLetterTileDiscarded); 
+        //pet.Passive.ScoreEvent.Invoke(new ScoreData(1));
+
+        //Create copy
+        ActivePet = ScriptableObject.Instantiate(pet);
+        ActivePet.Activate();
+
     }
 
     private void AddToy(Toy toy)
     {
-        LetterScored.AddListener(toy.Passive.OnLetterScored);
-        LetterTileDiscarded.AddListener(toy.Passive.OnLetterTileDiscarded);
+        //toy.Passive.ScoreEvent.Invoke(new ScoreData(1));
     }
     
      //Nothing in here should actually kick off any dynamic data
@@ -244,7 +165,7 @@ public class Run
         
         //Initial level load
         //ActiveLevelSet = levelSet;
-        ActiveLevel = new Level(ActiveLevelSet.Levels[0]);
+        ActiveLevel = new Level(activeBossDungeon.Levels[0]);
         
         Elapsed = 0;
         
@@ -288,19 +209,8 @@ public class Run
         AddGreyPips(new List<TimePip>());
 
         //Can we initialise it with a capacity and seed chars?
-        RackData = new RackData(ActiveLevelSet.RackSize);
-        RackData.Fill(ActiveLevelSet.RackSeeds, ActiveLevelSet.ScoringRubrik);
-        
-        //Should the run itself have the scoring rubrik? Not the level?
-        //Or the level set - rather
-        //I think so
-        
-        //Add the grid seeds of level 0
-        // foreach (var seedCharacter in ActiveLevel.Data.RackSeeds)
-        // {
-        //     Letter newLetter = new Letter(seedCharacter, 0);
-        //     RackData.Add(newLetter);
-        // }
+        RackData = new RackData(activeBossDungeon.RackSize);
+        RackData.Fill(activeBossDungeon.RackSeeds, activeBossDungeon.ScoringRubrik);
         
         //Set up appropriate event responses for the run
         VerifyResponses();
@@ -309,9 +219,66 @@ public class Run
     private void VerifyResponses()
     {
         //Scoring actions
+        if (emptyRackListener == null)
+        {
+            emptyRackListener = (costsK, costsPips) => {
+                bool validated = true;
+
+                //If the active level has a live input don't allow new tiles
+                if (ActiveLevel.inputs.Count > 0 && ActiveLevel.InputInProgress() != null)
+                {
+                    Debug.LogWarningFormat($"Cannot empty rack when there is a live input");
+                    validated = false;
+                }
+
+                //Did the request come with a score cost?
+                else if (costsK)
+                {
+                    int kCost = activeBossDungeon.ScoringRubrik.emptyRackKCost;
+
+                    //Do we have enough score to cover the cost?
+                    if (Energy >= kCost)
+                    {
+                        //Take the score away
+                        //ModifyScore(-kCost);
+                        Energy -= kCost;
+                    }
+                    else
+                    {
+                        validated = false;
+                    }
+                }
+
+                //If we haven't already failed validation and the request wants to remove pips
+                if (validated && costsPips)
+                {
+                    int pipCost = activeBossDungeon.ScoringRubrik.emptyRackPipCost;
+
+                    //If we have enough pips to cover the pip cost
+                    if (WorkingPips.Count >= pipCost)
+                    {
+                        //Remove the pips
+                        RemovePips(pipCost);
+                    }
+                    else
+                    {
+                        validated = false;
+                    }
+                }
+
+                //If we are still in a valid state - execute the request
+                if (validated)
+                {
+                    //Listener >> Gate >> Event    
+                    BrainControl.Get().runManager.CurrentRun.RackData.Empty();
+                }
+            };
+        }
+        
+        
         if (newRackListener == null)
         {
-            newRackListener = (seedChars, fillTo, costsScore, costsPips) =>
+            newRackListener = (seedChars, fillTo, costsK, costsPips) =>
             {
                 bool validated = true;
 
@@ -323,15 +290,16 @@ public class Run
                 }
                 
                 //Did the request come with a score cost?
-                else if (costsScore)
+                else if (costsK)
                 {
-                    int scoreCost = ActiveLevelSet.ScoringRubrik.newRackScoreCost;
+                    int kCost = activeBossDungeon.ScoringRubrik.newRackKCost;
                     
                     //Do we have enough score to cover the cost?
-                    if (Score >= ActiveLevelSet.ScoringRubrik.newRackScoreCost)
+                    if (Energy >= kCost)
                     {
                         //Take the score away
-                        ModifyScore(-scoreCost);
+                        //ModifyScore(-kCost);
+                        Energy -= kCost;
                     }
                     else
                     {
@@ -342,7 +310,7 @@ public class Run
                 //If we haven't already failed validation and the request wants to remove pips
                 if (validated && costsPips)
                 {
-                    int pipCost = ActiveLevelSet.ScoringRubrik.newRackPipCost;
+                    int pipCost = activeBossDungeon.ScoringRubrik.newRackPipCost;
                     
                     //If we have enough pips to cover the pip cost
                     if (WorkingPips.Count >= pipCost)
@@ -360,14 +328,14 @@ public class Run
                 if (validated)
                 {
                     //Listener >> Gate >> Event    
-                    RackData.GetNew(ActiveLevelSet.ScoringRubrik);
+                    RackData.GetNew(activeBossDungeon.ScoringRubrik);
                 }
             };
         }
         
         if (fillRackListener == null)
         {
-            fillRackListener = (fillTo, costsScore, costsPips) =>
+            fillRackListener = (fillTo, costsK, costsPips) =>
             {
                 bool validated = true;
                 
@@ -385,13 +353,14 @@ public class Run
                     return;
                 }
 
-               else if (costsScore)
+                else if (costsK)
                 {
-                    int scoreCost = ActiveLevelSet.ScoringRubrik.fillRackScoreCost;
-                    
-                    if (Score >= ActiveLevelSet.ScoringRubrik.fillRackScoreCost)
+                    int kCost = activeBossDungeon.ScoringRubrik.fillRackKCost;
+
+                    if (Energy >= kCost)
                     {
-                        ModifyScore(-scoreCost);
+                        //ModifyScore(-kCost);
+                        Energy -= kCost;
                     }
                     else
                     {
@@ -401,7 +370,7 @@ public class Run
 
                 if (validated && costsPips)
                 {
-                    int pipCost = ActiveLevelSet.ScoringRubrik.fillRackPipCost;
+                    int pipCost = activeBossDungeon.ScoringRubrik.fillRackPipCost;
                     
                     if (WorkingPips.Count >= pipCost)
                     {
@@ -416,14 +385,14 @@ public class Run
                 //If we are still in a valid state - execute the request
                 if (validated)
                 {
-                    RackData.Fill(null, ActiveLevelSet.ScoringRubrik);
+                    RackData.Fill(null, activeBossDungeon.ScoringRubrik);
                 }
             };
         }
 
         if (getTileListener == null)
         {
-            getTileListener = (baseLetter, costsScore, costsPips) =>
+            getTileListener = (baseLetter, costsK, costsPips) =>
             {
                 bool validated = true;
                 
@@ -434,13 +403,14 @@ public class Run
                     validated = false;
                 }
 
-                else if (costsScore)
+                else if (costsK)
                 {
-                    int scoreCost = ActiveLevelSet.ScoringRubrik.specificTileScoreCost;
-                    
-                    if (Score >= scoreCost)
+                    int kCost = activeBossDungeon.ScoringRubrik.specificTileKCost;
+
+                    if (Energy >= kCost)
                     {
-                        ModifyScore(-scoreCost);
+                        //ModifyScore(-kCost);
+                        Energy -= kCost;
                     }
                     else
                     {
@@ -450,7 +420,7 @@ public class Run
 
                 if (validated && costsPips)
                 {
-                    int pipCost = ActiveLevelSet.ScoringRubrik.specificTilePipCost;
+                    int pipCost = activeBossDungeon.ScoringRubrik.specificTilePipCost;
                     
                     if (WorkingPips.Count >= pipCost)
                     {
@@ -464,113 +434,135 @@ public class Run
 
                 if (validated)
                 {
-                    BrainControl.Get().eventManager.e_getTile.Invoke(baseLetter, costsScore, costsPips);
+                    BrainControl.Get().eventManager.e_getTile.Invoke(baseLetter, costsK, costsPips);
                 }
             };
         }
 
         if (getConsonantListener == null)
         {
-            getConsonantListener = ( costsScore, costsPips) =>
+            getConsonantListener = (costsK, costsPips) =>
             {
                 bool validated = true;
-                
-                //If the active level has a live input don't allow new tiles
-                if (ActiveLevel.inputs.Count > 0 && ActiveLevel.InputInProgress() != null )
+
+                if (RackData.AtCapacity())
                 {
-                    Debug.LogWarningFormat($"Cannot generate new tiles when there is a live input");
                     validated = false;
                 }
 
-                else if (costsScore)
+                else
                 {
-                    int scoreCost = ActiveLevelSet.ScoringRubrik.consonantScoreCost;
-                    
-                    if (Score >= scoreCost)
+                    //If the active level has a live input don't allow new tiles
+                    if (ActiveLevel.inputs.Count > 0 && ActiveLevel.InputInProgress() != null)
                     {
-                        ModifyScore(-scoreCost);
-                    }
-                    else
-                    {
+                        Debug.LogWarningFormat($"Cannot generate new tiles when there is a live input");
                         validated = false;
                     }
-                }
 
-                if (validated && costsPips)
-                {
-                    int pipCost = ActiveLevelSet.ScoringRubrik.consonantPipCost;
-                    
-                    if (WorkingPips.Count >= pipCost)
+                    else if (costsK)
                     {
-                        RemovePips(pipCost);
+                        int kCost = activeBossDungeon.ScoringRubrik.consonantKCost;
+
+                        if (Energy >= kCost)
+                        {
+                            //ModifyScore(-kCost);
+                            Energy -= kCost;
+                        }
+                        else
+                        {
+                            validated = false;
+                        }
                     }
-                    else
+
+                    if (validated && costsPips)
                     {
-                        validated = false;
+                        int pipCost = activeBossDungeon.ScoringRubrik.consonantPipCost;
+
+                        if (WorkingPips.Count >= pipCost)
+                        {
+                            RemovePips(pipCost);
+                        }
+                        else
+                        {
+                            validated = false;
+                        }
                     }
                 }
-
                 if (validated)
                 {
-                    RackData.Add(ActiveLevelSet.ScoringRubrik.Consonant());
+                    RackData.Add(activeBossDungeon.ScoringRubrik.Consonant());
                 }
             };
         }
 
         if (getVowelListener == null)
         {
-            getVowelListener = ( costsScore,costsPips) =>
+            getVowelListener = (costsK, costsPips) =>
             {
                 bool validated = true;
-                
-                //If the active level has a live input don't allow new tiles
-                if (ActiveLevel.inputs.Count > 0 && ActiveLevel.InputInProgress() != null )
+
+                if (RackData.AtCapacity())
                 {
-                    Debug.LogWarningFormat($"Cannot generate new tiles when there is a live input");
                     validated = false;
                 }
 
-                else if (costsScore)
+                else
                 {
-                    int scoreCost = ActiveLevelSet.ScoringRubrik.vowelScoreCost;
-                    
-                    if (Score >= scoreCost)
+                    //If the active level has a live input don't allow new tiles
+                    if (ActiveLevel.inputs.Count > 0 && ActiveLevel.InputInProgress() != null)
                     {
-                        ModifyScore(-scoreCost);
-                    }
-                    else
-                    {
+                        Debug.LogWarningFormat($"Cannot generate new tiles when there is a live input");
                         validated = false;
                     }
-                }
 
-                if (validated && costsPips)
-                {
-                    int pipCost = ActiveLevelSet.ScoringRubrik.vowelPipCost;
-                    
-                    if (WorkingPips.Count >= pipCost)
+                    else if (costsK)
                     {
-                        RemovePips(pipCost);
+                        int kCost = activeBossDungeon.ScoringRubrik.vowelKCost;
+
+                        if (Energy >= kCost)
+                        {
+                            //ModifyScore(-kCost);
+                            Energy -= kCost;
+                        }
+                        else
+                        {
+                            validated = false;
+                        }
                     }
-                    else
+
+                    if (validated && costsPips)
                     {
-                        validated = false;
+                        int pipCost = activeBossDungeon.ScoringRubrik.vowelPipCost;
+
+                        if (WorkingPips.Count >= pipCost)
+                        {
+                            RemovePips(pipCost);
+                        }
+                        else
+                        {
+                            validated = false;
+                        }
                     }
                 }
 
                 if (validated)
                 {
-                    RackData.Add(ActiveLevelSet.ScoringRubrik.Vowel());
+                    RackData.Add(activeBossDungeon.ScoringRubrik.Vowel());
                     // BrainControl.Get().eventManager.e_getVowelRequest.Invoke(costsScore, costsPips);
                 }
             };
         }
-        
+
+        //At this point we know we have a legit block input with a scoreable word
+
+        //So we award a score based on the letters
+        //And we award spendable K to spend on //abilities //new letters
+        //Should K be based on base score - or modified score?
         if (validateSuccessListener == null)
         {
             validateSuccessListener = (blockInput) =>
             {
-                int score = 0;
+                ScoreData newScoreData = new ScoreData(0);
                 
                 foreach (BlockLine blockLine in blockInput.ValidatedLines)
                 {
@@ -579,12 +571,12 @@ public class Run
                     // Debug.Log("Compiled word set: " + GridTools.WordFromLine(b));
                 
                     //Figure out how much the compiled block line is worth
-                    int scoreAdd = ActiveLevelSet.ScoringRubrik.ScoreFromBlocks(blockLine);
+                    int scoreAdd = activeBossDungeon.ScoringRubrik.ScoreFromBlocks(blockLine);
                     
                     //Debug.Log("Compiled word set is worth: " + scoreAdd);
+
+                    newScoreData.Amount += scoreAdd;
                     
-                    score += scoreAdd;
-                   
                     recentWords.Add(validated);
                     
                     //Truncate our list
@@ -593,8 +585,29 @@ public class Run
                         recentWords.RemoveAt(recentWords.Count - 1);
                     }
                 }
-                
-                ModifyScore(score);
+
+                //Modify the score in order
+                //Passive
+                //Each collected toy
+                if (ActivePet != null)
+                {
+                    //Passive Effects
+                    ActivePet.Passive.ScoreEvent.Invoke(newScoreData);
+                }
+
+                //Toy Effects
+                foreach (Toy toy in m_toys)
+                {
+                    toy.Passive.ScoreEvent.Invoke(newScoreData);
+                }
+
+                //Add the score data to the current score
+                ModifyScore(newScoreData.Amount);
+
+                //As a test we add score divided by two as energy
+                Energy += newScoreData.Amount / 2;
+
+                BrainControl.Get().Grid.CheckForCompletion(blockInput);
             };
         }
         
@@ -603,7 +616,7 @@ public class Run
             validateFailListener = () =>
             {
                 Debug.Log("Validation failed");
-                ModifyScore(-ActiveLevelSet.ScoringRubrik.validateFailPenalty);
+                ModifyScore(-activeBossDungeon.ScoringRubrik.validateFailPenalty);
             };
         }
         
@@ -611,7 +624,8 @@ public class Run
         {
             levelSuccessListener = (Level level) =>
             {
-                ModifyScore(level.Score);
+                //Add score depending on words
+                ModifyScore(activeBossDungeon.ScoringRubrik.LevelSuccessAward);
             };
         }
     }
@@ -704,18 +718,8 @@ public class Run
         {
             Debug.LogWarningFormat($"Tried to remove {pipsToRemove} but there are only {consumablePips.Count} consumable pips available."); 
         }
-
-        // return pipsRemoved; // How many we actually removed
     }
-    // public void End()
-    // {
-    //     //This SHOULD tell the run tracker to stop
-    //     //And then it will unsubscribe
-    //     
-    //     //Is there a way to duck out without nullifying?
-    //     BrainControl.Get().runManager.RunTracker = null;
-    // }
-
+    
     //Add or remove a score value from the run
     private void ModifyScore(int modification)
     {
@@ -728,12 +732,6 @@ public class Run
         
         //Reflect it in the UI
         BrainControl.Get().eventManager.e_updateUI.Invoke();
-            
-        //We don't want to fail on scores
-        if (Score <= 0)
-        {
-            //Brain.ins.eventManager.e_failRun.Invoke();
-        }
     }
 }
 

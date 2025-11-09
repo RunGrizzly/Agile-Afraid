@@ -17,7 +17,7 @@ public class Brain : MonoBehaviour
 
     public ButtonControls buttonControls;
 
-    public AssetManager AssetManager = null;
+    [FormerlySerializedAs("AssetManager")] public DataManager dataManager = null;
     
     public static Brain ins;
 

@@ -1,23 +1,29 @@
 using System;
+using System.Collections.Generic;
 using TMPro;
 using Unity.Mathematics;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
+
+[Serializable]
+public class IndexableCanvasgroup
+{
+    public string Key = "";
+    public CanvasGroup Value = null;
+}
 
 public class UIManager : MonoBehaviour
 {
     public Canvas MainMenuCanvas = null;
+   
+    
     public Canvas GameCanvas = null;
 
-    public CanvasGroup TimerGroup = null;
-    public CanvasGroup TileRackGroup = null;
-    public CanvasGroup TileRequestGroup = null;
-    public CanvasGroup LevelRequirementsGroup = null;
-    public CanvasGroup LevelTrackGroup = null;
-    public CanvasGroup RecentWordGroup = null;
-    
     //Holders, panels, canvasses
+    [SerializeField]
+    private List<IndexableCanvasgroup> m_sourcePanelIndex = null;
+    private Dictionary<string, CanvasGroup> m_panelIndex = new Dictionary<string, CanvasGroup>();
+    
     ////////////////////
     // public Transform gameCanvas;
     public Transform RecentWordHolder;
@@ -30,6 +36,7 @@ public class UIManager : MonoBehaviour
     //Text Box elements
     ////////////////////
     public TextMeshProUGUI scoreText;
+    public TextMeshProUGUI energyText;
     public TextMeshProUGUI levelText;
     public TextMeshProUGUI messageBox;
     ////////////////////
@@ -39,6 +46,17 @@ public class UIManager : MonoBehaviour
     
     public InputModificationWidget inputControlTemplate;
     private InputModificationWidget inputControlInstance;
+
+    [SerializeField]
+    private float m_bagButtonRadius = 5;
+
+    [SerializeField]
+    private float m_endAngleDeg = 45;
+
+    [SerializeField]
+    private float m_startAngleDeg = 0;
+    
+    
     
     [SerializeField]
     private InterruptPanel m_interruptPanelTemplate;
@@ -53,44 +71,19 @@ public class UIManager : MonoBehaviour
     //Should I be spinning out a "widget" encapsulation? - probably
     public Image LevelRequirementGrubTemplate = null;
     ////////////////////
-
+    
     public SerializableDictionary<LevelRequirements, Image> LevelRequirementGrubs = new SerializableDictionary<LevelRequirements, Image>();
 
+    //Tweens
     private int m_printMessageTween = -99;
-    private int m_clearMessageTween = -99;
+    private int m_clearMessageTween = -98;
+    private int m_bagButtonShowTween = -97;
+    private int m_bagButtonSizeTween = -96;
     
     [SerializeField]
     private Transform m_tileHolder;
     private LetterTile m_tileTemplate;
     private SerializableDictionary<Letter, LetterTile> LetterTiles = new SerializableDictionary<Letter, LetterTile>();
-
-    // public void OnLetterAdded(Letter newLetter)
-    // {
-    //     //Add a new blank tile 
-    //     //Should the actual instantiantation take place on the UI?
-    //     LetterTile newTile = GameObject.Instantiate(m_tileTemplate, Vector3.zero, Quaternion.identity);
-    //     newTile.transform.SetParent(m_tileHolder);
-    //     newTile.transform.SetAsLastSibling();
-    //     newTile.transform.localScale = Vector3.one;
-    //     newTile.transform.localEulerAngles = Vector3.zero;
-    //     newTile.transform.localPosition = Vector3.zero;
-    //     
-    //     //Here we build on the tile itself
-    //     newTile.Build(newLetter);     
-    //     
-    //     LetterTiles.Add(newLetter,newTile);
-    // }
-    //
-    // public void OnLetterRemoved(Letter letter)
-    // {
-    //     LetterTile targetLetter = null;
-    //     
-    //     if (LetterTiles.TryGetValue(letter, out targetLetter) && targetLetter != null)
-    //     {
-    //         LetterTiles.Remove(letter);
-    //         Destroy(targetLetter.gameObject);
-    //     }
-    // }
     
     void SetLevelText(int level)
     {
@@ -107,20 +100,34 @@ public class UIManager : MonoBehaviour
         {
             return;
         }
+
+        scoreText.text = Brain.ins.runManager.CurrentRun.Score.ToString();
+        energyText.text = Brain.ins.runManager.CurrentRun.Energy.ToString();
         
-        scoreText.text = (Brain.ins.runManager.CurrentRun.Score).ToString();
         SetLevelText(Brain.ins.runManager.CurrentRun.ActiveLevelIndex);
         
         //This is apparently being called on a run that hasn't initialised them yet
         TimeBar.fillAmount = currentRun.WorkingTime / currentRun.MaxTime;
     }
 
+    private void FetchPanels()
+    {
+        m_panelIndex = new();
+
+        foreach (var entry in m_sourcePanelIndex)
+        {
+            m_panelIndex.Add(entry.Key, entry.Value);
+        }
+
+        foreach (var entry in m_panelIndex)
+        {
+            Debug.LogFormat($"{entry.Key}:{entry.Value}");
+        }
+    }
+
+
     void Start()
     {
-        // BrainControl.Get().eventManager.e_addedToRack.AddListener(OnLetterAdded);
-        //
-        // BrainControl.Get().eventManager.e_removedFromRack.AddListener(OnLetterRemoved);
-        
         BrainControl.Get().eventManager.e_updateUI.AddListener(UpdateUI);
 
         BrainControl.Get().eventManager.e_blockSelected.AddListener(ShowInputWidget);
@@ -132,30 +139,15 @@ public class UIManager : MonoBehaviour
         {
             foreach (var t in s.ValidatedStrings)
             {
-                PrintRecentWord(t + " " + BrainControl.Get().runManager.CurrentRun.ActiveLevelSet.ScoringRubrik.ScoreFromBlocks(s.ValidatedLines[0]));
+                PrintRecentWord(t + " " + BrainControl.Get().runManager.CurrentRun.activeBossDungeon.ScoringRubrik.ScoreFromBlocks(s.ValidatedLines[0]));
             }
         });
-        //
-        // BrainControl.Get().eventManager.e_endInput.AddListener(() =>
-        // {
-        //     ClearInputWidget();
-        // });
-        //
-        // BrainControl.Get().eventManager.e_clearBlock.AddListener((c) =>
-        // {
-        //     ClearInputWidget();
-        // });
-
+        
         //LEVEL scope UI
         BrainControl.Get().eventManager.e_levelLoaded.AddListener((level) =>
         {
             InitialiseLevelUI(level);
         });
-        
-        // BrainControl.Get().eventManager.e_restartLevel.AddListener(() =>
-        // {
-        //   InitialiseLevelUI(BrainControl.Get().runManager.currentRun.ActiveLevel);
-        // });
         
         BrainControl.Get().eventManager.e_levelSuccess.AddListener((level) =>
         {
@@ -180,20 +172,10 @@ public class UIManager : MonoBehaviour
             {
                 interruptPanelInstance.KillPanel();
             }
-            
+
+            FetchPanels();
             InitialiseRunUI(run);
         });
-        
-        // BrainControl.Get().eventManager.e_restartRun.AddListener(() =>
-        // {
-        //     if (interruptPanelInstance != null)
-        //     {
-        //         interruptPanelInstance.KillPanel();
-        //     }
-        //     
-        //     InitialiseRunUI(BrainControl.Get().runManager.CurrentRun);
-        // });
-        
         
         BrainControl.Get().eventManager.e_pauseRun.AddListener(() =>
         {
@@ -266,6 +248,10 @@ public class UIManager : MonoBehaviour
             ClearRunUI();
             ClearInputWidget();
         });
+
+        //Game is initialised everytime the main menu is loaded
+        BrainControl.Get().eventManager.e_gameInitialised.AddListener(FetchPanels);
+        BrainControl.Get().eventManager.e_gameInitialised.AddListener(() => ShowHideRunInfo(false));
         
         BrainControl.Get().eventManager.e_pipAdded.AddListener((TimePip newPip) =>
         {
@@ -298,13 +284,13 @@ public class UIManager : MonoBehaviour
         //If the man canvas exists and doesn't have a camera
         if (GameCanvas != null && GameCanvas.worldCamera == null)
         {
-            GameCanvas.worldCamera = Camera.main;
+            GameCanvas.worldCamera = Camera.main.transform.GetChild(0).GetComponent<Camera>();
             GameCanvas.planeDistance = 3;
         }
         
         if (MainMenuCanvas != null && MainMenuCanvas.worldCamera == null)
         {
-            MainMenuCanvas.worldCamera = Camera.main;
+            MainMenuCanvas.worldCamera = Camera.main.transform.GetChild(0).GetComponent<Camera>();
             MainMenuCanvas.planeDistance = 3;
         }
     }
@@ -337,7 +323,7 @@ public class UIManager : MonoBehaviour
         ClearRunUI();
         
         //Layout pip track for the levels in this run
-        foreach (LevelData level in run.ActiveLevelSet.Levels)
+        foreach (LevelData level in run.activeBossDungeon.Levels)
         {
             GameObject newPip = Instantiate(levelPipTemplate, Vector3.zero, Quaternion.identity);
             newPip.transform.SetParent(LevelPipHolder);
@@ -371,9 +357,16 @@ public class UIManager : MonoBehaviour
                     break;
             }    
         }
-        
-        //The timer group alpha is based on if the level is timed or not
-        TimerGroup.alpha = run.ActiveLevelSet.IsTimed ? 1 : 0;
+
+        if (m_panelIndex.TryGetValue("timepanel", out CanvasGroup timerGroup))
+        {
+            //The timer group alpha is based on if the level is timed or not
+            timerGroup.alpha = run.activeBossDungeon.IsTimed ? 1 : 0;
+        }
+        else
+        {
+            Debug.LogWarningFormat($"'timepanel' could not be found in the panel index");
+        }
     }
     
     private void ClearLevelUI()
@@ -402,42 +395,56 @@ public class UIManager : MonoBehaviour
         ClearLevelUI();
         
         LevelPipHolder.GetChild(BrainControl.Get().runManager.CurrentRun.ActiveLevelIndex).GetComponent<Image>().color = Color.green;
-        
-        foreach (LevelRequirements flag in Enum.GetValues(typeof(LevelRequirements)))
+
+        if (m_panelIndex.TryGetValue("levelrequirementspanel", out CanvasGroup levelRequirementsPanel))
         {
-            //Don't count none
-            if (flag == LevelRequirements.None)
+            foreach (LevelRequirements flag in Enum.GetValues(typeof(LevelRequirements)))
             {
-                continue;
+                //Don't count none
+                if (flag == LevelRequirements.None)
+                {
+                    continue;
+                }
+
+                if (level.Data.LevelRequirements.HasFlag(flag))
+                {
+                    var newLevelRequirementGrub = Instantiate(LevelRequirementGrubTemplate);
+                    newLevelRequirementGrub.transform.SetParent(levelRequirementsPanel.transform);
+
+                    newLevelRequirementGrub.transform.localPosition = Vector3.zero;
+                    newLevelRequirementGrub.transform.localRotation = quaternion.identity;
+                    newLevelRequirementGrub.transform.localScale = Vector3.one;
+
+                    newLevelRequirementGrub.GetComponentInChildren<TextMeshProUGUI>().text = flag.ToString();
+
+                    //Populate the list
+                    LevelRequirementGrubs.Add(flag, newLevelRequirementGrub);
+                    Debug.LogFormat($"Added {flag} grub to the UI manager");
+                }
             }
 
-            if (level.Data.LevelRequirements.HasFlag(flag))
-            {
-                var newLevelRequirementGrub = Instantiate(LevelRequirementGrubTemplate);
-                newLevelRequirementGrub.transform.SetParent(LevelRequirementsGroup.transform);
+            //This should always fail but it initialises the challenge grubs
+            //But its circular - it wall call back to this
+            BrainControl.Get().Grid.ValidateChallenges();
 
-                newLevelRequirementGrub.transform.localPosition = Vector3.zero;
-                newLevelRequirementGrub.transform.localRotation  = quaternion.identity;
-                newLevelRequirementGrub.transform.localScale = Vector3.one;
-                
-                newLevelRequirementGrub.GetComponentInChildren<TextMeshProUGUI>().text = flag.ToString();
-                
-                //Populate the list
-                LevelRequirementGrubs.Add(flag,newLevelRequirementGrub);
-                Debug.LogFormat($"Added {flag} grub to the UI manager");
-            }
+            //Only show level requirements if there are some
+            levelRequirementsPanel.alpha = level.Data.LevelRequirements == LevelRequirements.None ? 0 : 1;
+        }
+        else
+        {
+            Debug.LogWarningFormat($"'levelrequirementspanel' could not be found in the panel index");
         }
 
-        //This should always fail but it initialises the challenge grubs
-        //But its circular - it wall call back to this
-        BrainControl.Get().Grid.ValidateChallenges();
-        
-        //Only show level requirements if there are some
-        LevelRequirementsGroup.alpha = level.Data.LevelRequirements == LevelRequirements.None ? 0 : 1;
-        
-        //Tile request buttons disabled if the level does not allow them
-        TileRequestGroup.alpha = level.Data.AllowTileRequests ? 1 : 0;
-        TileRequestGroup.interactable = level.Data.AllowTileRequests;
+        if (m_panelIndex.TryGetValue("tilerequestpanel", out CanvasGroup tileRequestPanel))
+        {
+            //Tile request buttons disabled if the level does not allow them
+            tileRequestPanel.alpha = level.Data.AllowTileRequests ? 1 : 0;
+            tileRequestPanel.interactable = level.Data.AllowTileRequests;
+        }
+        else
+        {
+            Debug.LogWarningFormat($"'tilerequestpanel' could not be found in the panel index");
+        }
     }
     
     private void ClearInputWidget()
@@ -533,5 +540,122 @@ public class UIManager : MonoBehaviour
     }
 
 
+
+
+
+    //Get one of the retrievable panels
+    //If it doesn't exist, return null
+    public CanvasGroup GetPanelByID(string id)
+    {
+        CanvasGroup panel = null;
+        m_panelIndex.TryGetValue(id, out panel);
+
+        return panel != null ? panel : null;
+    }
+
+    //Control everything via their canvasgroup?
+    public void ShowHidePanelGeneric(CanvasGroup panel, bool newState)
+    {
+        int integerState = newState ? 1 : 0;
+
+        panel.alpha = integerState;
+        panel.interactable = newState;
+        panel.blocksRaycasts = newState;
+    }
+
+    //Do I need to pass context here?
+    //I need to get references to pet info etc
+    //So its not just run info I need
+
+    //And the pet info changes
+
+    //New dialogue with required context?
+    //Some run setup class that loads all possible options?
+
+    //Data manager that provides retrievable data?
+    public void ShowHideRunInfo(bool newState)
+    {
+        if (m_panelIndex.TryGetValue("mainmenuruninfopanel", out CanvasGroup runInfoPanel))
+        {
+            int integerState = newState ? 1 : 0;
+
+            LeanTween.value(0, 1, 0.5f).setOnComplete(() => {
+                runInfoPanel.alpha = integerState;
+                runInfoPanel.interactable = newState;
+                runInfoPanel.blocksRaycasts = newState;
+            });
+        }
+    }
+
+    public void ShowHideBagPanel(bool showHide)
+    {
+        LeanTween.cancel(m_bagButtonShowTween);
+        LeanTween.cancel(m_bagButtonSizeTween);
+
+        string panelID = "bagbuttonpanel";
+        CanvasGroup targetPanel = null;
+        m_panelIndex.TryGetValue(panelID, out targetPanel);
+
+        if (targetPanel == null)
+        {
+            Debug.LogErrorFormat($"Panel ID:{panelID} could not be found in the panel index");
+            return;
+        }
+
+        m_bagButtonSizeTween = LeanTween.value(1, 1.5f, 0.055f).setEase(LeanTweenType.easeInQuad).setLoopPingPong(1)
+            .setOnUpdate((float val) => {
+                for (int i = 0; i < targetPanel.transform.childCount; i++)
+                {
+                    targetPanel.transform.GetChild(i).GetComponent<RectTransform>().localScale = Vector3.one * val;
+                }
+            })
+            .setOnComplete(() => {
+                targetPanel.transform.localScale = Vector3.one;
+            }).id;
+
+        if (showHide)
+        {
+            targetPanel.interactable = true;
+
+            //Get circle points
+            List<Vector2> points = new List<Vector2>();
+
+            // float endAngleDeg = 0;
+            // float startAngleDeg = 45;
+
+            Vector2 center = Input.mousePosition;
+
+            float step = (m_endAngleDeg - m_startAngleDeg) / (targetPanel.transform.childCount - 1);
+
+            for (int i = 0; i < targetPanel.transform.childCount; i++)
+            {
+                float angle = m_startAngleDeg + step * i;
+                float rad = angle * Mathf.Deg2Rad;
+
+                float x = center.x + m_bagButtonRadius * Mathf.Cos(rad);
+                float y = center.y + m_bagButtonRadius * Mathf.Sin(rad);
+
+                targetPanel.transform.GetChild(i).GetComponent<RectTransform>().anchoredPosition = new Vector2(x, y);
+            }
+
+            m_bagButtonShowTween = LeanTween.value(targetPanel.alpha, 1, 0.2f).setOnUpdate((float val) => {
+                    targetPanel.alpha = val;
+                })
+                .setOnComplete(() => {
+                    targetPanel.alpha = 1;
+                }).id;
+        }
+        else
+        {
+            targetPanel.interactable = false;
+
+            m_bagButtonShowTween = LeanTween.value(targetPanel.alpha, 0, 0.2f).setOnUpdate((float val) => {
+                    targetPanel.alpha = val;
+                })
+                .setOnComplete(() => {
+                    targetPanel.alpha = 0;
+                }).id;
+        }
+    }
 }
 

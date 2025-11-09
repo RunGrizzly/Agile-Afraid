@@ -1,8 +1,5 @@
 using UnityEngine;
-using System.Collections;
 using CodingJar;
-using Sirenix.OdinInspector;
-
 
 public class BlockSelector : MonoBehaviour
 {
@@ -32,8 +29,8 @@ public class BlockSelector : MonoBehaviour
         {
             m_selectedBlock = null;
         }
-        
-        if (m_runManager.Runs.Count == 0)
+
+        if (m_runManager.TrackedRuns.Count == 0)
         {
             return;
         }
@@ -73,15 +70,6 @@ public class BlockSelector : MonoBehaviour
     
     public void Highlight(LetterBlock highlightedBlock)
     {
-        //Debug.LogFormat($"Trying to highlight {highlightedBlock.gridRef}");
-        //Debug.LogFormat($"Currently highlighted block is {m_highlightedBlock.gridRef}");
-        
-        // if (highlightedBlock == m_highlightedBlock)
-        // {
-        //     Debug.LogFormat($"The highlighted block is already highlighted");
-        //     return;
-        // }
-
         //If there is already a highlighted block
         //Unhighlight it
         if (m_highlightedBlock != null && m_highlightedBlock != highlightedBlock)

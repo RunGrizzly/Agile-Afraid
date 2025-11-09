@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Sirenix.OdinInspector;
+using Unity.AI.Navigation;
 using UnityEngine;
+using UnityEngine.AI;
 
 public enum LineOrientation { Horiz, Vert, Unknown }
 public enum LineDirection { Forwards, Backwards, Unknown }
@@ -131,6 +133,7 @@ public class BlockInput
         PlacedBlocks.Add(newLetterBlock);
         PossibleLines = UpdatePossibleLines();
         RevealPossibleLines();
+        newLetterBlock.NavMeshModifier.area = NavMesh.GetAreaFromName("Input");
     }
 
     public void RemoveFromInput(LetterBlock letterBlock)
@@ -140,6 +143,7 @@ public class BlockInput
         BrainControl.Get().runManager.CurrentRun.RackData.Add(letterBlock.letter);
         letterBlock.SetLockState(LockState.unlocked);
         letterBlock.Empty();
+        letterBlock.NavMeshModifier.area = NavMesh.GetAreaFromName("Not Set");
         
         if (PlacedBlocks.Count < 1)
         {
@@ -166,7 +170,9 @@ public class BlockInput
             {
                 //Don't lock
                 block.SetLockState(LockState.locked);
-                block.gameObject.layer = LayerMask.NameToLayer("Navigable");
+                
+                //Validated blocks go to the navigable layer
+                block.NavMeshModifier.area = NavMesh.GetAreaFromName("Validated");
 
                 block.letter.OnValidated();
             }

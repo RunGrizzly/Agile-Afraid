@@ -6,7 +6,7 @@ public class BuildBundles
     [MenuItem("Build/Build AssetBundles")]
     static void BuildAllBundles()
     {
-        string outputPath = "Assets/../AssetBundles";
+        string outputPath = "D:\\UnityProjects\\RunGrizzly\\petwords-content\\contents";
         
         if (!System.IO.Directory.Exists(outputPath))
         {

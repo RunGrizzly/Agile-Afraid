@@ -333,7 +333,7 @@ MonoBehaviour:
   taskManager: {fileID: 938982175}
   audioManager: {fileID: 1652736062}
   buttonControls: {fileID: 938982176}
-  AssetManager: {fileID: 938982177}
+  dataManager: {fileID: 938982177}
   Grid: {fileID: 0}
   Rack: {fileID: 0}
 --- !u!114 &938982173
@@ -350,20 +350,37 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MainMenuCanvas: {fileID: 0}
   GameCanvas: {fileID: 0}
-  TimerGroup: {fileID: 0}
-  TileRackGroup: {fileID: 0}
-  TileRequestGroup: {fileID: 0}
-  LevelRequirementsGroup: {fileID: 0}
-  LevelTrackGroup: {fileID: 0}
-  RecentWordGroup: {fileID: 0}
+  m_sourcePanelIndex:
+  - Key: mainmenuruninfopanel
+    Value: {fileID: 0}
+  - Key: mainmenumainpanel
+    Value: {fileID: 0}
+  - Key: bagbuttonpanel
+    Value: {fileID: 0}
+  - Key: recentwordpanel
+    Value: {fileID: 0}
+  - Key: leveltrackpanel
+    Value: {fileID: 0}
+  - Key: levelrequirementspanel
+    Value: {fileID: 0}
+  - Key: tilerequestpanel
+    Value: {fileID: 0}
+  - Key: tilerackpanel
+    Value: {fileID: 0}
+  - Key: timegrouppanel
+    Value: {fileID: 0}
   RecentWordHolder: {fileID: 0}
   LevelPipHolder: {fileID: 0}
   TimeBar: {fileID: 0}
   TimePipHolder: {fileID: 0}
   scoreText: {fileID: 0}
+  energyText: {fileID: 0}
   levelText: {fileID: 0}
   messageBox: {fileID: 0}
   inputControlTemplate: {fileID: 3367445172493855983, guid: fbb95001e239b3b4ab129f830e2ea7ed, type: 3}
+  m_bagButtonRadius: 180
+  m_endAngleDeg: 0
+  m_startAngleDeg: 90
   m_interruptPanelTemplate: {fileID: 1638279720682749569, guid: 35caf8b585127404287e897236004bc4, type: 3}
   recentWordTemplate: {fileID: 7910235621893071442, guid: 4ee2454551d21504993949f5306f62c9, type: 3}
   levelPipTemplate: {fileID: 2504070363903430941, guid: f7f77a36514740c4d8a16662b9ae8e2f, type: 3}
@@ -385,8 +402,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 309d17db47be3a047ba632b411c01957, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Runs: []
-  ActiveRunSettings: {fileID: 0}
+  TrackedRuns:
+  - IsPaused: 0
+    ActivePet: {fileID: 0}
+    RunSettings: {fileID: 0}
+    ActiveLevelSet: {fileID: 0}
+    ActiveLevel:
+      inputs: []
+      Resolution: 0
+    Resolution: 0
+    Score: 0
+    Energy: 0
+    recentWords: []
+    RackData:
+      Letters: []
+    Elapsed: 0
 --- !u!114 &938982175
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -423,8 +453,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c65411be7d853ba4da5897c7483b8ec0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TestRunSettings: {fileID: 0}
-  DeliveredLevelSet: {fileID: 0}
+  m_userPetData: []
+  m_availableLevelSets:
+    m_keys: []
+    m_values: []
 --- !u!850595691 &1025749669
 LightingSettings:
   m_ObjectHideFlags: 0
@@ -603,6 +635,33 @@ MonoBehaviour:
     _data:
       data: []
   - _sourceObject: {fileID: 938982173}
+    _sourceField: energyText
+    DEPRECATED_fromObject:
+      scene:
+        editorAssetGUID: 
+        name: 
+        _path: 
+      fullPath: 
+      componentName: 
+      componentIndex: 0
+      editorLocalId: 0
+      editorPrefabRelativePath: 
+      version: 0
+    _toObject:
+      scene:
+        editorAssetGUID: 1410d76adbb43f746b49c8df674a9654
+        name: UI
+        _path: Assets/Scenes/UI.unity
+      fullPath: /UICanvas/KPanel/Value
+      componentName: TMPro.TextMeshProUGUI, Unity.TextMeshPro, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      componentIndex: 0
+      editorLocalId: 449220979
+      editorPrefabRelativePath: 
+      version: 1
+    _data:
+      data: []
+  - _sourceObject: {fileID: 938982173}
     _sourceField: scoreText
     DEPRECATED_fromObject:
       scene:
@@ -738,7 +797,7 @@ MonoBehaviour:
     _data:
       data: []
   - _sourceObject: {fileID: 938982173}
-    _sourceField: RecentWordGroup
+    _sourceField: m_sourcePanelIndex,8.Value
     DEPRECATED_fromObject:
       scene:
         editorAssetGUID: 
@@ -755,98 +814,17 @@ MonoBehaviour:
         editorAssetGUID: 1410d76adbb43f746b49c8df674a9654
         name: UI
         _path: Assets/Scenes/UI.unity
-      fullPath: /UICanvas/RecentWordPanel
+      fullPath: /UICanvas/TimePanel
       componentName: UnityEngine.CanvasGroup, UnityEngine.UIModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
       componentIndex: 0
-      editorLocalId: 1039735320
+      editorLocalId: 1233919995
       editorPrefabRelativePath: 
       version: 1
     _data:
       data: []
   - _sourceObject: {fileID: 938982173}
-    _sourceField: LevelTrackGroup
-    DEPRECATED_fromObject:
-      scene:
-        editorAssetGUID: 
-        name: 
-        _path: 
-      fullPath: 
-      componentName: 
-      componentIndex: 0
-      editorLocalId: 0
-      editorPrefabRelativePath: 
-      version: 0
-    _toObject:
-      scene:
-        editorAssetGUID: 1410d76adbb43f746b49c8df674a9654
-        name: UI
-        _path: Assets/Scenes/UI.unity
-      fullPath: /UICanvas/LevelPanel
-      componentName: UnityEngine.CanvasGroup, UnityEngine.UIModule, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
-      componentIndex: 0
-      editorLocalId: 1827199175
-      editorPrefabRelativePath: 
-      version: 1
-    _data:
-      data: []
-  - _sourceObject: {fileID: 938982173}
-    _sourceField: LevelRequirementsGroup
-    DEPRECATED_fromObject:
-      scene:
-        editorAssetGUID: 
-        name: 
-        _path: 
-      fullPath: 
-      componentName: 
-      componentIndex: 0
-      editorLocalId: 0
-      editorPrefabRelativePath: 
-      version: 0
-    _toObject:
-      scene:
-        editorAssetGUID: 1410d76adbb43f746b49c8df674a9654
-        name: UI
-        _path: Assets/Scenes/UI.unity
-      fullPath: /UICanvas/LevelRequirementsPanel
-      componentName: UnityEngine.CanvasGroup, UnityEngine.UIModule, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
-      componentIndex: 0
-      editorLocalId: 1225521287
-      editorPrefabRelativePath: 
-      version: 1
-    _data:
-      data: []
-  - _sourceObject: {fileID: 938982173}
-    _sourceField: TileRequestGroup
-    DEPRECATED_fromObject:
-      scene:
-        editorAssetGUID: 
-        name: 
-        _path: 
-      fullPath: 
-      componentName: 
-      componentIndex: 0
-      editorLocalId: 0
-      editorPrefabRelativePath: 
-      version: 0
-    _toObject:
-      scene:
-        editorAssetGUID: 1410d76adbb43f746b49c8df674a9654
-        name: UI
-        _path: Assets/Scenes/UI.unity
-      fullPath: /UICanvas/RackButtons
-      componentName: UnityEngine.CanvasGroup, UnityEngine.UIModule, Version=0.0.0.0,
-        Culture=neutral, PublicKeyToken=null
-      componentIndex: 0
-      editorLocalId: 1014110932
-      editorPrefabRelativePath: 
-      version: 1
-    _data:
-      data: []
-  - _sourceObject: {fileID: 938982173}
-    _sourceField: TileRackGroup
+    _sourceField: m_sourcePanelIndex,7.Value
     DEPRECATED_fromObject:
       scene:
         editorAssetGUID: 
@@ -873,7 +851,7 @@ MonoBehaviour:
     _data:
       data: []
   - _sourceObject: {fileID: 938982173}
-    _sourceField: TimerGroup
+    _sourceField: m_sourcePanelIndex,6.Value
     DEPRECATED_fromObject:
       scene:
         editorAssetGUID: 
@@ -890,11 +868,119 @@ MonoBehaviour:
         editorAssetGUID: 1410d76adbb43f746b49c8df674a9654
         name: UI
         _path: Assets/Scenes/UI.unity
-      fullPath: /UICanvas/TimePanel
+      fullPath: /UICanvas/BagPanel/BagButtons
       componentName: UnityEngine.CanvasGroup, UnityEngine.UIModule, Version=0.0.0.0,
         Culture=neutral, PublicKeyToken=null
       componentIndex: 0
-      editorLocalId: 1233919995
+      editorLocalId: 91740810
+      editorPrefabRelativePath: 
+      version: 1
+    _data:
+      data: []
+  - _sourceObject: {fileID: 938982173}
+    _sourceField: m_sourcePanelIndex,5.Value
+    DEPRECATED_fromObject:
+      scene:
+        editorAssetGUID: 
+        name: 
+        _path: 
+      fullPath: 
+      componentName: 
+      componentIndex: 0
+      editorLocalId: 0
+      editorPrefabRelativePath: 
+      version: 0
+    _toObject:
+      scene:
+        editorAssetGUID: 1410d76adbb43f746b49c8df674a9654
+        name: UI
+        _path: Assets/Scenes/UI.unity
+      fullPath: /UICanvas/LevelRequirementsPanel
+      componentName: UnityEngine.CanvasGroup, UnityEngine.UIModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+      componentIndex: 0
+      editorLocalId: 1225521287
+      editorPrefabRelativePath: 
+      version: 1
+    _data:
+      data: []
+  - _sourceObject: {fileID: 938982173}
+    _sourceField: m_sourcePanelIndex,4.Value
+    DEPRECATED_fromObject:
+      scene:
+        editorAssetGUID: 
+        name: 
+        _path: 
+      fullPath: 
+      componentName: 
+      componentIndex: 0
+      editorLocalId: 0
+      editorPrefabRelativePath: 
+      version: 0
+    _toObject:
+      scene:
+        editorAssetGUID: 1410d76adbb43f746b49c8df674a9654
+        name: UI
+        _path: Assets/Scenes/UI.unity
+      fullPath: /UICanvas/LevelPanel
+      componentName: UnityEngine.CanvasGroup, UnityEngine.UIModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+      componentIndex: 0
+      editorLocalId: 1827199175
+      editorPrefabRelativePath: 
+      version: 1
+    _data:
+      data: []
+  - _sourceObject: {fileID: 938982173}
+    _sourceField: m_sourcePanelIndex,3.Value
+    DEPRECATED_fromObject:
+      scene:
+        editorAssetGUID: 
+        name: 
+        _path: 
+      fullPath: 
+      componentName: 
+      componentIndex: 0
+      editorLocalId: 0
+      editorPrefabRelativePath: 
+      version: 0
+    _toObject:
+      scene:
+        editorAssetGUID: 1410d76adbb43f746b49c8df674a9654
+        name: UI
+        _path: Assets/Scenes/UI.unity
+      fullPath: /UICanvas/RecentWordPanel
+      componentName: UnityEngine.CanvasGroup, UnityEngine.UIModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+      componentIndex: 0
+      editorLocalId: 1039735320
+      editorPrefabRelativePath: 
+      version: 1
+    _data:
+      data: []
+  - _sourceObject: {fileID: 938982173}
+    _sourceField: m_sourcePanelIndex,2.Value
+    DEPRECATED_fromObject:
+      scene:
+        editorAssetGUID: 
+        name: 
+        _path: 
+      fullPath: 
+      componentName: 
+      componentIndex: 0
+      editorLocalId: 0
+      editorPrefabRelativePath: 
+      version: 0
+    _toObject:
+      scene:
+        editorAssetGUID: 1410d76adbb43f746b49c8df674a9654
+        name: UI
+        _path: Assets/Scenes/UI.unity
+      fullPath: /UICanvas/BagPanel/BagButtons
+      componentName: UnityEngine.CanvasGroup, UnityEngine.UIModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+      componentIndex: 0
+      editorLocalId: 91740810
       editorPrefabRelativePath: 
       version: 1
     _data:
@@ -954,6 +1040,60 @@ MonoBehaviour:
     _data:
       data: []
   - _sourceObject: {fileID: 938982173}
+    _sourceField: m_sourcePanelIndex,1.Value
+    DEPRECATED_fromObject:
+      scene:
+        editorAssetGUID: 
+        name: 
+        _path: 
+      fullPath: 
+      componentName: 
+      componentIndex: 0
+      editorLocalId: 0
+      editorPrefabRelativePath: 
+      version: 0
+    _toObject:
+      scene:
+        editorAssetGUID: c282660f956924543a0e62c8d797e9d3
+        name: MainMenu
+        _path: Assets/Scenes/MainMenu.unity
+      fullPath: /mainmenu.canvas/mainmenu.main
+      componentName: UnityEngine.CanvasGroup, UnityEngine.UIModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+      componentIndex: 0
+      editorLocalId: 1385859686
+      editorPrefabRelativePath: 
+      version: 1
+    _data:
+      data: []
+  - _sourceObject: {fileID: 938982173}
+    _sourceField: m_sourcePanelIndex,0.Value
+    DEPRECATED_fromObject:
+      scene:
+        editorAssetGUID: 
+        name: 
+        _path: 
+      fullPath: 
+      componentName: 
+      componentIndex: 0
+      editorLocalId: 0
+      editorPrefabRelativePath: 
+      version: 0
+    _toObject:
+      scene:
+        editorAssetGUID: c282660f956924543a0e62c8d797e9d3
+        name: MainMenu
+        _path: Assets/Scenes/MainMenu.unity
+      fullPath: /mainmenu.canvas/mainmenu.runInfo
+      componentName: UnityEngine.CanvasGroup, UnityEngine.UIModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+      componentIndex: 0
+      editorLocalId: 727376744
+      editorPrefabRelativePath: 
+      version: 1
+    _data:
+      data: []
+  - _sourceObject: {fileID: 938982173}
     _sourceField: MainMenuCanvas
     DEPRECATED_fromObject:
       scene:
@@ -971,7 +1111,7 @@ MonoBehaviour:
         editorAssetGUID: c282660f956924543a0e62c8d797e9d3
         name: MainMenu
         _path: Assets/Scenes/MainMenu.unity
-      fullPath: /MainMenuCanvas
+      fullPath: /mainmenu.canvas
       componentName: UnityEngine.Canvas, UnityEngine.UIModule, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
       componentIndex: 0
@@ -1000,7 +1140,7 @@ MonoBehaviour:
       editorAssetGUID: 14a58eddb21d09b4eb3e7acc94a35b22
       name: Cameras
       _path: Assets/Scenes/Cameras.unity
-    loadInEditor: 0
+    loadInEditor: 1
     loadMethod: 3
   - scene:
       editorAssetGUID: 1410d76adbb43f746b49c8df674a9654

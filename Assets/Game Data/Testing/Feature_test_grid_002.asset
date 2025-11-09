@@ -1223,10 +1223,10 @@ MonoBehaviour:
       Data: 37|GridSeed, Assembly-CSharp
     - Name: Content
       Entry: 1
-      Data: 
+      Data: D
     - Name: Flags
       Entry: 3
-      Data: 16
+      Data: 36
     - Name: Color
       Entry: 7
       Data: UnityEngine.Color, UnityEngine.CoreModule
@@ -1619,10 +1619,10 @@ MonoBehaviour:
       Data: 49|GridSeed, Assembly-CSharp
     - Name: Content
       Entry: 1
-      Data: 
+      Data: M
     - Name: Flags
       Entry: 3
-      Data: 16
+      Data: 36
     - Name: Color
       Entry: 7
       Data: UnityEngine.Color, UnityEngine.CoreModule

@@ -109,7 +109,7 @@ MonoBehaviour:
       Data: 
   LevelSetID: DailyChallenge2
   IsTimed: 0
-  ScoringRubrik: {fileID: 11400000, guid: 69598f0d728d71847b8f24c55d7e7a92, type: 2}
+  ScoringRubrik: {fileID: 11400000, guid: aebfadb60de633940abe86b8b7ef09f6, type: 2}
   RackSeeds:
   - character: 109
     score: 3

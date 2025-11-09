@@ -4,71 +4,21 @@ using System.Linq;
 using CodingJar;
 using Sirenix.OdinInspector;
 using TMPro;
+using Unity.AI.Navigation;
 using UnityEngine;
-using UnityEngine.Events;
-using UnityEngine.Serialization;
+using UnityEngine.AI;
 using Random = UnityEngine.Random;
 
 
 public enum FillState { empty, filled }
 public enum LockState { unlocked, locked }
 
-
-
-//Reusable as both a character passive and obtainable run mods
-public abstract class RunModification : ScriptableObject
-{
-    //OnScore
-    //OnValidate
-    //OnDiscard
-    //Etc
-
-    //Example field
-    public int Rarity = 1;
-}
-
-public class CharacterPassive : RunModification
-{
-    public void OnLetterScored(Letter letter)
-    {
-        
-    }
-    
-    public void OnLetterTileDiscarded(LetterTile letterTile)
-    {
-        
-    }  
-}
-
-public class ToyPassive : RunModification
-{
-    public void OnLetterScored(Letter letter)
-    {
-        
-    }
-    
-    public void OnLetterTileDiscarded(LetterTile letterTile)
-    {
-        
-    }
-}
-
-//Ball passives can be picked up and accumulated
-//Are the available passives specific to the pet?
-public abstract class Toy: ScriptableObject
-{
-    //On hover
-    //Show info about the toy
-    //A toy that goes into the run modification slot
-    public ToyPassive Passive; //EX Words with a W score x2
-    public abstract void OnPickUp();
-    public abstract void OnDiscard();
-}
-
-
 [Serializable]
-public class LetterBlock : MonoBehaviour, ILetterDestination
+public class LetterBlock : MonoBehaviour, ILetterDestination //Selectable?
 {
+    public NavMeshModifier NavMeshModifier = null;
+    
+    
     [SerializeField]
     public MeshRenderer MeshRenderer = null;
     
@@ -174,11 +124,15 @@ public class LetterBlock : MonoBehaviour, ILetterDestination
 
         BaseLetter = new Letter(char.MinValue, 0);
 
-        gameObject.layer = LayerMask.NameToLayer("Default");
+        NavMeshModifier.area = NavMesh.GetAreaFromName("Not Set");
+        //gameObject.layer = LayerMask.NameToLayer("Default");
 
         letterBox.text = "";
         scoreBox.text = "";
     }
+
+    //Letter block custom validity check
+    //A letter block is valid for sending if it create a route to the start tile
     public bool IsValid()
     {
         BlockInput activeInput = null;
@@ -186,6 +140,20 @@ public class LetterBlock : MonoBehaviour, ILetterDestination
         //First check - if we are locked or filled - not valid
         if (lockState != LockState.unlocked || fillState != FillState.empty)
         {
+            return false;
+        }
+
+        //Assume this block is an input block
+        NavMeshModifier.area = NavMesh.GetAreaFromName("Input");
+
+        //We can use the grid, to check if there is a navigable path the start position and the new block
+        //We want to include both validated, and non validated inputs
+
+        int checkMask = (1 << NavMesh.GetAreaFromName("Input")) | (1 << NavMesh.GetAreaFromName("Validated"));
+
+        if (!BrainControl.Get().Grid.CheckPath(BrainControl.Get().Grid.StartPosition, transform.position, checkMask))
+        {
+            Debug.LogFormat($"The destination block does not form a valid path with the origin");
             return false;
         }
         
@@ -224,6 +192,9 @@ public class LetterBlock : MonoBehaviour, ILetterDestination
                 //We are not within those possible lines
                 //We are not valid
                 Debug.LogFormat($"Tried to enter a block that is not part of the current input.");
+
+                //Reset navmesh
+                NavMeshModifier.area = NavMesh.GetAreaFromName("Not Set");
                 return false;
             }
         }
@@ -269,12 +240,13 @@ public class LetterBlock : MonoBehaviour, ILetterDestination
 
             //Create a new copy of the letter entry found using the passed letters
             //Why does this fail?
-            var match = BrainControl.Get().runManager.CurrentRun.ActiveLevelSet.ScoringRubrik.distribution.Keys.FirstOrDefault(x => char.ToLower(x.character) == char.ToLower(targetChar));
+            var match = BrainControl.Get().runManager.CurrentRun.activeBossDungeon.ScoringRubrik.distribution.Keys.FirstOrDefault(x => char.ToLower(x.character) == char.ToLower(targetChar));
 
             if (match != null)
             {
                 // /Debug.LogFormat($"Found a match for character {targetChar}");
                 SetLetter(match);
+                NavMeshModifier.area = NavMesh.GetAreaFromName("Validated");
             }
             else
             {
@@ -339,8 +311,8 @@ public class LetterBlock : MonoBehaviour, ILetterDestination
         MeshRenderer.material.SetInt("_isStart", 1);
         //Lock this to make it unselectable
         //SetLockState(LockState.locked);
-        gameObject.layer = LayerMask.NameToLayer("Navigable");
-        BrainControl.Get().Grid.startPosition = transform.position;
+        // gameObject.layer = LayerMask.NameToLayer("Navigable");
+        BrainControl.Get().Grid.StartPosition = transform.position;
     }
 
     public void SetAsTarget()
@@ -348,7 +320,7 @@ public class LetterBlock : MonoBehaviour, ILetterDestination
         MeshRenderer.material.SetInt("_isTarget", 1);
         //Lock this to make it unselectable
         //SetLockState(LockState.locked);
-        gameObject.layer = LayerMask.NameToLayer("Navigable");
-        BrainControl.Get().Grid.targetPosition = transform.position;
+        // gameObject.layer = LayerMask.NameToLayer("Navigable");
+        BrainControl.Get().Grid.TargetPosition = transform.position;
     }
 }

@@ -13,24 +13,29 @@ public class ScoreSet : SerializedScriptableObject
     public Dictionary<Letter,float> distribution = new Dictionary<Letter,float>();
 
     //This cost is in pips
-    public int specificTileScoreCost;
+    public int specificTileKCost;
     public int specificTilePipCost;
 
-    public int vowelScoreCost;
+    public int vowelKCost;
     public int vowelPipCost;
 
-    public int consonantScoreCost;
+    public int consonantKCost;
     public int consonantPipCost;
 
-    public int fillRackScoreCost;
+    public int fillRackKCost;
     public int fillRackPipCost;
 
-    public int newRackScoreCost;
+    public int newRackKCost;
     public int newRackPipCost;
 
+    public int emptyRackKCost;
+    public int emptyRackPipCost;
+    
     public int levelRestartCost;
     public int validateFailPenalty;
 
+    public int LevelSuccessAward;
+    
     public int ScoreFromBlocks(BlockLine line)
     {
         int score = 0;

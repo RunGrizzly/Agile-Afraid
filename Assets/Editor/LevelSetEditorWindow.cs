@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class LevelSetBatchEditor : EditorWindow
 {
-    private LevelSet levelSet;
+    private BossDungeon bossDungeon;
     private bool[] levelSelectionStates;
 
     private bool applyRackSize;
@@ -43,25 +43,25 @@ public class LevelSetBatchEditor : EditorWindow
 
     private void OnGUI()
     {
-        levelSet = (LevelSet)EditorGUILayout.ObjectField("Level Set", levelSet, typeof(LevelSet), false);
+        bossDungeon = (BossDungeon)EditorGUILayout.ObjectField("Level Set", bossDungeon, typeof(BossDungeon), false);
 
-        if (levelSet == null)
+        if (bossDungeon == null)
         {
             EditorGUILayout.HelpBox("Assign a Level Set asset to begin.", MessageType.Info);
             return;
         }
 
-        if (levelSelectionStates == null || levelSelectionStates.Length != levelSet.Levels.Count)
+        if (levelSelectionStates == null || levelSelectionStates.Length != bossDungeon.Levels.Count)
         {
-            levelSelectionStates = new bool[levelSet.Levels.Count];
+            levelSelectionStates = new bool[bossDungeon.Levels.Count];
         }
 
         EditorGUILayout.Space();
         EditorGUILayout.LabelField("Levels in Set", EditorStyles.boldLabel);
 
-        for (int i = 0; i < levelSet.Levels.Count; i++)
+        for (int i = 0; i < bossDungeon.Levels.Count; i++)
         {
-            var level = levelSet.Levels[i];
+            var level = bossDungeon.Levels[i];
 
             EditorGUILayout.BeginHorizontal();
 
@@ -135,13 +135,13 @@ public class LevelSetBatchEditor : EditorWindow
 
         if (GUILayout.Button("Apply Selected Settings to Checked Levels"))
         {
-            Undo.RecordObject(levelSet, "Batch Apply Level Settings");
+            Undo.RecordObject(bossDungeon, "Batch Apply Level Settings");
 
-            for (int i = 0; i < levelSet.Levels.Count; i++)
+            for (int i = 0; i < bossDungeon.Levels.Count; i++)
             {
                 if (!levelSelectionStates[i]) continue;
 
-                var level = levelSet.Levels[i];
+                var level = bossDungeon.Levels[i];
 
                 //if (applyRackSize) level.rackSize = newRackSize;
                 if (applyColorA) level.DeadZoneColorA = newColorA;
@@ -158,7 +158,7 @@ public class LevelSetBatchEditor : EditorWindow
                 //if (applyIsTimed) level.IsTimed = newIsTimed;
             }
 
-            EditorUtility.SetDirty(levelSet);
+            EditorUtility.SetDirty(bossDungeon);
             AssetDatabase.SaveAssets();
         }
     }

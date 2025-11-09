@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Survival_001
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
-    SerializedBytes: 0101060000004c006500760065006c0073002f000000000149000000530079007300740065006d002e0043006f006c006c0065006300740069006f006e0073002e00470065006e0065007200690063002e004c00690073007400600031005b005b004c006500760065006c0044006100740061002c00200041007300730065006d0062006c0079002d004300530068006100720070005d005d002c0020006d00730063006f0072006c006900620000000000060100000000000000022f01000000011a0000004c006500760065006c0044006100740061002c00200041007300730065006d0062006c0079002d00430053006800610072007000010000000b010800000067007200690064004400610074006100000000000101050000004d0075007300690063002f02000000011d00000050006c0061007900610062006c00650043006c00690070002c00200041007300730065006d0062006c0079002d00430053006800610072007000020000002d01040000004e0061006d0065000b010900000041007500640069006f0043006c0069007000010000000503010e00000044006500610064005a006f006e00650043006f006c006f00720041002f03000000012900000055006e0069007400790045006e00670069006e0065002e0043006f006c006f0072002c00200055006e0069007400790045006e00670069006e0065002e0043006f00720065004d006f00640075006c00650020b114853e20fd8e1e3f2027186f3f20000000000503010e00000044006500610064005a006f006e00650043006f006c006f0072004200300300000020f839a43d200000803f200315103f2000000000051d01110000004c006500760065006c0052006500710075006900720065006d0065006e007400730004000000000000002b011100000041006c006c006f007700540069006c00650052006500710075006500730074007300001701030000007000610072000000000017010b000000740072006f00700068007900530063006f00720065000000000017010b0000007200650070006500610074004c0069006d006900740000000000050705
+    SerializedFormat: 2
+    SerializedBytes: 
     ReferencedUnityObjects:
     - {fileID: 11400000, guid: 5ccedc72d9bbe01469843ed1dad32646, type: 2}
     - {fileID: 8300000, guid: 7cdeef785fc2c4a438642837f4aa4107, type: 3}
@@ -22,8 +22,92 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes: []
-  LevelSetID: DailyChallenge2
+    SerializationNodes:
+    - Name: Levels
+      Entry: 7
+      Data: 0|System.Collections.Generic.List`1[[LevelData, Assembly-CSharp]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: 1|LevelData, Assembly-CSharp
+    - Name: gridData
+      Entry: 10
+      Data: 0
+    - Name: Music
+      Entry: 7
+      Data: 2|PlayableClip, Assembly-CSharp
+    - Name: Name
+      Entry: 6
+      Data: 
+    - Name: AudioClip
+      Entry: 10
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: DeadZoneColorA
+      Entry: 7
+      Data: UnityEngine.Color, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0.2599235
+    - Name: 
+      Entry: 4
+      Data: 0.6193693
+    - Name: 
+      Entry: 4
+      Data: 0.9339623
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: DeadZoneColorB
+      Entry: 7
+      Data: UnityEngine.Color, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0.08018869
+    - Name: 
+      Entry: 4
+      Data: 1
+    - Name: 
+      Entry: 4
+      Data: 0.5628206
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: LevelRequirements
+      Entry: 3
+      Data: 4
+    - Name: AllowTileRequests
+      Entry: 5
+      Data: false
+    - Name: par
+      Entry: 3
+      Data: 5
+    - Name: trophyScore
+      Entry: 3
+      Data: 0
+    - Name: repeatLimit
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+  LevelSetID: 111a
   IsTimed: 0
   ScoringRubrik: {fileID: 11400000, guid: aebfadb60de633940abe86b8b7ef09f6, type: 2}
   RackSeeds:

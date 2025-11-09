@@ -5,17 +5,15 @@ using System.Collections;
 
 public class StageManager : MonoBehaviour
 {
-    void Start()
+    private void Start()
     {
         //Subscribe to quit to menu event
-        BrainControl.Get().eventManager.e_quitToMenu.AddListener(() =>
-        {
-            InitialiseGame();
-        });
-
+        BrainControl.Get().eventManager.e_quitToMenu.AddListener(InitialiseGame);
+            
         InitialiseGame();
     }
 
+    //We entered into the main menu as if a new game was started
     private void InitialiseGame()
     {
         Task t = new Task(InitialiseGameRoutine());
@@ -24,7 +22,6 @@ public class StageManager : MonoBehaviour
      
     private IEnumerator InitialiseGameRoutine()
     {
-
         Task t_initialiseGame = new Task(LoadScenes(new List<string>() { "Cameras", "MainMenu" }, true));
 
         while (t_initialiseGame.Running)
@@ -39,19 +36,30 @@ public class StageManager : MonoBehaviour
 
     public void InitialiseDailyRun()
     {
-        Task t = new Task(InitialiseRunRoutine(BrainControl.Get().AssetManager.DeliveredLevelSet));
+        Task t = new Task(InitialiseRunRoutine());
     }
     
-    public void InitialiseRun(LevelSet levelSet)
+    public void InitialiseRun()
     {
-        Task t = new Task(InitialiseRunRoutine(levelSet));
+        Task t = new Task(InitialiseRunRoutine());
     }
 
-    private IEnumerator InitialiseRunRoutine(LevelSet levelSet)
+    //Makes a new run
+    //Sets it to staged
+    //Waits for it to be tracked
+    
+    
+    
+    //Maybe this can be baked into the run manager
+    private IEnumerator InitialiseRunRoutine()
     {
+        //Pop up a run staging environment
+        //Create a new run
+        
         //Actual scene load
         List<string> initialScenes = new List<string>() { "UI", "WordGame" };
         Task t_initialiseScenes = new Task(LoadScenes(initialScenes, true));
+        
         
         while (t_initialiseScenes.Running)
         {
@@ -62,15 +70,16 @@ public class StageManager : MonoBehaviour
         //We have entered the game scene
         Debug.Log("All scenes initialised");
         
-        //As soon as the appropriate scenes are loaded, we tacitly permit the run to start
-        Brain.ins.runManager.StartNewRun(levelSet);
+        // //As soon as the appropriate scenes are loaded, we tacitly permit the run to start
+        // //Stage an empty run on the run manager 
+        // Run newRun = new Run(levelSet);
+        Brain.ins.runManager.StartStagedRun();
+        
+        
+        
         
         //So we are ready to initialise the run
         //This should be the entry point for the run kickoff
-        
-        //This should only be done to respond to an actually loaded run
-        //Brain.ins.eventManager.e_newRun.Invoke(Brain.ins.RunSettings, levelSet);
-        
     }
   
     IEnumerator LoadScenes(List<string> scenes, bool cleanup)

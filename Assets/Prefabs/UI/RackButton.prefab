@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 359880922889497897}
   - component: {fileID: 1449135074601833485}
   - component: {fileID: 6472759242237485002}
+  - component: {fileID: 3264854053920645494}
   m_Layer: 5
   m_Name: RackButton
   m_TagString: Untagged
@@ -37,7 +38,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 300, y: 250}
+  m_SizeDelta: {x: 60, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &359880922889497897
 CanvasRenderer:
@@ -120,15 +121,34 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1449135074601833485}
   m_OnClick:
     m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &3264854053920645494
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2644375526670607512}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00f4d02a9a434dbfaa57fcf42e490ff8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SourceButton: {fileID: 6472759242237485002}
+  ClickButton:
+    m_PersistentCalls:
+      m_Calls: []
+  HoverEvent:
+    m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: ButtonControls, Assembly-CSharp
-        m_MethodName: GetVowel
+        m_TargetAssemblyTypeName: 
+        m_MethodName: 
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 1
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -165,8 +185,8 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 5311698923303278698}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.1728777, y: 0.18772843}
-  m_AnchorMax: {x: 0.89851177, y: 0.9054841}
+  m_AnchorMin: {x: 0.23009379, y: 0.3231252}
+  m_AnchorMax: {x: 0.89471537, y: 0.77686435}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -225,7 +245,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 92.05
+  m_fontSize: 16.85
   m_fontSizeBase: 42.7
   m_fontWeight: 400
   m_enableAutoSizing: 1

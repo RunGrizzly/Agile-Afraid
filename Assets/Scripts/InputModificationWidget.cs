@@ -1,8 +1,4 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public enum InputModification
 {
@@ -20,9 +16,7 @@ public class InputModificationWidget : MonoBehaviour
     
     Ray ray;
     RaycastHit hit;
-
-    // private bool isHovered;
-
+    
     public float hoverPop;
 
     public void OnEnable()

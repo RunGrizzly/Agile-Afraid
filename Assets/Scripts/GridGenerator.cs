@@ -1,6 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using Cinemachine;
 using Sirenix.OdinInspector;
@@ -10,93 +8,44 @@ using UnityEngine.UI;
 
 public class GridGenerator : MonoBehaviour
 {
+    //We use the start and end position to calculate a path - maybe this could be better?
+    [ReadOnly]
+    public Vector3 StartPosition = Vector3.zero;
+    [ReadOnly]
+    public Vector3 TargetPosition = new Vector3(100, 100, 100);
+    
     public LetterBlock[,] letterBlocks = new LetterBlock[,] { };
 
-    public LetterBlock blockTemplate;
+    [SerializeField]
+    private LetterBlock m_blockTemplate;
+    
+    [SerializeField]
+    private CinemachineTargetGroup m_targetGroup;
 
-    // public LetterBlock highlightedBlock;
-    // public LetterBlock selectedBlock;
-    //
-    // public float selectPop;
-
-    public CinemachineTargetGroup targetGroup;
-
-    public NavMeshSurface navSurface;
-
-    public Vector3 startPosition = Vector3.zero, targetPosition = new Vector3(100, 100, 100);
-
-    public GameObject deadZone;
-
-    public NavMeshPath path;
-
-    public GUISkin editorSkin;
-
+    [SerializeField]
+    private NavMeshSurface m_navSurface;
+  
+    [SerializeField]
+    private MeshRenderer m_deadzoneRenderer = null;
+    
     private LevelRequirements m_activeRequirements;
     
-    
-    void Start()
+    private void OnEnable()
     {
+        BrainControl.Get().eventManager.e_levelLoaded.AddListener(SetDeadzoneColors);
+        // BrainControl.Get().eventManager.e_validateSuccess.AddListener(CheckForCompletion);
+    }
 
-        BrainControl.Get().eventManager.e_levelLoaded.AddListener((l) =>
-        {
-            var deadZoneRenderer = deadZone.GetComponent<MeshRenderer>(); 
-           deadZoneRenderer.material.SetColor("_ColorA", l.Data.DeadZoneColorA);
-           deadZoneRenderer.material.SetColor("_ColorB", l.Data.DeadZoneColorB);
-        });
+    private void OnDisable()
+    {
+        BrainControl.Get().eventManager.e_levelLoaded.RemoveListener(SetDeadzoneColors);
+        // BrainControl.Get().eventManager.e_validateSuccess.RemoveListener(CheckForCompletion);
+    }
 
-        //Level level event responses
-        /////////////////////////////
-        // Brain.ins.eventManager.e_blockSelected.AddListener((b) =>
-        // {
-        //     if (b.lockState != LockState.locked) SelectBlock(b);
-        // });
-
-        // Brain.ins.eventManager.e_clearBlock.AddListener((c) =>
-        // {
-        //     c.Empty();
-        //     c.SetLockState(LockState.unlocked);
-        //     selectedBlock = null;
-        // });
-
-        //Track input mode
-        // Brain.ins.eventManager.e_beginInput.AddListener((a) =>
-        // {
-        //     SelectBlock(a);
-        // });
-
-        // Brain.ins.eventManager.e_updateInput.AddListener((u) =>
-        // {
-        //     SelectBlock(u);
-        // });
-        
-        //When an input is validated
-        Brain.ins.eventManager.e_validateSuccess.AddListener((BlockInput input) =>
-        {
-            //So we made a complete path
-            if (CheckPath())
-            {
-                //Continue to check the challenges
-                if (ValidateChallenges())
-                {
-                    //We completed the grid
-                    BrainControl.Get().runManager.CurrentRun.ActiveLevel.Complete();
-                }
-                //The path was completed but the challenges failed
-                else
-                {
-                    //This currently does nothing as nothing listens to it
-                    BrainControl.Get().eventManager.e_levelFail.Invoke(BrainControl.Get().runManager.CurrentRun.ActiveLevel);
-                }
-            }
-            //There was no valid path
-            //Just continue
-            else
-            {
-                
-            }
-        });
-
-        // StartCoroutine(Generate());
+    private void SetDeadzoneColors(Level level)
+    {
+        m_deadzoneRenderer.material.SetColor("_ColorA", level.Data.DeadZoneColorA);
+        m_deadzoneRenderer.material.SetColor("_ColorB", level.Data.DeadZoneColorB);
     }
 
     bool GridIsValid()
@@ -165,10 +114,36 @@ public class GridGenerator : MonoBehaviour
         return true;
     }
 
-    [Button]
-    public bool CheckPath()
+    public void CheckForCompletion(BlockInput blockInput)
     {
-        navSurface.BuildNavMesh();
+        //We check if there is a route from the start to end filled with validated blocks
+        if (CheckPath(StartPosition, TargetPosition, 1 << NavMesh.GetAreaFromName("Validated")))
+        {
+            //Continue to check the challenges
+            if (ValidateChallenges())
+            {
+                //We completed the grid
+                BrainControl.Get().runManager.CurrentRun.ActiveLevel.Complete();
+            }
+            //The path was completed but the challenges failed
+            else
+            {
+                //This currently does nothing as nothing listens to it
+                BrainControl.Get().eventManager.e_levelFail.Invoke(BrainControl.Get().runManager.CurrentRun.ActiveLevel);
+                Debug.LogWarningFormat($"The path was completed but the challenges failed.");
+            }
+        }
+        else
+        {
+         Debug.LogWarningFormat($"There is no valid path to check completion against.");
+        }
+    }
+
+    [Button]
+    public bool CheckPath(Vector3 positionA, Vector3 positionB, int areaMask)
+    {
+        //Problem exists here where it doesn't take into account non-validated blocks
+        m_navSurface.BuildNavMesh();
 
         //Check if grid is built
         //Do this by comparing the actual size of the grid with the request dims
@@ -177,19 +152,20 @@ public class GridGenerator : MonoBehaviour
             return false;
         }
 
-        if (!NavMesh.SamplePosition(startPosition, out NavMeshHit hitA, 1, NavMesh.AllAreas))
+        
+        if (!NavMesh.SamplePosition(positionA, out NavMeshHit hitA, 1, areaMask))
         {
             return false;
         }
 
-        if (!NavMesh.SamplePosition(targetPosition, out NavMeshHit hitB, 1, NavMesh.AllAreas))
+        if (!NavMesh.SamplePosition(positionB, out NavMeshHit hitB, 1, areaMask))
         {
             return false;
         }
 
 
         NavMeshPath path = new NavMeshPath();
-        NavMesh.CalculatePath(hitA.position, hitB.position, NavMesh.AllAreas, path);
+        NavMesh.CalculatePath(hitA.position, hitB.position, areaMask, path);
         
         
         if (path.status == NavMeshPathStatus.PathComplete)
@@ -204,54 +180,7 @@ public class GridGenerator : MonoBehaviour
             return false;
         }
     }
-
-    // public void HighlightBlock(LetterBlock b)
-    // {
-    //     if (b == highlightedBlock)
-    //     {
-    //         return;
-    //     }
-    //
-    //     //If there is already a highlighted block
-    //     //Unhighlight it
-    //     if (highlightedBlock != null)
-    //     {
-    //         //Change the material to it's highlighted state
-    //         //We should cache this inside the block
-    //         highlightedBlock.MeshRenderer.material.SetInt("_isHighlighted", 0);
-    //         
-    //         //Tween it down
-    //         //This looks unmanaged - we should stop any tweens in progress
-    //         LeanTween.moveLocalY(highlightedBlock.MeshRenderer.gameObject, 0, 0.15f).setEase(LeanTweenType.easeOutExpo);
-    //     }
-    //
-    //   
-    //     highlightedBlock = b;
-    //     b.MeshRenderer.gameObject.GetComponent<MeshRenderer>().material.SetInt("_isHighlighted", 1);
-    //     LeanTween.moveLocalY(highlightedBlock.MeshRenderer.gameObject, selectPop, 0.15f).setEase(LeanTweenType.easeOutElastic);
-    // }
-    //
-    //
-    // public void Unhilight()
-    // {
-    //
-    //     if (highlightedBlock == null) return;
-    //
-    //     else
-    //     {
-    //         highlightedBlock.MeshRenderer.gameObject.GetComponent<MeshRenderer>().material.SetInt("_isHighlighted", 0);
-    //         LeanTween.moveLocalY(highlightedBlock.MeshRenderer.gameObject, 0, 0.15f).setEase(LeanTweenType.easeOutExpo);
-    //         highlightedBlock = null;
-    //     }
-    //
-    //
-    // }
-    //
-    // public void SelectBlock(LetterBlock a)
-    // {
-    //     selectedBlock = a;
-    // }
-
+    
     public IEnumerator Generate(GridData gridData)
     {
         letterBlocks = new LetterBlock[gridData.gridSeed.GetLength(0),gridData.gridSeed.GetLength(1)];
@@ -265,13 +194,12 @@ public class GridGenerator : MonoBehaviour
         GameObject gridHolder = new GameObject("gridHolder");
         gridHolder.transform.SetParent(transform);
         gridHolder.name = "gridHolder";
-
-
+        
         for (int x = 0; x < letterBlocks.GetLength(0); x++)
         {
             for (int y = 0; y < letterBlocks.GetLength(1); y++)
             {
-                LetterBlock newBlock = Instantiate(blockTemplate, new Vector3(x, 0, y), Quaternion.identity);
+                LetterBlock newBlock = Instantiate(m_blockTemplate, new Vector3(x, 0, y), Quaternion.identity);
 
                 newBlock.gridRef = new Vector2Int(x, y);
                 newBlock.name = newBlock.gridRef.ToString();
@@ -280,6 +208,7 @@ public class GridGenerator : MonoBehaviour
                 newBlock.BuildFromGridSeed(gridData.gridSeed[x,y]);
 
                 newBlock.transform.SetParent(gridHolder.transform);
+                
                 letterBlocks[x, y] = newBlock;
             }
         }
@@ -295,22 +224,8 @@ public class GridGenerator : MonoBehaviour
         targetB.radius = 0;
         targetB.weight = 1;
 
-        targetGroup.m_Targets = new CinemachineTargetGroup.Target[] { targetA, targetB };
+        m_targetGroup.m_Targets = new CinemachineTargetGroup.Target[] { targetA, targetB };
 
         yield return new WaitForEndOfFrame();
     }
-
-    public List<LetterBlock> CheckAdjacency(LetterBlock a)
-    {
-
-        List<LetterBlock> adjacencies = new List<LetterBlock>();
-
-        if (GridTools.IsInBounds(new Vector2Int(a.gridRef.x + 1, a.gridRef.y)) && letterBlocks[a.gridRef.x + 1, a.gridRef.y].fillState == FillState.filled) adjacencies.Add(letterBlocks[a.gridRef.x + 1, a.gridRef.y]);
-        if (GridTools.IsInBounds(new Vector2Int(a.gridRef.x, a.gridRef.y - 1)) && letterBlocks[a.gridRef.x, a.gridRef.y - 1].fillState == FillState.filled) adjacencies.Add(letterBlocks[a.gridRef.x, a.gridRef.y - 1]);
-        if (GridTools.IsInBounds(new Vector2Int(a.gridRef.x - 1, a.gridRef.y)) && letterBlocks[a.gridRef.x - 1, a.gridRef.y].fillState == FillState.filled) adjacencies.Add(letterBlocks[a.gridRef.x - 1, a.gridRef.y]);
-        if (GridTools.IsInBounds(new Vector2Int(a.gridRef.x, a.gridRef.y + 1)) && letterBlocks[a.gridRef.x, a.gridRef.y + 1].fillState == FillState.filled) adjacencies.Add(letterBlocks[a.gridRef.x, a.gridRef.y + 1]);
-        return adjacencies;
-    }
-
-
 }

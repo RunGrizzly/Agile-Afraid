@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -7,30 +8,16 @@ public enum Resolution {None, Win, Fail, Restarted, Aborted}
 
 public class RunManager : MonoBehaviour
 {
-    public List<Run> Runs = new List<Run>();
-    public Run CurrentRun => Runs[0];
+    public List<Run> TrackedRuns = new List<Run>();
+    public Run CurrentRun => TrackedRuns[0];
     public Task RunTracker;
 
-    public RunSettings ActiveRunSettings = null;
+    //This is staged while the run is being constructed by the user
+    //It is then "tracked" when we start playing
+    [ShowInInspector]
+    public Run StagedRun { get; private set; }
     
-    //Game framework broadly looks like this
-    //Game////////////////
-    //////////////////////
-    //                  //
-    //  //Run/////////
-    //////////////////////
-    //  //              //
-    //  //  //Level///////
-    //  //  //////////////
-    //  //  //          //
-    //  //  //          //
-    //  //  //          //
-    //  //  //          //
-    //  //  //          //
-    //////////////////////
-    //////////////////////
-    ///
-    ///     //Track run here
+    //Track run here
     private void OnEnable()
     {
         //A new input is called
@@ -57,7 +44,6 @@ public class RunManager : MonoBehaviour
             {
                 liveInput.AddToInput(newLetterBlock);         
             }
-            //RevealPossibleLines(latestInput.PossibleLines);
         });
         //////////////////////
 
@@ -79,6 +65,9 @@ public class RunManager : MonoBehaviour
             Debug.LogFormat("Input cancelled");
             CurrentRun.ActiveLevel.RemoveInput(input);
         });
+
+        //When we load in a new game - pre initialise a run
+        Brain.ins.eventManager.e_gameInitialised.AddListener(StageNewRun);
         //////////////////////
     }
 
@@ -142,36 +131,56 @@ public class RunManager : MonoBehaviour
             }
         }
     }
-
-    //Prepare a new run with run settings and a level set
-    public void LoadNewRun()
+    
+    public void StageNewRun()
     {
-        
-    }
-
-
-    public void SetRunSettings(RunSettings newSettings)
-    {
-        ActiveRunSettings = newSettings;
+        StagedRun = new Run();
     }
     
-    //Kick off the currently loaded run
-    public void StartNewRun(LevelSet levelSet)
+    public void StageNewRun(Run run)
     {
-        //Creates a new run from run settings
-        Runs.Insert(0, new Run(ActiveRunSettings, levelSet));
-        RunTracker = new Task(TrackRun(CurrentRun));
+        StagedRun = run;
+    }
+    
+    public void StageNewRun(RunSettings settings, BossDungeon bossDungeon, Pet pet, bool autoTrack = false )
+    {
+        StagedRun = new Run(settings, bossDungeon, pet);
+
+        if (autoTrack)
+        { 
+            StartStagedRun();    
+        }
+    }
+    public void SetRunSettings(RunSettings settings)
+    {
+        StagedRun.RunSettings = settings;
+    }
+    
+    public void SetPet(Pet pet)
+    {
+        StagedRun.ActivePet = pet;
+    }
+    
+    public void SetLevels(BossDungeon bossDungeon)
+    {
+        StagedRun.activeBossDungeon = bossDungeon;
+    }
+    
+    //Set levels with a string
+    //This pings the data manager to get the actual levelset
+    public void SetLevels(string levelSetID)
+    {
+        StagedRun.activeBossDungeon = BrainControl.Get().dataManager.GetLevelSetByID(levelSetID);
     }
     
     
     //This fails on restart from daily challenge
-    public void StartNewRun(Run sourceRun)
+    public void StartStagedRun()
     {
-        //Creates a new run from run settings
-        Runs.Insert(0, new Run(sourceRun.RunSettings, sourceRun.ActiveLevelSet));
+        //Creates a new run from existing run
+        TrackedRuns.Insert(0, StagedRun);
         RunTracker = new Task(TrackRun(CurrentRun));
     }
-    
     
     //This breaks specifically when in a pause state
     //Win/Lose is fine
@@ -208,7 +217,7 @@ public class RunManager : MonoBehaviour
          case Resolution.Restarted:
              //Current run is the last run added (0) (so the one just played)
              // CurrentRun.ActiveLevel.Resolution = Resolution.Restarted;
-             StartNewRun(CurrentRun);
+             StageNewRun(CurrentRun);
              break;
          
          case Resolution.Aborted:
@@ -263,30 +272,17 @@ public class RunManager : MonoBehaviour
          BrainControl.Get().eventManager.e_levelSuccess.AddListener(run.levelSuccessListener);   
         #endregion
         
-        // //Fill the rack to prepare the run
-        // BrainControl.Get().eventManager.e_newRackRequest.Invoke
-        // (
-        //     run.ActiveLevel.Data.RackSeeds,
-        //     run.ActiveLevel.Data.rackSize, 
-        //     false, 
-        //     false
-        // );
-        
-        //Directly fill the runs rack and let it broadcast
-        // CurrentRun.RackData.Fill( run.ActiveLevel.Data.RackSeeds, CurrentRun.ActiveLevelSet.ScoringRubrik);
-        
-        
         //Run manager has prepared the current run
         BrainControl.Get().eventManager.e_newRun.Invoke(run);
 
         
             //So we can await each level here
             //We need to be able to STOP this process
-            for(int i = 0; i < run.ActiveLevelSet.Levels.Count; i++)
+            for(int i = 0; i < run.activeBossDungeon.Levels.Count; i++)
             {
                 Debug.LogFormat($"New level index: {i}");
                 
-                var level = run.ActiveLevelSet.Levels[i];
+                var level = run.activeBossDungeon.Levels[i];
                 run.ActiveLevel = new Level(level);
                 
                 //This invokes the level initialiser
@@ -335,7 +331,7 @@ public class RunManager : MonoBehaviour
 
                     #endregion
                     
-                    if (run.ActiveLevelSet.IsTimed)
+                    if (run.activeBossDungeon.IsTimed)
                     {
                         CurrentRun.RemoveWorkingTime(Time.deltaTime * (run.IsPaused ? 0 : 1));
                     }

@@ -74,7 +74,7 @@ public class InterruptPanel : MonoBehaviour
         m_runInfoPanel.alpha = 1;
         
         m_scoreInfoText.text = string.Format($"{run.Score}");
-        m_levelInfoText.text = string.Format($"{run.ActiveLevelIndex+1}/{run.ActiveLevelSet.Levels.Count}");
+        m_levelInfoText.text = string.Format($"{run.ActiveLevelIndex + 1}/{run.activeBossDungeon.Levels.Count}");
         m_timeInfoText.text = string.Format($"{run.Elapsed}");
         
         m_optionsPanel.alpha = 0;
@@ -99,7 +99,7 @@ public class InterruptPanel : MonoBehaviour
         m_runInfoPanel.alpha = 1;
 
         m_scoreInfoText.text = string.Format($"{run.Score}");
-        m_levelInfoText.text = string.Format($"{run.ActiveLevelIndex+1}/{run.ActiveLevelSet.Levels.Count}");
+        m_levelInfoText.text = string.Format($"{run.ActiveLevelIndex + 1}/{run.activeBossDungeon.Levels.Count}");
         m_timeInfoText.text = string.Format($"{run.Elapsed}");
         
         m_optionsPanel.alpha = 0;

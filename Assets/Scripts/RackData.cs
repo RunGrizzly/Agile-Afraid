@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
+using UnityEngine;
 
 [Serializable]
 public class RackData
@@ -11,7 +13,8 @@ public class RackData
     {
         m_capacity = capacity;
     }
-    
+
+    [Button]
     public void Add(Letter letter)
     {
         Letter newLetter = new Letter(letter);
@@ -41,6 +44,9 @@ public class RackData
 
     public void Fill(List<Letter> seed, ScoreSet rubrik)
     {
+        Debug.LogFormat($"Attempting to fill rack using rubrik: {rubrik}");
+        
+        
         if (seed != null)
         {
             foreach (Letter letter in seed)

@@ -22,11 +22,9 @@ public class WordBankFromTextAsset : ScriptableObject
     {
         RebuildBank();
     }
-
-
+    
     public void RebuildBank()
     {
-
         data = textAsset.text.Split("\n"[0]).ToList();
 
         for (int i = 0; i < data.Count; i++)
@@ -35,19 +33,15 @@ public class WordBankFromTextAsset : ScriptableObject
         }
 
         FilterBank();
-
     }
 
     public void FilterBank()
     {
-
         filteredData = new WordBank();
 
         foreach (string word in data)
         {
-
             if (word.Length >= minLength && word.Length <= maxLength) filteredData.AddToBank(word);
-
         }
     }
 

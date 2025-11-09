@@ -665,15 +665,18 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-  specificTileScoreCost: 10
-  specificTilePipCost: 3
-  vowelScoreCost: 10
-  vowelPipCost: 2
-  consonantScoreCost: 10
-  consonantPipCost: 1
-  fillRackScoreCost: 10
-  fillRackPipCost: 3
-  newRackScoreCost: 10
-  newRackPipCost: 4
+  specificTileKCost: 3
+  specificTilePipCost: 0
+  vowelKCost: 3
+  vowelPipCost: 0
+  consonantKCost: 3
+  consonantPipCost: 0
+  fillRackKCost: 3
+  fillRackPipCost: 0
+  newRackKCost: 3
+  newRackPipCost: 0
+  emptyRackKCost: 3
+  emptyRackPipCost: 0
   levelRestartCost: 10
   validateFailPenalty: 10
+  LevelSuccessAward: 10

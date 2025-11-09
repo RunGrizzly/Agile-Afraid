@@ -1,0 +1,330 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1f5e7d8dd164094a39abe2c1d0be34e, type: 3}
+  m_Name: q1_2025_d_001
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects:
+    - {fileID: 11400000, guid: e2725858f34412a40aa10f1dd5d8c270, type: 2}
+    - {fileID: 8300000, guid: 12c9cc95055fc9b4a83e1151bd66e40c, type: 3}
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: Levels
+      Entry: 7
+      Data: 0|System.Collections.Generic.List`1[[LevelData, Assembly-CSharp]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 4
+    - Name: 
+      Entry: 7
+      Data: 1|LevelData, Assembly-CSharp
+    - Name: gridData
+      Entry: 10
+      Data: 0
+    - Name: Music
+      Entry: 7
+      Data: 2|PlayableClip, Assembly-CSharp
+    - Name: Name
+      Entry: 6
+      Data: 
+    - Name: AudioClip
+      Entry: 10
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: DeadZoneColorA
+      Entry: 7
+      Data: UnityEngine.Color, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: DeadZoneColorB
+      Entry: 7
+      Data: UnityEngine.Color, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: LevelRequirements
+      Entry: 3
+      Data: 0
+    - Name: AllowTileRequests
+      Entry: 5
+      Data: true
+    - Name: par
+      Entry: 3
+      Data: 0
+    - Name: trophyScore
+      Entry: 3
+      Data: 0
+    - Name: repeatLimit
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 3|LevelData, Assembly-CSharp
+    - Name: gridData
+      Entry: 10
+      Data: 0
+    - Name: Music
+      Entry: 7
+      Data: 4|PlayableClip, Assembly-CSharp
+    - Name: Name
+      Entry: 6
+      Data: 
+    - Name: AudioClip
+      Entry: 10
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: DeadZoneColorA
+      Entry: 7
+      Data: UnityEngine.Color, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: DeadZoneColorB
+      Entry: 7
+      Data: UnityEngine.Color, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: LevelRequirements
+      Entry: 3
+      Data: 0
+    - Name: AllowTileRequests
+      Entry: 5
+      Data: true
+    - Name: par
+      Entry: 3
+      Data: 0
+    - Name: trophyScore
+      Entry: 3
+      Data: 0
+    - Name: repeatLimit
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 5|LevelData, Assembly-CSharp
+    - Name: gridData
+      Entry: 10
+      Data: 0
+    - Name: Music
+      Entry: 7
+      Data: 6|PlayableClip, Assembly-CSharp
+    - Name: Name
+      Entry: 6
+      Data: 
+    - Name: AudioClip
+      Entry: 10
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: DeadZoneColorA
+      Entry: 7
+      Data: UnityEngine.Color, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: DeadZoneColorB
+      Entry: 7
+      Data: UnityEngine.Color, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: LevelRequirements
+      Entry: 3
+      Data: 0
+    - Name: AllowTileRequests
+      Entry: 5
+      Data: true
+    - Name: par
+      Entry: 3
+      Data: 0
+    - Name: trophyScore
+      Entry: 3
+      Data: 0
+    - Name: repeatLimit
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 7|LevelData, Assembly-CSharp
+    - Name: gridData
+      Entry: 10
+      Data: 0
+    - Name: Music
+      Entry: 7
+      Data: 8|PlayableClip, Assembly-CSharp
+    - Name: Name
+      Entry: 6
+      Data: 
+    - Name: AudioClip
+      Entry: 10
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: DeadZoneColorA
+      Entry: 7
+      Data: UnityEngine.Color, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: DeadZoneColorB
+      Entry: 7
+      Data: UnityEngine.Color, UnityEngine.CoreModule
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: LevelRequirements
+      Entry: 3
+      Data: 0
+    - Name: AllowTileRequests
+      Entry: 5
+      Data: true
+    - Name: par
+      Entry: 3
+      Data: 0
+    - Name: trophyScore
+      Entry: 3
+      Data: 0
+    - Name: repeatLimit
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+  SelectionID: d_challenge
+  IsTimed: 0
+  ScoringRubrik: {fileID: 11400000, guid: 2183d7b917fd6804ca2cf649dfe84a4c, type: 2}
+  RackSeeds: []
+  RackSize: 8
